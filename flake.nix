@@ -43,7 +43,8 @@
         # ament_python setup.py builds with its own python, so once the release pin's python differs
         # from the dev pin's, release python packages may need their own colcon again
         colcon = import ./nix/colcon.nix { inherit lib pkgs skip; inherit (inputs) riptide_setup; };
-        uwrt = pkgs.callPackage ./nix/uwrt.nix { };
+        # the uwrt_nix commit goes in uwrt's version, so doctor can spot a stale profile copy
+        uwrt = pkgs.callPackage ./nix/uwrt.nix { rev = self.shortRev or self.dirtyShortRev or "dirty"; };
         mkShell = p: args: import ./nix/riptide-shell.nix ({
           inherit (p) lib;
           pkgs = p;

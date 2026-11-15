@@ -7,8 +7,11 @@ boundary when everything before it passes `bash -n`. Statements that mention ROS
 consecutive ones (with only comments or blank lines between) in one block. Everything else,
 like GPG_TTY or cargo, stays outside.
 
+A file that's already partly guarded gets the rest wrapped. Line endings (LF or CRLF) and a
+missing final newline are kept, so --unpatch gives back the original bytes.
+
 usage: patch-bashrc.py [--check | --unpatch] [--dry-run] FILE
-  --check    exit 0 if FILE is guarded and sources no ROS outside the guard, else 1
+  --check    exit 0 if FILE has no ROS statement outside a guard, else 1
   --unpatch  remove the guard lines again
 """
 import argparse
@@ -27,11 +30,22 @@ GUARD = 'if [ -z "${UWRT_NIX_SHELL:-}" ] && [ ! -f ~/.uwrt/use_nix ]; then'
 END = 'fi # <<< uwrt nix guard <<<'
 
 ROS = re.compile(r'/opt/ros|\bros2\b|\bcolcon\b|\bROS_|\bRMW_|\bZENOH|\brmw|dds_scripts|config_rmw|UWRT_|_uwrt_'
-                 r'|osu-uwrt/\S*(install|setup\.(ba)?sh)|\brviz')
+                 r'|osu-uwrt/\S*(install|setup\.(ba)?sh)|install/(local_)?setup\.(ba|z)?sh|\brviz')
 
 
 def parses(text):
-    return subprocess.run([BASH, '-n'], input=text, text=True, capture_output=True).returncode == 0
+    # bash -n only warns about a heredoc cut off by the end of input, so check for that too
+    r = subprocess.run([BASH, '-n'], input=text, text=True, capture_output=True)
+    return r.returncode == 0 and 'here-document' not in r.stderr
+
+
+def split_lines(text):
+    """Lines with their own endings, split on \\n only (str.splitlines also splits on \\x0c etc)."""
+    return [l for l in re.split(r'(?<=\n)', text) if l]
+
+
+def bare(line):
+    return line.rstrip('\r\n')
 
 
 def statements(lines):
@@ -39,7 +53,7 @@ def statements(lines):
     out, start = [], 0
     for i in range(1, len(lines) + 1):
         # cheap filter first: a continued line can't end a statement
-        if lines[i - 1].rstrip('\n').endswith('\\'):
+        if bare(lines[i - 1]).endswith('\\'):
             continue
         if parses(''.join(lines[:i])):
             out.append((start, i))
@@ -49,26 +63,34 @@ def statements(lines):
     return out
 
 
-def neutral(text):
-    return all(not s.strip() or s.lstrip().startswith('#') for s in text.splitlines())
+def kind(stmt):
+    """n: comments/blank, g: an existing guard, r: ros, o: anything else."""
+    if bare(stmt[0]) in (BEGIN, GUARD):
+        return 'g'
+    text = ''.join(stmt)
+    if all(not s.strip() or s.lstrip().startswith('#') for s in text.splitlines()):
+        return 'n'
+    return 'r' if ROS.search(text) else 'o'
+
+
+def classify(lines):
+    return [(s, e, kind(lines[s:e])) for s, e in statements(lines)]
 
 
 def patch(lines):
-    stmts = statements(lines)
-    kind = []
-    for s, e in stmts:
-        text = ''.join(lines[s:e])
-        kind.append('n' if neutral(text) else 'r' if ROS.search(text) else 'o')
+    stmts = classify(lines)
+    # guard lines always end in \n: `then\r` isn't a keyword to bash
+    nl = '\n'
 
     # blocks: from a ros statement to the last ros statement before the next other one
     blocks, i = [], 0
     while i < len(stmts):
-        if kind[i] != 'r':
+        if stmts[i][2] != 'r':
             i += 1
             continue
         j = last = i
-        while j < len(stmts) and kind[j] != 'o':
-            if kind[j] == 'r':
+        while j < len(stmts) and stmts[j][2] in 'rn':
+            if stmts[j][2] == 'r':
                 last = j
             j += 1
         blocks.append((stmts[i][0], stmts[last][1]))
@@ -76,32 +98,29 @@ def patch(lines):
 
     out, pos = [], 0
     for s, e in blocks:
-        out += lines[pos:s] + [BEGIN + '\n', GUARD + '\n'] + lines[s:e]
-        if out[-1] and not out[-1].endswith('\n'):
-            out[-1] += '\n'
-        out.append(END + '\n')
+        out += lines[pos:s] + [BEGIN + nl, GUARD + nl] + lines[s:e]
+        if out[-1].endswith('\n'):
+            out.append(END + nl)
+        else:
+            # no final newline: give it one before the guard ends and leave END without one,
+            # unpatch takes it back off
+            out[-1] += nl
+            out.append(END)
         pos = e
     return out + lines[pos:], len(blocks)
 
 
 def unpatch(lines):
-    return [l for l in lines if l.rstrip('\n') not in (BEGIN, GUARD, END)]
+    out = [l for l in lines if bare(l) not in (BEGIN, GUARD, END)]
+    if lines and lines[-1] == END and out:
+        out[-1] = bare(out[-1])
+    return out
 
 
 def check(lines):
-    """Guarded, and no ros statement outside a guard."""
-    if not any(l.rstrip('\n') == BEGIN for l in lines):
-        return False, 'no uwrt guard'
-    depth, bad = 0, []
-    for n, l in enumerate(lines, 1):
-        t = l.rstrip('\n')
-        if t == GUARD:
-            depth += 1
-        elif t == END:
-            depth -= 1
-        elif depth == 0 and not l.lstrip().startswith('#') and re.search(r'/opt/ros|install/(local_)?setup\.bash', l):
-            bad.append(f'line {n}: {t.strip()}')
-    return (not bad), ('; '.join(bad) or 'guarded')
+    """No ros statement outside a guard."""
+    bad = [f'line {s + 1}: {bare(lines[s]).strip()}' for s, e, k in classify(lines) if k == 'r']
+    return (not bad), ('; '.join(bad) or 'no ros outside the uwrt guard')
 
 
 def main():
@@ -112,7 +131,8 @@ def main():
     ap.add_argument('--dry-run', action='store_true')
     a = ap.parse_args()
 
-    lines = a.file.read_text().splitlines(keepends=True)
+    # bytes in and out, so line endings survive
+    lines = split_lines(a.file.read_bytes().decode())
     if a.check:
         ok, why = check(lines)
         print(f'{a.file}: {why}')
@@ -121,9 +141,6 @@ def main():
     if a.unpatch:
         new, msg = unpatch(lines), 'removed the uwrt guard'
     else:
-        if any(l.rstrip('\n') == BEGIN for l in lines):
-            print(f'{a.file}: already guarded (--unpatch first to redo it)')
-            return
         new, n = patch(lines)
         msg = f'guarded {n} ros block(s)'
     if new == lines:
@@ -137,7 +154,7 @@ def main():
         return
     backup = a.file.with_name(f'{a.file.name}.uwrt-backup-{time.strftime("%Y%m%d-%H%M%S")}')
     shutil.copy2(a.file, backup)
-    a.file.write_text(''.join(new))
+    a.file.write_bytes(''.join(new).encode())
     print(f'{a.file}: {msg}, backup at {backup}')
 
 

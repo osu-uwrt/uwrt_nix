@@ -56,13 +56,19 @@ EOF
 
 envrc_text() {  # envrc_text <shell> <uwrt_nix dir>
   cat <<EOF
-# written by \`uwrt setup\`, not tracked. rerun it to update this file
+# written by \`uwrt setup\`, not tracked. \`uwrt setup --force\` rewrites it
 export UWRT_WS=\$PWD   # before use flake, the shell reads it at eval
-uwrt_nix=$2
+uwrt_nix=$(printf %q "$2")
 # nix-direnv re-evals when a file watched before use flake changes: uwrt_nix and the package.xml
-# files (deps come from those). a new package needs \`direnv reload\`
-watch_file \$(git -C "\$uwrt_nix" ls-files --full-name | sed "s|^|\$uwrt_nix/|") \\
-  \$(find src -name package.xml -not -path '*/build/*' -not -path '*/install/*')
+# files (deps come from those). a new package or COLCON_IGNORE needs \`direnv reload\`
+if _w=\$(git -C "\$uwrt_nix" ls-files --full-name 2>/dev/null); then
+  mapfile -t _w < <(sed "s|^|\$uwrt_nix/|" <<< "\$_w")
+else
+  mapfile -t _w < <(find "\$uwrt_nix" -type f -not -path '*/.git/*')
+fi
+mapfile -t -O \${#_w[@]} _w < <(find src -name package.xml -not -path '*/build/*' -not -path '*/install/*')
+watch_file "\${_w[@]}"
+unset _w
 use flake "\$uwrt_nix#$1" --impure
 watch_file "\${UWRT_CONFIG_DIR:-\$HOME/.uwrt}/env" install/local_setup.bash
 eval "\$(uwrt-env)"
@@ -120,28 +126,47 @@ build() {
   local ws=${UWRT_WS:-}
   [ -n "$ws" ] || die "not in a uwrt workspace env (cd into one, or uwrt dev|release)"
   cd "$ws"
-  colcon build "$@"
-  [ -d build ] || return 0
-  merge_cc "$ws/build"
-  stale_env
+  local rc=0
+  colcon build "$@" || rc=$?
+  # even after a failed build: the roots and the stale hint matter most then
+  if [ -d build ]; then
+    merge_cc "$ws/build" || true
+    env_roots
+  fi
+  return $rc
 }
 
-# packages whose cmake cache still points at an older ros env. nothing roots that env, so a
-# `nix store gc` would break them; reconfigure them against this one
-stale_env() {
-  local cur f stale=()
+# the workspace links against the ros env it was configured with, and only the current env has a
+# gc root (nix-direnv's). keep one in build/.uwrt-gcroots for every env a cmake cache uses, so
+# `nix store gc` can't break built packages, and name the packages still on an older env
+env_roots() {
+  local cur f e envs=() stale=()
   # no `| grep -q` under pipefail: an early exit SIGPIPEs the writer and fails the pipeline
   cur=$(tr : '\n' <<< "${AMENT_PREFIX_PATH:-}" | grep -E '^/nix/store/[a-z0-9]{32}-ros-env$' || true)
   cur=${cur%%$'\n'*}
-  [ -n "$cur" ] || return 0
+  [ -n "$cur" ] && envs+=("$cur")
   for f in build/*/CMakeCache.txt; do
     [ -f "$f" ] || continue
-    if [ -n "$(grep -oE '/nix/store/[a-z0-9]{32}-ros-env' "$f" | grep -vxF "$cur" || true)" ]; then
-      stale+=("$(basename "$(dirname "$f")")")
-    fi
+    local used; used=$(grep -oE '/nix/store/[a-z0-9]{32}-ros-env' "$f" | sort -u || true)
+    [ -n "$used" ] || continue
+    envs+=($used)
+    if [ -n "$cur" ] && [ -n "$(grep -vxF "$cur" <<< "$used" || true)" ]; then stale+=("$(basename "$(dirname "$f")")"); fi
+  done
+  local d=build/.uwrt-gcroots
+  mkdir -p "$d"
+  # drop roots nothing uses any more, add the missing ones
+  local all; all=$(printf '%s\n' "${envs[@]}" | sort -u)
+  for f in "$d"/*; do
+    [ -L "$f" ] || continue
+    grep -qxF "$(readlink "$f")" <<< "$all" || rm -f "$f"
+  done
+  for e in $all; do
+    [ -e "$d/${e#/nix/store/}" ] && continue
+    [ -e "$e" ] || { echo "uwrt: $e is gone (garbage collected?), rebuild the packages that use it" >&2; continue; }
+    nix-store --add-root "$d/${e#/nix/store/}" --realise "$e" >/dev/null
   done
   [ ${#stale[@]} -eq 0 ] && return 0
-  echo "uwrt: ${#stale[@]} package(s) are configured against an older env, which \`nix store gc\` can delete:" >&2
+  echo "uwrt: ${#stale[@]} package(s) are configured against an older env (kept from gc in $d). to move them over:" >&2
   echo "  uwrt build --cmake-clean-cache --packages-select ${stale[*]}" >&2
 }
 
@@ -215,9 +240,9 @@ setup() {
 
   if [ -n "$patch" ]; then
     "$python" -I "$share/patch-bashrc.py" ${dry:+--dry-run} $([ "$patch" = unpatch-bashrc ] && echo --unpatch) "$bashrc"
-  elif [ "$(uname -s)" = Linux ] && grep -qs /opt/ros "$HOME/.bashrc" \
+  elif [ "$(uname -s)" = Linux ] && [ -f "$HOME/.bashrc" ] \
     && ! "$python" -I "$share/patch-bashrc.py" --check "$HOME/.bashrc" >/dev/null; then
-    echo "uwrt: ~/.bashrc sources apt ros without the uwrt guard. uwrt setup --patch-bashrc --dry-run shows the change"
+    echo "uwrt: ~/.bashrc has ros lines outside the uwrt guard. uwrt setup --patch-bashrc --dry-run shows the change"
   fi
 }
 
@@ -251,8 +276,10 @@ doctor() {
   if command -v direnv >/dev/null; then
     local dv; dv=$(direnv version)
     vge "$dv" 2.30 && ok "direnv $dv" || bad "direnv $dv is too old (need 2.30+)"
-    local rc=$HOME/.zshrc; [[ ${SHELL:-} == *bash ]] && rc=$HOME/.bashrc
-    grep -qs 'direnv hook' "$rc" && ok "direnv hook in $rc" || bad "no direnv hook in $rc (eval \"\$(direnv hook ${SHELL##*/})\")"
+    local rc f hooked=; rc=(~/.zshrc ~/.zshenv ~/.zprofile /etc/zshrc /etc/zshenv)
+    [[ ${SHELL:-} == *bash ]] && rc=(~/.bashrc ~/.bash_profile ~/.profile /etc/bashrc /etc/bash.bashrc)
+    for f in "${rc[@]}"; do grep -qs 'direnv hook' "$f" && { hooked=$f; break; }; done
+    [ -n "$hooked" ] && ok "direnv hook in $hooked" || bad "no direnv hook in ${rc[0]} (eval \"\$(direnv hook ${SHELL##*/})\")"
     local ndv; ndv=$(direnv_nix_version)
     if [ -z "$ndv" ]; then bad "nix-direnv isn't loaded by direnv (source its direnvrc from ~/.config/direnv/direnvrc)"
     elif vge "$ndv" 3.0.0; then ok "nix-direnv $ndv"
@@ -284,12 +311,15 @@ doctor() {
   else bad "rsync is $(command -v rsync || echo missing), not GNU rsync (colcon deploy needs it; nix profile add nixpkgs#rsync)"; fi
 
   if [ "$os" = Linux ]; then
-    if ! grep -qs /opt/ros "$HOME/.bashrc"; then ok "~/.bashrc doesn't source apt ros"
-    elif "$python" -I "$share/patch-bashrc.py" --check "$HOME/.bashrc" >/dev/null; then ok "~/.bashrc has the uwrt guard"
-    else bad "~/.bashrc sources apt ros without the uwrt guard (uwrt setup --patch-bashrc)"; fi
+    if [ ! -f "$HOME/.bashrc" ] || "$python" -I "$share/patch-bashrc.py" --check "$HOME/.bashrc" >/dev/null; then ok "no ros in ~/.bashrc outside the uwrt guard"
+    else bad "~/.bashrc has ros lines outside the uwrt guard (uwrt setup --patch-bashrc --dry-run)"; fi
   fi
 
   if [ -d "$nd/.git" ]; then
+    # the version carries the uwrt_nix commit it was built from
+    local head; head=$(git -C "$nd" rev-parse --short=7 HEAD 2>/dev/null || true)
+    if [[ $version == *+"$head"* ]]; then ok "uwrt matches uwrt_nix $head"
+    else warn "this uwrt ($version) isn't from uwrt_nix $head (nix profile upgrade uwrt)"; fi
     local un; un=$(git -C "$nd" ls-files --others --exclude-standard)
     [ -z "$un" ] && ok "no untracked files in uwrt_nix" \
       || bad "untracked files in uwrt_nix are invisible to the flake, git add them: $(echo $un)"

@@ -27,12 +27,15 @@ done
 if [ "$(uname -s)" = Darwin ]; then def=fastdds-local; else def=zenoh; fi
 rmw=${c[UWRT_RMW]:-$def}
 q() { printf '%q' "$1"; }
+fastdds_net="ROS_DISCOVERY_SERVER ROS_SUPER_CLIENT FASTRTPS_DEFAULT_PROFILES_FILE FASTDDS_DEFAULT_PROFILES_FILE"
 
 case $rmw in
   fastdds-local)
     echo "export UWRT_RMW=fastdds-local RMW_IMPLEMENTATION=rmw_fastrtps_cpp ROS_LOCALHOST_ONLY=1"
     echo "export ROS_DOMAIN_ID=$(q "${c[UWRT_LOCAL_DOMAIN]:-93}")"
     echo "unset ZENOH_SESSION_CONFIG_URI ZENOH_ROUTER_CONFIG_URI ZENOH_ROUTER_CHECK_ATTEMPTS ZENOH_CONFIG_OVERRIDE"
+    # release's fastdds scripts point these at the robot's discovery server
+    echo "unset $fastdds_net ROS_AUTOMATIC_DISCOVERY_RANGE ROS_STATIC_PEERS"
     ;;
   zenoh)
     # release's client config if there is a release checkout, else the copy shipped with uwrt
@@ -41,7 +44,7 @@ case $rmw in
     [ -n "$cfg" ] || { [ -f "$rel" ] && cfg=$rel || cfg=$share/zenoh_client.json5; }
     echo "export UWRT_RMW=zenoh RMW_IMPLEMENTATION=rmw_zenoh_cpp ZENOH_ROUTER_CHECK_ATTEMPTS=10"
     echo "export ROS_DOMAIN_ID=$(q "${c[UWRT_ROBOT_DOMAIN]:-4}") ZENOH_SESSION_CONFIG_URI=$(q "$cfg")"
-    echo "unset ROS_LOCALHOST_ONLY ZENOH_ROUTER_CONFIG_URI ZENOH_CONFIG_OVERRIDE"
+    echo "unset ROS_LOCALHOST_ONLY ZENOH_ROUTER_CONFIG_URI ZENOH_CONFIG_OVERRIDE $fastdds_net"
     ;;
   *)
     echo "uwrt-env: unknown UWRT_RMW '$rmw' in $conf (zenoh or fastdds-local)" >&2

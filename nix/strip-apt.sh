@@ -14,11 +14,14 @@ _uwrt_ws_prefix() {
 }
 
 _uwrt_strip() {
-  local var=$1 out= e
-  local IFS=:
-  for e in ${!var-}; do
+  local var=$1 out= e parts
+  IFS=: read -ra parts <<< "${!var-}"
+  for e in "${parts[@]}"; do
     case $e in
       '') continue ;;
+      # another riptide shell's env (a nix develop nested in one): only ours stays
+      /nix/store/*-ros-env|/nix/store/*-ros-env/*|/nix/store/*-dyld-wrappers/*)
+        case $e in "$_uwrt_own_env"|"$_uwrt_own_env"/*|"$_uwrt_own_wrap"/*) ;; *) continue ;; esac ;;
       /nix/store/*) ;;
       /opt/ros/*) continue ;;
       *) _uwrt_ws_prefix "$e" && continue ;;
@@ -34,4 +37,4 @@ for _uwrt_v in PATH LD_LIBRARY_PATH DYLD_LIBRARY_PATH PYTHONPATH CMAKE_PREFIX_PA
 done
 unset -f _uwrt_strip _uwrt_ws_prefix
 # ROS_DISTRO/VERSION/PYTHON_VERSION are already the env's own by now, nix sets them before this
-unset _uwrt_v COLCON_PREFIX_PATH AMENT_CURRENT_PREFIX
+unset _uwrt_v _uwrt_own_env _uwrt_own_wrap COLCON_PREFIX_PATH AMENT_CURRENT_PREFIX

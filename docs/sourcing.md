@@ -19,7 +19,7 @@ Workspace locations default to `~/osu-uwrt/development/software`, `~/osu-uwrt/re
 `uwrt setup` writes this `.envrc` (untracked; in release it's listed in `.git/info/exclude`, never `.gitignore`):
 
 1. `export UWRT_WS=$PWD`. The shell scans `$UWRT_WS/src`'s package.xml files at eval time, hence `--impure`.
-2. `watch_file` on every tracked file in uwrt_nix and every package.xml. nix-direnv re-evaluates only when one of these changed since its cache, so editing a dependency in a package.xml takes effect on the next prompt. A **new** package needs `direnv reload`.
+2. `watch_file` on every tracked file in uwrt_nix (every file, if uwrt_nix isn't a git checkout) and every package.xml. nix-direnv re-evaluates only when one of these is newer than its cache, so editing a dependency in a package.xml takes effect on the next prompt. Adding a package, or adding/removing a `COLCON_IGNORE`, needs `direnv reload`. (A deleted package.xml doesn't trigger one either; its deps just stay in the env until the next re-eval.)
 3. `use flake <uwrt_nix>#riptide-dev --impure` (or `#riptide-release`). The shellHook drops `/opt/ros` and every colcon workspace the outer shell had sourced from the path variables (`nix/strip-apt.sh`) and sets `UWRT_NIX_SHELL`.
 4. `eval "$(uwrt-env)"`: the RMW settings (below). `~/.uwrt/env` is watched after `use flake`, so switching RMW only reloads; it doesn't re-evaluate Nix.
 5. `source install/local_setup.bash` if the workspace is built. On macOS `DYLD_LIBRARY_PATH` is then unset again: it would shadow system libraries (libyaml, …) for every program, and install rpaths plus the ROS program wrappers already find the libraries.
@@ -32,11 +32,11 @@ A cached load takes about 0.2–0.3 s. A cache miss (changed package.xml, uwrt_n
 |---|---|
 | `uwrt dev` / `uwrt release` | A shell in that workspace with its env, from anywhere (`direnv exec`; falls back to `nix develop` without direnv) |
 | `uwrt dev <cmd…>` | Runs one command in that env, in the current directory |
-| `uwrt build [colcon args]` | `colcon build` from the workspace root (works from any subdirectory), then merges `build/*/compile_commands.json` into `build/compile_commands.json`. Warns about packages configured against an older ROS env (see below) |
+| `uwrt build [colcon args]` | `colcon build` from the workspace root (works from any subdirectory), then, even when the build fails, merges `build/*/compile_commands.json` into `build/compile_commands.json` and refreshes the workspace's GC roots (see below) |
 | `uwrt rmw zenoh\|fastdds-local\|show` | Saves the RMW in `~/.uwrt/env`; direnv applies it on the next prompt |
 | `uwrt deps update` | Regenerates `deps/system-keys.json` from the pinned rosdistro |
 | `uwrt setup [--patch-bashrc [FILE] \| --unpatch-bashrc [FILE]] [--dry-run] [--force]` | See above and below |
-| `uwrt doctor` | Machine checks; exits non-zero on a failure |
+| `uwrt doctor` | Machine checks; exits non-zero on a failure. Also warns when the `uwrt` you ran wasn't built from uwrt_nix's current commit (`uwrt --version` shows `0.2.0+<commit>`; `nix profile upgrade uwrt`) |
 
 ## RMW (`uwrt-env`, replaces release's `config_rmw.bash`)
 
@@ -44,9 +44,17 @@ A cached load takes about 0.2–0.3 s. A cache miss (changed package.xml, uwrt_n
 |---|---|---|
 | `RMW_IMPLEMENTATION` | `rmw_fastrtps_cpp` | `rmw_zenoh_cpp` |
 | Domain | `93` (`UWRT_LOCAL_DOMAIN`) | `4` (`UWRT_ROBOT_DOMAIN`) |
-| Other | `ROS_LOCALHOST_ONLY=1`, no `ZENOH_*` | `ZENOH_SESSION_CONFIG_URI` = release's `scripts/dds_scripts/zenoh/zenoh_client.json5` (else a copy shipped with uwrt), `ZENOH_ROUTER_CHECK_ATTEMPTS=10` |
+| Other | `ROS_LOCALHOST_ONLY=1`; unsets `ZENOH_*` and the FastDDS discovery-server settings release's scripts export (`ROS_DISCOVERY_SERVER`, `ROS_SUPER_CLIENT`, `FASTRTPS_/FASTDDS_DEFAULT_PROFILES_FILE`, `ROS_AUTOMATIC_DISCOVERY_RANGE`, `ROS_STATIC_PEERS`) | `ZENOH_SESSION_CONFIG_URI` = release's `scripts/dds_scripts/zenoh/zenoh_client.json5` (else a copy shipped with uwrt), `ZENOH_ROUTER_CHECK_ATTEMPTS=10` |
 
 With zenoh every node connects to the robot's router (`orin2:7447`) and gives up when it's off, so local work uses `fastdds-local`. `~/.uwrt/env` takes `KEY=value` lines; uwrt reads them without running them.
+
+**Tab completion (opt-in, zsh):** one line in `~/.zshrc`, after `compinit`, costs about 0.3 s per new shell:
+
+```zsh
+eval "$(uwrt dev register-python-argcomplete --shell zsh ros2 colcon 2>/dev/null)"
+```
+
+Completion then works wherever `ros2`/`colcon` are on PATH, i.e. inside a workspace. bash: the same with `--shell bash`.
 
 ## Editors (compile_commands.json, clangd)
 
@@ -70,15 +78,16 @@ fi # <<< uwrt nix guard <<<
 ```
 
 - It finds the parts by statement, not by line number: bash itself (`bash -n`) says where each top-level statement ends, and statements mentioning ROS (`/opt/ros`, `ros2`, `ROS_*`, `RMW_*`, `ZENOH*`, the `sr`/`srd` selection functions, workspace `install/setup.bash`, …) are wrapped. Other lines (GPG_TTY, aliases, cargo) stay outside.
-- `--dry-run` prints the diff. It keeps a timestamped backup, refuses a file that doesn't parse, and is a no-op on a guarded file. `uwrt setup --unpatch-bashrc` removes it again (byte-identical to before).
+- `--dry-run` prints the diff. It keeps a timestamped backup and refuses a file that doesn't parse (or a result that wouldn't). On a partly guarded file it wraps only what's left; on a fully guarded one it does nothing. Heredocs stay whole. `uwrt setup --unpatch-bashrc` removes the guard again, byte-identical to before (including CRLF line endings and a missing final newline).
+- Note: aliases and functions that would work fine with Nix's `ros2` (`ros_restart`, `zenohd`, `rviz()` on xps) are inside the guard too, because they mention ROS. An alias *called* elsewhere in the file without a ROS word (e.g. an uncommented `srd` autoselect) stays outside and would say "command not found" in a Nix shell; guard such a line by hand.
 - `touch ~/.uwrt/use_nix` turns apt ROS off for every new shell, not just inside Nix shells.
-- `uwrt doctor` fails on Linux when `~/.bashrc` sources `/opt/ros` without the guard.
+- `uwrt doctor` fails on Linux when `~/.bashrc` has a ROS statement outside the guard (the same detection the patcher uses, so it covers workspaces like `~/ros2_ws/install/setup.bash` too).
 
-The shells also strip apt paths themselves (step 3 above), so the env is clean even when the outer shell had apt ROS sourced. The guard covers shells started *inside* a Nix env.
+The shells also strip apt paths themselves (step 3 above), so the env is clean even when the outer shell had apt ROS sourced. The guard covers shells started *inside* a Nix env. The strip also drops another riptide shell's ROS env, so a `nix develop` of one shell nested inside the other ends up with only its own.
 
 ## Known limits and decisions
 
 - **One colcon for both shells** (user decision, 2026-11-15). colcon and colcon_riptide come from the dev overlay pin in `riptide-release` too. colcon runs ament_python `setup.py` builds with its own Python, so once the release pin's Python differs from the dev pin's, release Python packages may break and need a per-pin colcon again. Today both pins are the same commit.
-- **Stale envs and garbage collection.** A colcon workspace links against store paths that no GC root protects except the current env (nix-direnv roots it under `.direnv/`). After the env changes (a uwrt_nix edit or bump that changes the ROS env), already-configured packages keep pointing at the old env, and `nix store gc` can delete it, which breaks their builds and binaries. `uwrt build` lists them; rebuild with `uwrt build --cmake-clean-cache --packages-select …`.
+- **Envs and garbage collection.** A colcon workspace links against the ROS env it was configured with. nix-direnv only roots the *current* env (under `.direnv/`), and already-configured packages keep pointing at the old one after the env changes (a uwrt_nix edit or bump). So `uwrt build` keeps a GC root in `build/.uwrt-gcroots/` for every ROS env any package's CMake cache uses, drops roots nothing uses any more, and names the packages still on an older env (`uwrt build --cmake-clean-cache --packages-select …` moves them over). Builds made with plain `colcon build` get their roots at the next `uwrt build`. `rm -rf build` drops the roots with it.
 - uwrt's closure is the dev pin's python3, the same store path the ROS env already uses, so the profile install adds nothing on a machine with the shells.
 - `uwrt fw` and titan_firmware's `.envrc` come with the firmware shell (Phase 4).

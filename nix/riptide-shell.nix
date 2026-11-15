@@ -55,7 +55,10 @@ pkgs.mkShell {
   passthru = { inherit env dyldWrappers; workspace = ws; };
 
   # apt ros and outer workspaces out first (see strip-apt.sh), then say what was scanned
-  shellHook = "source ${./strip-apt.sh}\n" + (if scanned then ''
+  shellHook = ''
+    _uwrt_own_env=${env} _uwrt_own_wrap=${if darwin then "${dyldWrappers}" else "none"}
+    source ${./strip-apt.sh}
+  '' + (if scanned then ''
     echo "${name}: deps from ${ws}/src${lib.optionalString (deps.skipped != [ ]) ", skipping ${lib.concatStringsSep " " deps.skipped}"}" >&2
   '' else ''
     echo "${name}: no workspace scanned (${if home == "" then "pure eval, use --impure" else "${ws}/src not found, set UWRT_WS"}), base ros only" >&2
