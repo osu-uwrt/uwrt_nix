@@ -1,0 +1,15 @@
+--- a/src/blackboard.cpp	2026-11-15 10:49:45
++++ b/src/blackboard.cpp	2026-11-15 10:49:45
+@@ -105,9 +105,9 @@
+   if(storage_it != storage_.end())
+   {
+     const auto& prev_info = storage_it->second->port_info;
+-    if (prev_info.type() != info.type() &&
+-        prev_info.isStronglyTyped() &&
+-        info.isStronglyTyped())
++    if (prev_info.isStronglyTyped() &&
++        info.isStronglyTyped() &&
++        *prev_info.type() != *info.type())
+     {
+       throw LogicError("Blackboard: once declared, the type of a port "
+                        "shall not change. Previously declared type [",

@@ -19,6 +19,12 @@ in {
         };
       });
 
+      # Blackboard::setPortInfo compares type_info pointers. on mac each dylib has its own hidden std::string
+      # typeinfo, so doTask's plugins fail "once declared, the type of a port shall not change". compare the types
+      behaviortree-cpp-v3 = rosPrev.behaviortree-cpp-v3.overrideAttrs (old: {
+        patches = (old.patches or [ ]) ++ [ ./patches/behaviortree-cpp-v3-typeinfo.patch ];
+      });
+
       # camera_ros is only for apriltag_ros' example launch and needs libcamera (linux only)
       apriltag-ros = rosPrev.apriltag-ros.overrideAttrs (old: {
         propagatedBuildInputs = lib.filter (p: (p.pname or "") != "ros-${rosDistro}-camera-ros") old.propagatedBuildInputs;
