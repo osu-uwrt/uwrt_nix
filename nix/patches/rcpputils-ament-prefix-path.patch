@@ -1,0 +1,19 @@
+diff -ru a/src/find_library.cpp b/src/find_library.cpp
+--- a/src/find_library.cpp	2026-11-14 23:01:50
++++ b/src/find_library.cpp	2026-11-14 23:01:50
+@@ -66,6 +66,15 @@
+       return path;
+     }
+   }
++#ifdef __APPLE__
++  // SIP strips DYLD_* through /bin/sh and /usr/bin/env, so also look in <prefix>/lib
++  for (const auto & prefix : rcpputils::split(get_env_var("AMENT_PREFIX_PATH"), ':')) {
++    std::string path = prefix + "/lib/" + filename;
++    if (rcutils_is_file(path.c_str())) {
++      return path;
++    }
++  }
++#endif
+   return "";
+ }
+ 

@@ -1,61 +1,77 @@
 {
   inputs = {
-    # both pinned to develop (cached on ros + ros-darwin), bump on purpose
+    # both pinned to develop (cached on ros + ros-darwin), bump on purpose.
+    # release only supplies release's ros deps, cut a release with `nix flake update nix-ros-overlay-release`
     nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay/84ede7becd81f206251f4cd709c551f43c3eb376";
     nix-ros-overlay-release.url = "github:lopsided98/nix-ros-overlay/84ede7becd81f206251f4cd709c551f43c3eb376";
     nixpkgs.follows = "nix-ros-overlay/nixpkgs";  # IMPORTANT!!!
+
+    riptide_setup = { url = "github:osu-uwrt/riptide_setup/matlab-install"; flake = false; };
+
+    # ros-extra, the commits development/dependencies used. no vectornav, the fork is deprecated
+    chameleon_tf = { url = "github:coalman321/chameleon_tf/fe161bf96970e52b29fa8a39a256958fbe1f4065"; flake = false; };
+    nortek_dvl = { url = "github:osu-uwrt/nortek_dvl/be21db9ffc60f040b2c0287a60ec43423da80d0f"; flake = false; };
+    zed_interfaces = { url = "github:stereolabs/zed-ros2-interfaces/f7f90f11f818c3dda23219cd05d8c854a569fc85"; flake = false; };
   };
-  outputs = { self, nix-ros-overlay, nix-ros-overlay-release, nixpkgs }:
+
+  outputs = { self, nix-ros-overlay, nix-ros-overlay-release, nixpkgs, ... }@inputs:
+    let
+      rosDistro = "humble";
+      rosExtra = { inherit (inputs) chameleon_tf nortek_dvl zed_interfaces; };
+    in
     nix-ros-overlay.inputs.flake-utils.lib.eachSystem [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ] (system:
       let
-        pkgs = import nixpkgs {
+        pkgsFor = overlay: import overlay.inputs.nixpkgs {
           inherit system;
-          overlays = [ nix-ros-overlay.overlays.default ];
+          overlays = [
+            overlay.overlays.default
+            (import ./nix/overlay.nix { inherit rosDistro rosExtra; })
+          ];
         };
+        pkgs = pkgsFor nix-ros-overlay;
+        pkgsRelease = pkgsFor nix-ros-overlay-release;
         lib = pkgs.lib;
-        ros = pkgs.rosPackages.humble;
 
-        # camera_ros is only for apriltag_ros' example launch and needs libcamera (linux only).
-        # nobody runs real camera hardware on a mac, so drop it there
-        apriltag-ros = if pkgs.stdenv.hostPlatform.isDarwin
-          then ros.apriltag-ros.overrideAttrs (old: {
-            propagatedBuildInputs = lib.filter (p: (p.pname or "") != "ros-humble-camera-ros") old.propagatedBuildInputs;
-          })
-          else ros.apriltag-ros;
+        skip = import ./nix/skip.nix { inherit lib; inherit (pkgs) stdenv; };
+        colconFor = p: import ./nix/colcon.nix { inherit (p) lib; pkgs = p; inherit (inputs) riptide_setup; inherit skip; };
 
-        # phase 0 spike, temporary. gets replaced by the real shells in phase 1
-        spikeRos = with ros; {
-          inherit ros-base rclcpp rclpy rmw-fastrtps-cpp rmw-zenoh-cpp rosbag2 cv-bridge tf2-ros
-            image-transport behaviortree-cpp-v3 robot-localization control-toolbox
-            tf-transformations xacro robot-state-publisher joint-state-publisher diagnostic-updater
-            vision-msgs pluginlib;
-          inherit apriltag-ros;
-        };
-        # no pybullet, only the deprecated c_simulator used it
-        spikePy = { inherit (pkgs.python3Packages) transforms3d fabric; };
-        spikeFw = { inherit (pkgs) gcc-arm-embedded-13 gcc-arm-embedded-14 openocd; };
-
-        # drop whatever won't eval on this platform so the shell still loads
-        evals = p: (builtins.tryEval p.drvPath).success;
-        avail = lib.filterAttrs (_: evals);
-        dropped = lib.attrNames (lib.filterAttrs (_: p: !evals p) (spikeRos // spikePy // spikeFw));
+        # colcon comes from the same pin as the ros env, so ament_python builds use its python
+        mkShell = p: args: import ./nix/riptide-shell.nix ({
+          inherit (p) lib;
+          pkgs = p;
+          ros = p.rosPackages.${rosDistro};
+          colcon = colconFor p;
+          inherit skip;
+        } // args);
+        ros = pkgs.rosPackages.${rosDistro};
       in {
-        legacyPackages.spike = spikeRos // spikePy // spikeFw;
+        devShells = rec {
+          riptide-dev = mkShell pkgs {
+            name = "riptide-dev";
+            defaultWorkspace = "osu-uwrt/development/software";
+            # release vendors these as submodules, dev gets them from here
+            extraRos = with ros; [ chameleon-tf chameleon-tf-msgs nortek-dvl nortek-dvl-msgs zed-interfaces ];
+          };
+          riptide-release = mkShell pkgsRelease {
+            name = "riptide-release";
+            defaultWorkspace = "osu-uwrt/release";
+          };
+          default = riptide-dev;
+        };
 
-        devShells.spike = pkgs.mkShell {
-          name = "uwrt-spike";
-          packages = [
-            (pkgs.colcon.withExtensions [ pkgs.python3Packages.colcon-alias ])
-            (ros.buildEnv {
-              underlay = true;
-              paths = lib.attrValues (avail spikeRos) ++ lib.attrValues (avail spikePy);
-            })
-          ] ++ lib.attrValues (avail spikeFw);
-          shellHook = lib.optionalString (dropped != [ ]) ''
-            echo "spike: not available on ${system}: ${lib.concatStringsSep " " dropped}" >&2
-          '';
+        packages = {
+          inherit (colconFor pkgs) colcon colcon-riptide;
+        };
+
+        apps.deps-update = {
+          type = "app";
+          program = toString (pkgs.writeShellScript "uwrt-deps-update" ''
+            exec ${pkgs.python3.withPackages (ps: [ ps.pyyaml ])}/bin/python3 -I ${./scripts/update-system-keys.py} \
+              ${nix-ros-overlay.inputs.rosdistro} "''${1:-deps/system-keys.json}"
+          '');
         };
       });
+
   nixConfig = {
     extra-substituters = [ "https://ros.cachix.org" "https://ros-darwin.cachix.org" ];
     extra-trusted-public-keys = [

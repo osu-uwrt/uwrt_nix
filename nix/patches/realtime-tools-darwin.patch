@@ -1,0 +1,65 @@
+diff -ru a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2026-11-14 23:01:13
++++ b/CMakeLists.txt	2026-11-14 23:01:13
+@@ -48,7 +48,7 @@
+   $<INSTALL_INTERFACE:include/realtime_tools>
+ )
+ ament_target_dependencies(realtime_tools PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS})
+-if(UNIX)
++if(UNIX AND NOT APPLE)
+   target_link_libraries(realtime_tools PUBLIC cap)
+ endif()
+ 
+@@ -62,7 +62,7 @@
+   $<INSTALL_INTERFACE:include/realtime_tools>
+ )
+ ament_target_dependencies(thread_priority PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS})
+-if(UNIX)
++if(UNIX AND NOT APPLE)
+   target_link_libraries(thread_priority PUBLIC cap)
+ endif()
+ 
+diff -ru a/src/realtime_helpers.cpp b/src/realtime_helpers.cpp
+--- a/src/realtime_helpers.cpp	2026-11-14 23:01:13
++++ b/src/realtime_helpers.cpp	2026-11-14 23:01:13
+@@ -32,7 +32,9 @@
+ #include <windows.h>
+ #else
+ #include <sched.h>
++#ifdef __linux__
+ #include <sys/capability.h>
++#endif
+ #include <sys/mman.h>
+ #include <sys/utsname.h>
+ 
+@@ -75,6 +77,9 @@
+ #ifdef _WIN32
+   HANDLE thread = GetCurrentThread();
+   return SetThreadPriority(thread, priority);
++#elif !defined(__linux__)
++  (void)priority;
++  return false;
+ #else
+   struct sched_param schedp;
+   memset(&schedp, 0, sizeof(schedp));
+@@ -94,6 +99,8 @@
+ {
+ #ifdef _WIN32
+   return {false, "Memory locking is not supported on Windows."};
++#elif !defined(__linux__)
++  return {false, "Memory locking is only supported on Linux."};
+ #else
+   auto is_capable = [](cap_value_t v) -> bool {
+     bool rc = false;
+@@ -145,6 +152,11 @@
+   std::string message;
+ #ifdef _WIN32
+   message = "Thread affinity is not supported on Windows.";
++  return std::make_pair(false, message);
++#elif !defined(__linux__)
++  (void)thread;
++  (void)cores;
++  message = "Thread affinity is only supported on Linux.";
+   return std::make_pair(false, message);
+ #else
+   auto set_affinity_result_message = [](int result, std::string & msg) -> bool {

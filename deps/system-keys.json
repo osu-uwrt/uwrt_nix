@@ -1,0 +1,3725 @@
+{
+ "ace": [
+  "ace"
+ ],
+ "ack": [
+  "ack"
+ ],
+ "ack-grep": [
+  "ack"
+ ],
+ "acl": [
+  "acl"
+ ],
+ "acpi": [
+  "acpi"
+ ],
+ "acpitool": [
+  "acpitool"
+ ],
+ "adwaita-icon-theme": [
+  "adwaita-icon-theme"
+ ],
+ "alsa-oss": [
+  "alsa-oss"
+ ],
+ "alsa-utils": [
+  "alsa-utils"
+ ],
+ "ant": [
+  "ant"
+ ],
+ "antlr": [
+  "antlr"
+ ],
+ "apache2": [
+  "apacheHttpd"
+ ],
+ "apr": [
+  "apr"
+ ],
+ "aravis": [
+  "aravis"
+ ],
+ "aravis-dev": [
+  "aravis"
+ ],
+ "arduino-core": [
+  "arduino"
+ ],
+ "armadillo": [
+  "armadillo"
+ ],
+ "asio": [
+  "asio"
+ ],
+ "assimp": [
+  "assimp"
+ ],
+ "assimp-dev": [
+  "assimp"
+ ],
+ "at": [
+  "at"
+ ],
+ "at-spi2-core": [
+  "at-spi2-core"
+ ],
+ "atlas": [
+  "atlas"
+ ],
+ "autoconf": [
+  "autoconf"
+ ],
+ "autoconf-archive": [
+  "autoconf-archive"
+ ],
+ "automake": [
+  "automake"
+ ],
+ "autossh": [
+  "autossh"
+ ],
+ "avahi-daemon": [
+  "avahi"
+ ],
+ "avahi-utils": [
+  "avahi"
+ ],
+ "avr-libc": [
+  "avrlibc"
+ ],
+ "avrdude": [
+  "avrdude"
+ ],
+ "awscli": [
+  "awscli"
+ ],
+ "babeltrace": [
+  "babeltrace"
+ ],
+ "bandit": [
+  "bandit"
+ ],
+ "bazaar": [
+  "breezy"
+ ],
+ "beep": [
+  "beep"
+ ],
+ "benchmark": [
+  "gbenchmark"
+ ],
+ "binutils": [
+  "binutils"
+ ],
+ "bison": [
+  "bison"
+ ],
+ "black": [
+  "python3Packages.black"
+ ],
+ "blender": [
+  "blender"
+ ],
+ "bluez": [
+  "bluez"
+ ],
+ "boost": [
+  "boost"
+ ],
+ "box2d-dev": [
+  "box2d"
+ ],
+ "bullet": [
+  "bullet"
+ ],
+ "bullet-extras": [
+  "bullet"
+ ],
+ "bzip2": [
+  "bzip2"
+ ],
+ "ca-certificates": [
+  "cacert"
+ ],
+ "can-utils": [
+  "can-utils"
+ ],
+ "cargo": [
+  "cargo"
+ ],
+ "cargo-latest": [
+  "cargo"
+ ],
+ "castxml": [
+  "castxml"
+ ],
+ "catch2": [
+  "catch2"
+ ],
+ "cccc": [
+  "cccc"
+ ],
+ "cdk": [
+  "cdk"
+ ],
+ "cdk-dev": [
+  "cdk"
+ ],
+ "cgal": [
+  "cgal_5"
+ ],
+ "chafa": [
+  "chafa"
+ ],
+ "checkinstall": [
+  "checkinstall"
+ ],
+ "chromedriver": [
+  "chromedriver"
+ ],
+ "chromium-browser": [
+  "chromium"
+ ],
+ "chrony": [
+  "chrony"
+ ],
+ "clang": [
+  "clang"
+ ],
+ "clang-format": [
+  "clang"
+ ],
+ "clang-tidy": [
+  "clang"
+ ],
+ "clangd": [
+  "clang"
+ ],
+ "cli11": [
+  "cli11"
+ ],
+ "cmake": [
+  "cmake"
+ ],
+ "coinor-libcbc-dev": [
+  "cbc"
+ ],
+ "coinor-libcbc3": [
+  "cbc"
+ ],
+ "coinor-libcgl-dev": [
+  "cbc"
+ ],
+ "coinor-libclp-dev": [
+  "clp"
+ ],
+ "coinor-libcoinutils-dev": [
+  "cbc"
+ ],
+ "coinor-libipopt-dev": [
+  "ipopt"
+ ],
+ "coinor-libosi-dev": [
+  "osi"
+ ],
+ "collada-dom": [
+  "collada-dom"
+ ],
+ "collectd": [
+  "collectd"
+ ],
+ "comedi": [
+  "comedilib"
+ ],
+ "coreutils": [
+  "coreutils"
+ ],
+ "couchdb": [
+  "couchdb3"
+ ],
+ "cppcheck": [
+  "cppcheck"
+ ],
+ "cppunit": [
+  "cppunit"
+ ],
+ "crypto++": [
+  "cryptopp"
+ ],
+ "curl": [
+  "curl"
+ ],
+ "curlpp-dev": [
+  "curlpp"
+ ],
+ "cvs": [
+  "cvs"
+ ],
+ "cwiid": [
+  "cwiid"
+ ],
+ "cwiid-dev": [
+  "cwiid"
+ ],
+ "cython": [
+  "pythonPackages.cython"
+ ],
+ "cython3": [
+  "python3Packages.cython"
+ ],
+ "daemontools": [
+  "daemontools"
+ ],
+ "datamodel-code-generator": [
+  "python3Packages.datamodel-code-generator"
+ ],
+ "dcraw": [
+  "dcraw"
+ ],
+ "devilspie2": [
+  "devilspie2"
+ ],
+ "devscripts": [
+  "debian-devscripts"
+ ],
+ "dfu-util": [
+  "dfu-util"
+ ],
+ "disper": [
+  "disper"
+ ],
+ "dkms": [],
+ "dnsmasq": [
+  "dnsmasq"
+ ],
+ "docker-compose": [
+  "docker-compose"
+ ],
+ "docker.io": [
+  "docker"
+ ],
+ "doxygen": [
+  "doxygen"
+ ],
+ "dpkg": [
+  "dpkg"
+ ],
+ "dpkg-dev": [
+  "dpkg"
+ ],
+ "e2fsprogs": [
+  "e2fsprogs"
+ ],
+ "ed": [
+  "ed"
+ ],
+ "edac-utils": [
+  "edac-utils"
+ ],
+ "eigen": [
+  "eigen"
+ ],
+ "eigen2": [
+  "eigen2"
+ ],
+ "emacs": [
+  "emacs"
+ ],
+ "embree": [
+  "embree"
+ ],
+ "enblend": [
+  "enblend-enfuse"
+ ],
+ "enet": [
+  "enet"
+ ],
+ "espeak": [
+  "espeak"
+ ],
+ "ethtool": [
+  "ethtool"
+ ],
+ "exfat-utils": [
+  "exfat"
+ ],
+ "exiv2": [
+  "exiv2"
+ ],
+ "f2c": [
+  "libf2c"
+ ],
+ "fakeroot": [
+  "fakeroot"
+ ],
+ "festival": [
+  "festival-stub"
+ ],
+ "ffmpeg": [
+  "ffmpeg"
+ ],
+ "ffmpeg-dev": [
+  "ffmpeg"
+ ],
+ "file": [
+  "file"
+ ],
+ "filezilla": [
+  "filezilla"
+ ],
+ "flac": [
+  "flac"
+ ],
+ "flawfinder": [
+  "flawfinder"
+ ],
+ "flex": [
+  "flex"
+ ],
+ "flite": [
+  "flite"
+ ],
+ "fltk": [
+  "fltk"
+ ],
+ "fluid": [
+  "fltk"
+ ],
+ "fluidsynth": [
+  "fluidsynth"
+ ],
+ "fmt": [
+  "fmt"
+ ],
+ "fonts-noto": [
+  "noto-fonts"
+ ],
+ "fping": [
+  "fping"
+ ],
+ "freeimage": [
+  "freeimage"
+ ],
+ "freetype": [
+  "freetype"
+ ],
+ "fsharp": [
+  "fsharp"
+ ],
+ "fswebcam": [
+  "fswebcam"
+ ],
+ "ftdi-eeprom": [
+  "libftdi"
+ ],
+ "fxload": [
+  "fxload"
+ ],
+ "fzf": [
+  "fzf"
+ ],
+ "g++-static": [],
+ "gawk": [
+  "gawk"
+ ],
+ "gazebo": [
+  "gazebo"
+ ],
+ "gazebo11": [
+  "gazebo_11"
+ ],
+ "gazebo7": [
+  "gazebo_7"
+ ],
+ "gazebo9": [
+  "gazebo_9"
+ ],
+ "gcovr": [
+  "gcovr"
+ ],
+ "gdal-bin": [
+  "gdal"
+ ],
+ "geographiclib": [
+  "geographiclib"
+ ],
+ "geographiclib-tools": [
+  "geographiclib"
+ ],
+ "geos": [
+  "geos"
+ ],
+ "gettext-base": [
+  "gettext"
+ ],
+ "gforth": [
+  "gforth"
+ ],
+ "gfortran": [
+  "gfortran"
+ ],
+ "ghc": [
+  "ghc"
+ ],
+ "gifsicle": [
+  "gifsicle"
+ ],
+ "gimp": [
+  "gimp"
+ ],
+ "git": [
+  "git"
+ ],
+ "git-lfs": [
+  "git-lfs"
+ ],
+ "gitg": [
+  "gitg"
+ ],
+ "gitk": [
+  "gitFull"
+ ],
+ "gksu": [
+  "gksu"
+ ],
+ "glc": [
+  "quesoglc"
+ ],
+ "glpk": [
+  "glpk"
+ ],
+ "glslang-dev": [
+  "glslang"
+ ],
+ "glslc": [
+  "shaderc"
+ ],
+ "glut": [
+  "freeglut"
+ ],
+ "gnat": [
+  "gnat"
+ ],
+ "gnome-terminal": [
+  "gnome.gnome-terminal"
+ ],
+ "gnuplot": [
+  "gnuplot"
+ ],
+ "golang-go": [
+  "go"
+ ],
+ "google-mock": [
+  "gtest"
+ ],
+ "gpac": [
+  "gpac"
+ ],
+ "gperf": [
+  "gperf"
+ ],
+ "gperftools": [
+  "gperftools"
+ ],
+ "gphoto2": [
+  "gphoto2"
+ ],
+ "gpsbabel": [
+  "gpsbabel"
+ ],
+ "gpsd": [
+  "gpsd"
+ ],
+ "gradle": [
+  "gradle"
+ ],
+ "graphicsmagick": [
+  "graphicsmagick"
+ ],
+ "graphviz": [
+  "graphviz"
+ ],
+ "graphviz-dev": [
+  "graphviz"
+ ],
+ "gringo": [
+  "gringo"
+ ],
+ "gstreamer1.0": [
+  "gst_all_1.gstreamer"
+ ],
+ "gstreamer1.0-alsa": [
+  "gst_all_1.gst-plugins-base"
+ ],
+ "gstreamer1.0-gl": [
+  "gst_all_1.gst-plugins-base"
+ ],
+ "gstreamer1.0-libav": [
+  "gst_all_1.gst-libav"
+ ],
+ "gstreamer1.0-nice": [
+  "gst_all_1.gst-plugins-bad"
+ ],
+ "gstreamer1.0-plugins-bad": [
+  "gst_all_1.gst-plugins-bad"
+ ],
+ "gstreamer1.0-plugins-base": [
+  "gst_all_1.gst-plugins-base"
+ ],
+ "gstreamer1.0-plugins-good": [
+  "gst_all_1.gst-plugins-good"
+ ],
+ "gstreamer1.0-plugins-ugly": [
+  "gst_all_1.gst-plugins-ugly"
+ ],
+ "gtest": [
+  "gtest"
+ ],
+ "gtk-doc-tools": [
+  "gtk-doc"
+ ],
+ "gtk2": [
+  "gtk2"
+ ],
+ "gtk3": [
+  "gtk3"
+ ],
+ "gtk4": [
+  "gtk4"
+ ],
+ "gv": [
+  "gv"
+ ],
+ "haproxy": [
+  "haproxy"
+ ],
+ "hddtemp": [
+  "hddtemp"
+ ],
+ "hdf5": [
+  "hdf5"
+ ],
+ "hdf5-tools": [
+  "hdf5"
+ ],
+ "hostapd": [
+  "hostapd"
+ ],
+ "hostname": [
+  "hostname"
+ ],
+ "htop": [
+  "htop"
+ ],
+ "hugin-tools": [
+  "hugin"
+ ],
+ "i2c-tools": [
+  "i2c-tools"
+ ],
+ "ifstat": [
+  "ifstat-legacy"
+ ],
+ "ignition-cmake2": [
+  "ignition.cmake2"
+ ],
+ "ignition-common3": [
+  "ignition.common3"
+ ],
+ "ignition-fuel-tools4": [
+  "ignition.fuel-tools4"
+ ],
+ "ignition-math6": [
+  "ignition.math6"
+ ],
+ "ignition-math6-eigen3": [
+  "ignition.math6"
+ ],
+ "ignition-msgs5": [
+  "ignition.msgs5"
+ ],
+ "ignition-msgs8": [
+  "ignition.msgs8"
+ ],
+ "ignition-tools": [
+  "ignition.tools"
+ ],
+ "ignition-transport11": [
+  "ignition.transport11"
+ ],
+ "ignition-transport8": [
+  "ignition.transport8"
+ ],
+ "imagemagick": [
+  "imagemagick"
+ ],
+ "intltool": [
+  "intltool"
+ ],
+ "inxi": [
+  "inxi"
+ ],
+ "iperf": [
+  "iperf"
+ ],
+ "ipmitool": [
+  "ipmitool"
+ ],
+ "iproute2": [
+  "iproute2"
+ ],
+ "iputils-ping": [
+  "unixtools.ping"
+ ],
+ "ipython": [
+  "pythonPackages.ipython"
+ ],
+ "ipython3": [
+  "python3Packages.ipython"
+ ],
+ "iw": [
+  "iw"
+ ],
+ "iwyu": [
+  "include-what-you-use"
+ ],
+ "jack": [
+  "jack2"
+ ],
+ "jasper": [
+  "jasper"
+ ],
+ "java": [
+  "openjdk"
+ ],
+ "joystick": [
+  "linuxConsoleTools"
+ ],
+ "jq": [
+  "jq"
+ ],
+ "jsonnet": [
+  "jsonnet"
+ ],
+ "jupyter-nbconvert": [
+  "python3Packages.nbconvert"
+ ],
+ "jupyter-notebook": [
+  "python3Packages.notebook"
+ ],
+ "jython": [
+  "jython"
+ ],
+ "kakasi": [
+  "kakasi"
+ ],
+ "kate": [
+  "plasma5Packages.kate"
+ ],
+ "kgraphviewer": [
+  "kgraphviewer"
+ ],
+ "konsole": [
+  "plasma5Packages.konsole"
+ ],
+ "language-pack-en": [],
+ "lcov": [
+  "lcov"
+ ],
+ "lensfun": [
+  "lensfun"
+ ],
+ "lensfun-dev": [
+  "lensfun"
+ ],
+ "leveldb": [
+  "leveldb"
+ ],
+ "libabsl-dev": [
+  "abseil-cpp"
+ ],
+ "libadolc-dev": [
+  "adolc"
+ ],
+ "libadwaita-dev": [
+  "libadwaita"
+ ],
+ "libalglib-dev": [
+  "alglib"
+ ],
+ "libargparse-dev": [
+  "argparse"
+ ],
+ "libasound2-dev": [
+  "alsa-lib"
+ ],
+ "libatomic": [],
+ "libav": [
+  "libav"
+ ],
+ "libavahi-client-dev": [
+  "avahi"
+ ],
+ "libavahi-core-dev": [
+  "avahi"
+ ],
+ "libavdevice-dev": [
+  "ffmpeg"
+ ],
+ "libb64-dev": [
+  "libb64"
+ ],
+ "libbison-dev": [
+  "bison"
+ ],
+ "libblas-dev": [
+  "blas"
+ ],
+ "libblosc-dev": [
+  "c-blosc"
+ ],
+ "libbluetooth": [
+  "bluez"
+ ],
+ "libbluetooth-dev": [
+  "bluez"
+ ],
+ "libboost-atomic": [
+  "boost"
+ ],
+ "libboost-atomic-dev": [
+  "boost"
+ ],
+ "libboost-chrono": [
+  "boost"
+ ],
+ "libboost-chrono-dev": [
+  "boost"
+ ],
+ "libboost-coroutine": [
+  "boost"
+ ],
+ "libboost-coroutine-dev": [
+  "boost"
+ ],
+ "libboost-date-time": [
+  "boost"
+ ],
+ "libboost-date-time-dev": [
+  "boost"
+ ],
+ "libboost-dev": [
+  "boost"
+ ],
+ "libboost-filesystem": [
+  "boost"
+ ],
+ "libboost-filesystem-dev": [
+  "boost"
+ ],
+ "libboost-iostreams": [
+  "boost"
+ ],
+ "libboost-iostreams-dev": [
+  "boost"
+ ],
+ "libboost-math": [
+  "boost"
+ ],
+ "libboost-math-dev": [
+  "boost"
+ ],
+ "libboost-numpy-dev": [
+  "boost"
+ ],
+ "libboost-program-options": [
+  "boost"
+ ],
+ "libboost-program-options-dev": [
+  "boost"
+ ],
+ "libboost-python": [
+  "boost"
+ ],
+ "libboost-python-dev": [
+  "boost"
+ ],
+ "libboost-random": [
+  "boost"
+ ],
+ "libboost-random-dev": [
+  "boost"
+ ],
+ "libboost-regex": [
+  "boost"
+ ],
+ "libboost-regex-dev": [
+  "boost"
+ ],
+ "libboost-serialization": [
+  "boost"
+ ],
+ "libboost-serialization-dev": [
+  "boost"
+ ],
+ "libboost-system": [
+  "boost"
+ ],
+ "libboost-system-dev": [
+  "boost"
+ ],
+ "libboost-thread": [
+  "boost"
+ ],
+ "libboost-thread-dev": [
+  "boost"
+ ],
+ "libboost-timer": [
+  "boost"
+ ],
+ "libboost-timer-dev": [
+  "boost"
+ ],
+ "libbsd-dev": [
+  "libbsd"
+ ],
+ "libc++-dev": [
+  "libcxx"
+ ],
+ "libcairo2-dev": [
+  "cairo"
+ ],
+ "libcap-dev": [
+  "libcap"
+ ],
+ "libcap-ng-dev": [
+  "libcap_ng"
+ ],
+ "libcap-ng0": [
+  "libcap_ng"
+ ],
+ "libcap2": [
+  "libcap"
+ ],
+ "libcap2-bin": [
+  "libcap"
+ ],
+ "libccd-dev": [
+  "libccd"
+ ],
+ "libccid": [
+  "ccid"
+ ],
+ "libcdd-dev": [
+  "cddlib"
+ ],
+ "libcegui-mk2-dev": [
+  "cegui"
+ ],
+ "libceres-dev": [
+  "ceres-solver"
+ ],
+ "libcgroup-dev": [
+  "libcgroup"
+ ],
+ "libclang-dev": [
+  "clang"
+ ],
+ "libconfig++-dev": [
+  "libconfig"
+ ],
+ "libconfig-dev": [
+  "libconfig"
+ ],
+ "libconsole-bridge-dev": [
+  "console-bridge"
+ ],
+ "libcpp-httplib-dev": [
+  "httplib"
+ ],
+ "libcunit-dev": [
+  "cunit"
+ ],
+ "libcurl": [
+  "curl"
+ ],
+ "libcurl-dev": [
+  "curl"
+ ],
+ "libcxxopts-dev": [
+  "cxxopts"
+ ],
+ "libdbus-dev": [
+  "dbus"
+ ],
+ "libdc1394-dev": [
+  "libdc1394"
+ ],
+ "libdevil-dev": [
+  "libdevil"
+ ],
+ "libdlib-dev": [
+  "dlib"
+ ],
+ "libdmtx-dev": [
+  "libdmtx"
+ ],
+ "libdpkg-dev": [
+  "dpkg"
+ ],
+ "libdraco-dev": [
+  "draco"
+ ],
+ "libdrm-dev": [
+  "libdrm"
+ ],
+ "libdw-dev": [
+  "elfutils"
+ ],
+ "libdwarf-dev": [
+  "libdwarf"
+ ],
+ "libdxflib-dev": [
+  "libsForQt5.dxflib"
+ ],
+ "libedit": [
+  "libedit"
+ ],
+ "libedit-dev": [
+  "libedit"
+ ],
+ "libepoxy-dev": [
+  "libepoxy"
+ ],
+ "libespeak-dev": [
+  "espeak"
+ ],
+ "libev-dev": [
+  "libev"
+ ],
+ "libevdev-dev": [
+  "libevdev"
+ ],
+ "libevent-dev": [
+  "libevent"
+ ],
+ "libexif": [
+  "libexif"
+ ],
+ "libexif-dev": [
+  "libexif"
+ ],
+ "libexiv2-dev": [
+  "exiv2"
+ ],
+ "libexpected-dev": [
+  "tl-expected-nixpkgs"
+ ],
+ "libext2fs-dev": [
+  "e2fsprogs"
+ ],
+ "libfcl": [
+  "fcl"
+ ],
+ "libfcl-dev": [
+  "fcl"
+ ],
+ "libffi-dev": [
+  "libffi"
+ ],
+ "libfftw3": [
+  "fftw",
+  "fftwLongDouble",
+  "fftwFloat"
+ ],
+ "libfftw3-dev": [
+  "fftw",
+  "fftwLongDouble",
+  "fftwFloat"
+ ],
+ "libfl-dev": [
+  "flex"
+ ],
+ "libflann": [
+  "flann"
+ ],
+ "libflann-dev": [
+  "flann"
+ ],
+ "libflatbuffers-dev": [
+  "flatbuffers"
+ ],
+ "libfltk-dev": [
+  "fltk"
+ ],
+ "libfreeimage-dev": [
+  "freeimage"
+ ],
+ "libfreenect-dev": [
+  "freenect"
+ ],
+ "libfreetype-dev": [
+  "freetype"
+ ],
+ "libfreetype6": [
+  "freetype"
+ ],
+ "libfreetype6-dev": [
+  "freetype"
+ ],
+ "libftdi-dev": [
+  "libftdi"
+ ],
+ "libftdi1-dev": [
+  "libftdi1"
+ ],
+ "libftgl-dev": [
+  "ftgl"
+ ],
+ "libfyaml-dev": [
+  "libfyaml"
+ ],
+ "libg2o-dev": [
+  "g2o"
+ ],
+ "libgazebo11-dev": [
+  "gazebo_11"
+ ],
+ "libgazebo7-dev": [
+  "gazebo_7"
+ ],
+ "libgazebo9-dev": [
+  "gazebo_9"
+ ],
+ "libgconf2": [
+  "gnome2.GConf"
+ ],
+ "libgdal-dev": [
+  "gdal"
+ ],
+ "libgeographiclib-dev": [
+  "geographiclib"
+ ],
+ "libgeos++-dev": [
+  "geos"
+ ],
+ "libgeotiff-dev": [
+  "libgeotiff"
+ ],
+ "libgflags-dev": [
+  "gflags"
+ ],
+ "libgif-dev": [
+  "giflib"
+ ],
+ "libgirepository-dev": [
+  "gobject-introspection"
+ ],
+ "libgit2-dev": [
+  "libgit2"
+ ],
+ "libgles-dev": [
+  "libglvnd"
+ ],
+ "libglew-dev": [
+  "glew"
+ ],
+ "libglfw3-dev": [
+  "glfw3"
+ ],
+ "libglib-dev": [
+  "glib"
+ ],
+ "libglm-dev": [
+  "glm"
+ ],
+ "libgmock-dev": [
+  "gtest"
+ ],
+ "libgmp": [
+  "gmp"
+ ],
+ "libgoogle-glog-dev": [
+  "glog"
+ ],
+ "libgpgme-dev": [
+  "gpgme"
+ ],
+ "libgphoto-dev": [
+  "libgphoto2"
+ ],
+ "libgpiod-dev": [
+  "libgpiod_1"
+ ],
+ "libgps": [
+  "gpsd"
+ ],
+ "libgrpc": [
+  "grpc"
+ ],
+ "libgsl": [
+  "gsl"
+ ],
+ "libgstreamer-plugins-bad1.0-dev": [
+  "gst_all_1.gst-plugins-bad"
+ ],
+ "libgstreamer-plugins-base1.0-dev": [
+  "gst_all_1.gst-plugins-base"
+ ],
+ "libgstreamer1.0-dev": [
+  "gst_all_1.gstreamer"
+ ],
+ "libgstrtspserver-1.0-0": [
+  "gst_all_1.gst-rtsp-server"
+ ],
+ "libgstrtspserver-1.0-dev": [
+  "gst_all_1.gst-rtsp-server"
+ ],
+ "libgtest-dev": [
+  "gtest"
+ ],
+ "libgts": [
+  "gts"
+ ],
+ "libhdf5-dev": [
+  "hdf5"
+ ],
+ "libhidapi-dev": [
+  "hidapi"
+ ],
+ "libi2c-dev": [
+  "i2c-tools"
+ ],
+ "libicu-dev": [
+  "icu"
+ ],
+ "libignition-common3": [
+  "ignition.common3"
+ ],
+ "libignition-fuel-tools4": [
+  "ignition.fuel-tools4"
+ ],
+ "libignition-math6": [
+  "ignition.math6"
+ ],
+ "libignition-msgs5": [
+  "ignition.msgs5"
+ ],
+ "libignition-transport8": [
+  "ignition.transport8"
+ ],
+ "libiio-dev": [
+  "libiio"
+ ],
+ "libimage-exiftool-perl": [
+  "perlPackages.ImageExifTool"
+ ],
+ "libimath-dev": [
+  "imath"
+ ],
+ "libirrlicht-dev": [
+  "irrlicht"
+ ],
+ "libiw-dev": [
+  "wirelesstools"
+ ],
+ "libjansson-dev": [
+  "jansson"
+ ],
+ "libjpeg": [
+  "libjpeg"
+ ],
+ "libjson-c-dev": [
+  "json_c"
+ ],
+ "libjson-glib": [
+  "json-glib"
+ ],
+ "libjsoncpp": [
+  "jsoncpp"
+ ],
+ "libjsoncpp-dev": [
+  "jsoncpp"
+ ],
+ "libkml-dev": [
+  "libkml"
+ ],
+ "liblapack-dev": [
+  "liblapack"
+ ],
+ "liblcm": [
+  "lcm"
+ ],
+ "liblcm-dev": [
+  "lcm.dev"
+ ],
+ "libleptonica-dev": [
+  "leptonica"
+ ],
+ "liblinear-dev": [
+  "liblinear"
+ ],
+ "liblinphone-dev": [
+  "liblinphone"
+ ],
+ "liblmdb-dev": [
+  "lmdb"
+ ],
+ "liblttng-ctl-dev": [
+  "lttng-tools"
+ ],
+ "liblttng-ust": [
+  "lttng-ust"
+ ],
+ "liblttng-ust-dev": [
+  "lttng-ust"
+ ],
+ "liblz4": [
+  "lz4"
+ ],
+ "liblz4-dev": [
+  "lz4"
+ ],
+ "liblzma-dev": [
+  "xz"
+ ],
+ "libmagick": [
+  "imagemagick"
+ ],
+ "libmicrohttpd": [
+  "libmicrohttpd"
+ ],
+ "libmodbus-dev": [
+  "libmodbus"
+ ],
+ "libmodbus5": [
+  "libmodbus"
+ ],
+ "libmongoc-1.0-0": [
+  "mongoc"
+ ],
+ "libmongoc-dev": [
+  "mongoc"
+ ],
+ "libmpg123-dev": [
+  "mpg123"
+ ],
+ "libmpich-dev": [
+  "mpich"
+ ],
+ "libmpich2-dev": [
+  "mpich"
+ ],
+ "libmsgpack-cxx-dev": [
+  "msgpack-cxx"
+ ],
+ "libnanoflann-dev": [
+  "nanoflann"
+ ],
+ "libnanopb-dev": [
+  "nanopb"
+ ],
+ "libncurses": [
+  "ncurses"
+ ],
+ "libncurses-dev": [
+  "ncurses"
+ ],
+ "libnl-3": [
+  "libnl"
+ ],
+ "libnl-3-dev": [
+  "libnl"
+ ],
+ "libnlopt-cxx-dev": [
+  "nlopt"
+ ],
+ "libnlopt-dev": [
+  "nlopt"
+ ],
+ "libnlopt0": [
+  "nlopt"
+ ],
+ "libnotify": [
+  "libnotify"
+ ],
+ "libnss3-dev": [
+  "nss"
+ ],
+ "liboctomap-dev": [
+  "octomap"
+ ],
+ "libogg": [
+  "libogg"
+ ],
+ "libogre": [
+  "ogre1_9"
+ ],
+ "libogre-dev": [
+  "ogre1_9"
+ ],
+ "libois-dev": [
+  "ois"
+ ],
+ "libomp-dev": [
+  "llvmPackages.openmp"
+ ],
+ "libopenal-dev": [
+  "openal"
+ ],
+ "libopenblas-dev": [
+  "openblas"
+ ],
+ "libopencv-core": [
+  "opencv"
+ ],
+ "libopencv-core-dev": [
+  "opencv"
+ ],
+ "libopencv-dev": [
+  "opencv",
+  "opencv.cxxdev"
+ ],
+ "libopencv-highgui": [
+  "opencv"
+ ],
+ "libopencv-imgcodecs": [
+  "opencv"
+ ],
+ "libopencv-imgcodecs-dev": [
+  "opencv"
+ ],
+ "libopencv-imgproc": [
+  "opencv"
+ ],
+ "libopencv-imgproc-dev": [
+  "opencv",
+  "opencv.cxxdev"
+ ],
+ "libopencv-videoio": [
+  "opencv"
+ ],
+ "libopenexr-dev": [
+  "openexr"
+ ],
+ "libopenni2-dev": [
+  "openni2"
+ ],
+ "libopenscenegraph": [
+  "openscenegraph"
+ ],
+ "libopensplice69": [
+  "opensplice_6_9"
+ ],
+ "libopenvdb": [
+  "openvdb"
+ ],
+ "libopenvdb-dev": [
+  "openvdb"
+ ],
+ "libopus-dev": [
+  "libopus"
+ ],
+ "liborocos-kdl": [
+  "orocos-kdl"
+ ],
+ "liborocos-kdl-dev": [
+  "orocos-kdl"
+ ],
+ "libpaho-mqtt": [
+  "paho-mqtt-c"
+ ],
+ "libpaho-mqtt-dev": [
+  "paho-mqtt-c"
+ ],
+ "libpaho-mqttpp": [
+  "paho-mqtt-cpp"
+ ],
+ "libpaho-mqttpp-dev": [
+  "paho-mqtt-cpp"
+ ],
+ "libpcap": [
+  "libpcap"
+ ],
+ "libpcl-all": [
+  "pcl"
+ ],
+ "libpcl-all-dev": [
+  "pcl"
+ ],
+ "libpcl-apps": [
+  "pcl"
+ ],
+ "libpcl-common": [
+  "pcl"
+ ],
+ "libpcl-features": [
+  "pcl"
+ ],
+ "libpcl-filters": [
+  "pcl"
+ ],
+ "libpcl-io": [
+  "pcl"
+ ],
+ "libpcl-kdtree": [
+  "pcl"
+ ],
+ "libpcl-keypoints": [
+  "pcl"
+ ],
+ "libpcl-ml": [
+  "pcl"
+ ],
+ "libpcl-octree": [
+  "pcl"
+ ],
+ "libpcl-outofcore": [
+  "pcl"
+ ],
+ "libpcl-people": [
+  "pcl"
+ ],
+ "libpcl-recognition": [
+  "pcl"
+ ],
+ "libpcl-registration": [
+  "pcl"
+ ],
+ "libpcl-sample-consensus": [
+  "pcl"
+ ],
+ "libpcl-search": [
+  "pcl"
+ ],
+ "libpcl-segmentation": [
+  "pcl"
+ ],
+ "libpcl-stereo": [
+  "pcl"
+ ],
+ "libpcl-surface": [
+  "pcl"
+ ],
+ "libpcl-tracking": [
+  "pcl"
+ ],
+ "libpcl-visualization": [
+  "pcl"
+ ],
+ "libpcsclite-dev": [
+  "pcsclite"
+ ],
+ "libpng++-dev": [
+  "pngpp"
+ ],
+ "libpng-dev": [
+  "libpng"
+ ],
+ "libpng12-dev": [
+  "libpng12"
+ ],
+ "libpoco-dev": [
+  "poco"
+ ],
+ "libpopt-dev": [
+  "popt"
+ ],
+ "libpq-dev": [
+  "postgresql"
+ ],
+ "libpqxx": [
+  "libpqxx"
+ ],
+ "libpqxx-dev": [
+  "libpqxx"
+ ],
+ "libprocps-dev": [
+  "procps"
+ ],
+ "libpulse-dev": [
+  "pulseaudio"
+ ],
+ "libqglviewer-dev-qt5": [
+  "libsForQt5.libqglviewer"
+ ],
+ "libqglviewer2-qt5": [
+  "libsForQt5.libqglviewer"
+ ],
+ "libqhull": [
+  "qhull"
+ ],
+ "libqrencode": [
+  "qrencode"
+ ],
+ "libqrencode-dev": [
+  "qrencode"
+ ],
+ "libqt4": [
+  "qt4"
+ ],
+ "libqt4-dev": [
+  "qt4"
+ ],
+ "libqt4-opengl": [
+  "qt4"
+ ],
+ "libqt4-opengl-dev": [
+  "qt4"
+ ],
+ "libqt4-sql-psql": [
+  "qt4"
+ ],
+ "libqt5-concurrent": [
+  "qt5.qtbase"
+ ],
+ "libqt5-core": [
+  "qt5.qtbase"
+ ],
+ "libqt5-gui": [
+  "qt5.qtbase"
+ ],
+ "libqt5-multimedia": [
+  "qt5.qtmultimedia"
+ ],
+ "libqt5-network": [
+  "qt5.qtbase"
+ ],
+ "libqt5-opengl": [
+  "qt5.qtbase"
+ ],
+ "libqt5-opengl-dev": [
+  "qt5.qtbase"
+ ],
+ "libqt5-printsupport": [
+  "qt5.qtbase"
+ ],
+ "libqt5-qml": [
+  "qt5.qtdeclarative"
+ ],
+ "libqt5-quick": [
+  "qt5.qtdeclarative"
+ ],
+ "libqt5-serialport": [
+  "qt5.qtserialport"
+ ],
+ "libqt5-sql": [
+  "qt5.qtbase"
+ ],
+ "libqt5-svg": [
+  "qt5.qtsvg"
+ ],
+ "libqt5-svg-dev": [
+  "qt5.qtsvg"
+ ],
+ "libqt5-websockets-dev": [
+  "qt5.qtwebsockets"
+ ],
+ "libqt5-widgets": [
+  "qt5.qtbase"
+ ],
+ "libqt5-xml": [
+  "qt5.qtbase"
+ ],
+ "libqt5multimedia5-plugins": [
+  "qt5.qtmultimedia"
+ ],
+ "libqt5x11extras5-dev": [
+  "qt5.qtx11extras"
+ ],
+ "libqt6-core": [
+  "qt6.qtbase"
+ ],
+ "libqt6-gui": [
+  "qt6.qtbase"
+ ],
+ "libqt6-multimedia": [
+  "qt6.qtmultimedia"
+ ],
+ "libqt6-opengl": [
+  "qt6.qtbase"
+ ],
+ "libqt6-opengl-dev": [
+  "qt6.qtbase"
+ ],
+ "libqt6-qml": [
+  "qt6.qtdeclarative"
+ ],
+ "libqt6-quick": [
+  "qt6.qtdeclarative"
+ ],
+ "libqt6-websockets": [
+  "qt6.qtwebsockets"
+ ],
+ "libqt6-widgets": [
+  "qt6.qtbase"
+ ],
+ "libqt6gui6t64": [
+  "qt6.qtbase"
+ ],
+ "libqt6opengl6t64": [
+  "qt6.qtbase"
+ ],
+ "libqt6statemachine6": [
+  "qt6.qtscxml"
+ ],
+ "libqt6svg6": [
+  "qt6.qtsvg"
+ ],
+ "libqt6widgets6t64": [
+  "qt6.qtbase"
+ ],
+ "libqtcore": [
+  "qt5or6.qtbase"
+ ],
+ "libqtgui": [
+  "qt5or6.qtbase"
+ ],
+ "libqtgui4": [
+  "qt4"
+ ],
+ "libqtopengl": [
+  "qt5or6.qtbase"
+ ],
+ "libqtsvg": [
+  "qt5or6.qtsvg"
+ ],
+ "libqtwebkit-dev": [
+  "qt5.qtwebkit"
+ ],
+ "libqtwidgets": [
+  "qt5or6.qtbase"
+ ],
+ "libquazip1-qt5-dev": [
+  "libsForQt5.quazip"
+ ],
+ "libqwt-qt5-dev": [
+  "libsForQt5.qwt"
+ ],
+ "libqwt6": [
+  "libsForQt5.qwt"
+ ],
+ "libraw1394": [
+  "libraw1394"
+ ],
+ "libraw1394-dev": [
+  "libraw1394"
+ ],
+ "librdkafka-dev": [
+  "rdkafka"
+ ],
+ "libre2-dev": [
+  "re2"
+ ],
+ "libreadline": [
+  "readline"
+ ],
+ "libreadline-dev": [
+  "readline"
+ ],
+ "librtaudio-dev": [
+  "rtaudio"
+ ],
+ "libsensors4-dev": [
+  "lm_sensors"
+ ],
+ "libshaderc-dev": [
+  "shaderc"
+ ],
+ "libsimpleini-dev": [
+  "simpleini"
+ ],
+ "libsndfile1-dev": [
+  "libsndfile"
+ ],
+ "libsoundio-dev": [
+  "libsoundio"
+ ],
+ "libsoup-3.0-dev": [
+  "libsoup_3"
+ ],
+ "libsoup2-dev": [
+  "libsoup"
+ ],
+ "libspatialindex-dev": [
+  "libspatialindex"
+ ],
+ "libspatialite": [
+  "libspatialite"
+ ],
+ "libspnav-dev": [
+  "libspnav",
+  "libx11"
+ ],
+ "libsqlite3-dev": [
+  "sqlite"
+ ],
+ "libssh-dev": [
+  "libssh"
+ ],
+ "libssh2": [
+  "libssh2"
+ ],
+ "libssh2-dev": [
+  "libssh2"
+ ],
+ "libssl-dev": [
+  "openssl"
+ ],
+ "libstdc++6": [],
+ "libsvm-dev": [
+  "libsvm"
+ ],
+ "libsvm3": [
+  "libsvm"
+ ],
+ "libswscale-dev": [
+  "ffmpeg"
+ ],
+ "libsystemd-dev": [
+  "systemd"
+ ],
+ "libtaskflow-cpp-dev": [
+  "taskflow"
+ ],
+ "libtclap-dev": [
+  "tclap"
+ ],
+ "libtesseract": [
+  "tesseract"
+ ],
+ "libtheora": [
+  "libtheora"
+ ],
+ "libtiff-dev": [
+  "libtiff"
+ ],
+ "libtiff4-dev": [
+  "libtiff"
+ ],
+ "libtins-dev": [
+  "libtins"
+ ],
+ "libtool": [
+  "libtool"
+ ],
+ "libturbojpeg": [
+  "libjpeg_turbo"
+ ],
+ "libtweeny-dev": [
+  "tweeny"
+ ],
+ "libudev-dev": [
+  "udev"
+ ],
+ "libunwind": [
+  "libunwind"
+ ],
+ "libunwind-dev": [
+  "libunwind"
+ ],
+ "liburdfdom-dev": [
+  "urdfdom"
+ ],
+ "liburdfdom-headers-dev": [
+  "urdfdom-headers"
+ ],
+ "liburdfdom-tools": [
+  "urdfdom"
+ ],
+ "libusb": [
+  "libusb-compat-0_1"
+ ],
+ "libusb-1.0": [
+  "libusb1"
+ ],
+ "libusb-1.0-dev": [
+  "libusb1"
+ ],
+ "libusb-dev": [
+  "libusb1"
+ ],
+ "libuv1-dev": [
+  "libuv"
+ ],
+ "libuvc-dev": [
+  "libuvc"
+ ],
+ "libv4l-dev": [
+  "libv4l"
+ ],
+ "libvlc": [
+  "vlc"
+ ],
+ "libvlc-dev": [
+  "vlc"
+ ],
+ "libvpx-dev": [
+  "libvpx"
+ ],
+ "libvtk": [
+  "vtk"
+ ],
+ "libvtk-qt": [
+  "vtkWithQt5"
+ ],
+ "libvulkan-dev": [
+  "vulkan-loader"
+ ],
+ "libwebp-dev": [
+  "libwebp"
+ ],
+ "libwebsocketpp-dev": [
+  "websocketpp"
+ ],
+ "libwebsockets-dev": [
+  "libwebsockets"
+ ],
+ "libx11": [
+  "libx11"
+ ],
+ "libx11-dev": [
+  "libx11"
+ ],
+ "libx11-xcb-dev": [
+  "libx11"
+ ],
+ "libx264-dev": [
+  "x264"
+ ],
+ "libxaw": [
+  "libxaw"
+ ],
+ "libxcb-cursor0": [
+  "xcb-util-cursor-HEAD"
+ ],
+ "libxcb-randr0-dev": [
+  "libxcb"
+ ],
+ "libxcursor-dev": [
+  "libxcursor"
+ ],
+ "libxext": [
+  "libxext"
+ ],
+ "libxft-dev": [
+  "libxft"
+ ],
+ "libxi-dev": [
+  "libxi"
+ ],
+ "libxinerama-dev": [
+  "libxinerama"
+ ],
+ "libxkbcommon-dev": [
+  "libxkbcommon"
+ ],
+ "libxml++-2.6": [
+  "libxmlxx"
+ ],
+ "libxml2": [
+  "libxml2"
+ ],
+ "libxml2-utils": [
+  "libxml2"
+ ],
+ "libxmlrpc-c++": [
+  "xmlrpc_c"
+ ],
+ "libxmu-dev": [
+  "libxmu"
+ ],
+ "libxrandr": [
+  "libxrandr"
+ ],
+ "libxslt": [
+  "libxslt"
+ ],
+ "libxss1": [
+  "libxscrnsaver"
+ ],
+ "libxt-dev": [
+  "libxtst"
+ ],
+ "libxxf86vm": [
+  "libxxf86vm"
+ ],
+ "libxxhash-dev": [
+  "xxHash"
+ ],
+ "libyaml": [
+  "libyaml"
+ ],
+ "libyaml-dev": [
+  "libyaml"
+ ],
+ "libyuv-dev": [
+  "libyuv"
+ ],
+ "libzip-dev": [
+  "libzip"
+ ],
+ "libzmq3-dev": [
+  "cppzmq"
+ ],
+ "libzstd-dev": [
+  "zstd"
+ ],
+ "libzxing-dev": [
+  "zxing-cpp"
+ ],
+ "lighttpd": [
+  "lighttpd"
+ ],
+ "linphone": [
+  "linphone"
+ ],
+ "linux-headers-generic": [
+  "linuxHeaders"
+ ],
+ "linux-kernel-headers": [
+  "linuxHeaders"
+ ],
+ "llvm": [
+  "llvm"
+ ],
+ "llvm-7": [
+  "llvm_7"
+ ],
+ "llvm-7-dev": [
+  "llvm_7"
+ ],
+ "llvm-dev": [
+  "llvm"
+ ],
+ "lm-sensors": [
+  "lm_sensors"
+ ],
+ "log4cplus": [
+  "log4cplus"
+ ],
+ "log4cxx": [
+  "log4cxx"
+ ],
+ "lsb-release": [
+  "lsb-release"
+ ],
+ "lttng-tools": [
+  "lttng-tools"
+ ],
+ "lua-dev": [
+  "lua"
+ ],
+ "lua5.2-dev": [
+  "lua5"
+ ],
+ "lua5.3-dev": [
+  "lua5_3"
+ ],
+ "lz4": [
+  "lz4"
+ ],
+ "m2r": [
+  "m2r"
+ ],
+ "m4": [
+  "m4"
+ ],
+ "matio": [
+  "matio"
+ ],
+ "maven": [
+  "maven"
+ ],
+ "meld": [
+  "meld"
+ ],
+ "mercurial": [
+  "mercurial"
+ ],
+ "meshlab": [
+  "meshlab"
+ ],
+ "meson": [
+  "meson"
+ ],
+ "mkdocs": [
+  "mkdocs"
+ ],
+ "mongodb": [
+  "mongodb"
+ ],
+ "mongodb-dev": [
+  "mongodb"
+ ],
+ "mosquitto": [
+  "mosquitto"
+ ],
+ "mosquittopp-dev": [
+  "mosquitto"
+ ],
+ "mpfr": [
+  "mpfr"
+ ],
+ "mpg123": [
+  "mpg123"
+ ],
+ "mplayer": [
+  "mplayer"
+ ],
+ "msgpack": [
+  "msgpack"
+ ],
+ "msr-tools": [
+  "msr-tools"
+ ],
+ "muparser": [
+  "muparser"
+ ],
+ "nanobind-dev": [
+  "python3Packages.nanobind"
+ ],
+ "nanoflann": [
+  "nanoflann"
+ ],
+ "nasm": [
+  "nasm"
+ ],
+ "nbtscan": [
+  "nbtscan"
+ ],
+ "net-tools": [
+  "nettools"
+ ],
+ "netcdf": [
+  "netcdf"
+ ],
+ "netpbm": [
+  "netpbm"
+ ],
+ "network-manager": [
+  "networkmanager"
+ ],
+ "ninja-build": [
+  "ninja"
+ ],
+ "nkf": [
+  "nkf"
+ ],
+ "nlohmann-json-dev": [
+  "nlohmann_json"
+ ],
+ "nmap": [
+  "nmap"
+ ],
+ "nodejs": [
+  "nodejs"
+ ],
+ "nodejs-legacy": [
+  "nodejs"
+ ],
+ "npm": [
+  "nodePackages.npm"
+ ],
+ "ntp": [
+  "ntp"
+ ],
+ "ntpdate": [
+  "ntp"
+ ],
+ "nvidia-cg": [
+  "nvidia_cg_toolkit"
+ ],
+ "nvidia-cuda": [
+  "cudaPackages.cudatoolkit"
+ ],
+ "nvidia-cuda-dev": [
+  "cudaPackages.cudatoolkit"
+ ],
+ "nvidia-cudnn": [
+  "cudaPackages.cudnn"
+ ],
+ "ocl-icd-opencl-dev": [
+  "ocl-icd"
+ ],
+ "odb": [
+  "libodb"
+ ],
+ "omniidl": [
+  "omniorb"
+ ],
+ "omniorb": [
+  "omniorb"
+ ],
+ "opencascade": [
+  "opencascade-occt"
+ ],
+ "opencl-headers": [
+  "opencl-clhpp"
+ ],
+ "opende": [
+  "ode"
+ ],
+ "opengl": [
+  "libGL",
+  "libGLU"
+ ],
+ "openmpi": [
+  "openmpi"
+ ],
+ "openocd": [
+  "openocd"
+ ],
+ "openssh-client": [
+  "openssh"
+ ],
+ "openssh-server": [
+  "openssh"
+ ],
+ "openssl": [
+  "openssl"
+ ],
+ "optipng": [
+  "optipng"
+ ],
+ "osm2pgsql": [
+  "osm2pgsql"
+ ],
+ "osmium": [
+  "libosmium"
+ ],
+ "pandoc": [
+  "pandoc"
+ ],
+ "paramiko": [
+  "pythonPackages.paramiko"
+ ],
+ "patchelf": [
+  "patchelf"
+ ],
+ "pcre": [
+  "pcre"
+ ],
+ "pcre-dev": [
+  "pcre"
+ ],
+ "pcscd": [
+  "pcsclite"
+ ],
+ "phantomjs": [
+  "phantomjs"
+ ],
+ "php": [
+  "php"
+ ],
+ "pigz": [
+  "pigz"
+ ],
+ "pipx": [
+  "pipx"
+ ],
+ "pkg-config": [
+  "pkg-config"
+ ],
+ "pmccabe": [
+  "pmccabe"
+ ],
+ "pmount": [
+  "pmount"
+ ],
+ "pocketsphinx-bin": [
+  "pocketsphinx"
+ ],
+ "portaudio": [
+  "portaudio"
+ ],
+ "portaudio19-dev": [
+  "portaudio"
+ ],
+ "postfix": [
+  "postfix"
+ ],
+ "postgresql": [
+  "postgresql"
+ ],
+ "postgresql-client": [
+  "postgresql"
+ ],
+ "postgresql-postgis": [
+  "postgresqlPackages.postgis"
+ ],
+ "potrace": [
+  "potrace"
+ ],
+ "powertop": [
+  "powertop"
+ ],
+ "procps": [
+  "procps"
+ ],
+ "proj": [
+  "proj"
+ ],
+ "protobuf": [
+  "protobuf"
+ ],
+ "protobuf-compiler-grpc": [
+  "grpc"
+ ],
+ "protobuf-dev": [
+  "protobuf"
+ ],
+ "psmisc": [
+  "psmisc"
+ ],
+ "pstoedit": [
+  "pstoedit"
+ ],
+ "psutils": [
+  "psutils"
+ ],
+ "pugixml-dev": [
+  "pugixml"
+ ],
+ "pulseaudio-utils": [
+  "libpulseaudio"
+ ],
+ "pybind11-dev": [
+  "python3Packages.pybind11"
+ ],
+ "pydocstyle": [
+  "python3Packages.pydocstyle"
+ ],
+ "pyflakes3": [
+  "python3Packages.pyflakes"
+ ],
+ "pyqt5-dev-tools": [
+  "python3Packages.pyqt5"
+ ],
+ "python3": [
+  "python3"
+ ],
+ "python3-absl": [
+  "python3Packages.absl-py"
+ ],
+ "python3-alembic": [
+  "python3Packages.alembic"
+ ],
+ "python3-antlr4": [
+  "python3Packages.antlr4-python3-runtime"
+ ],
+ "python3-argcomplete": [
+  "python3Packages.argcomplete"
+ ],
+ "python3-attrs": [
+  "python3Packages.attrs"
+ ],
+ "python3-autobahn": [
+  "python3Packages.autobahn"
+ ],
+ "python3-babeltrace": [
+  "babeltrace"
+ ],
+ "python3-bcrypt": [
+  "python3Packages.bcrypt"
+ ],
+ "python3-bidict": [
+  "python3Packages.bidict"
+ ],
+ "python3-bitarray": [
+  "python3Packages.bitarray"
+ ],
+ "python3-boto3": [
+  "python3Packages.boto3"
+ ],
+ "python3-bs4": [
+  "python3Packages.beautifulsoup4"
+ ],
+ "python3-bson": [
+  "python3Packages.pymongo"
+ ],
+ "python3-cairo": [
+  "python3Packages.pycairo"
+ ],
+ "python3-cairosvg": [
+  "python3Packages.cairosvg"
+ ],
+ "python3-catkin-pkg": [
+  "python3Packages.catkin-pkg"
+ ],
+ "python3-catkin-pkg-modules": [
+  "python3Packages.catkin-pkg"
+ ],
+ "python3-cbor2": [
+  "python3Packages.cbor2"
+ ],
+ "python3-certifi": [
+  "python3Packages.certifi"
+ ],
+ "python3-cffi": [
+  "python3Packages.cffi"
+ ],
+ "python3-cherrypy3": [
+  "python3Packages.cherrypy"
+ ],
+ "python3-click": [
+  "python3Packages.click"
+ ],
+ "python3-collada": [
+  "python3Packages.pycollada"
+ ],
+ "python3-colorama": [
+  "python3Packages.colorama"
+ ],
+ "python3-colorcet": [
+  "python3Packages.colorcet"
+ ],
+ "python3-construct": [
+  "python3Packages.construct"
+ ],
+ "python3-coverage": [
+  "python3Packages.coverage"
+ ],
+ "python3-crcmod": [
+  "python3Packages.crcmod"
+ ],
+ "python3-cryptography": [
+  "python3Packages.cryptography"
+ ],
+ "python3-cvxopt": [
+  "python3Packages.cvxopt"
+ ],
+ "python3-dateutil": [
+  "python3Packages.python-dateutil"
+ ],
+ "python3-dbus": [
+  "python3Packages.dbus-python"
+ ],
+ "python3-decorator": [
+  "python3Packages.decorator"
+ ],
+ "python3-defusedxml": [
+  "python3Packages.defusedxml"
+ ],
+ "python3-deprecated": [
+  "python3Packages.deprecated"
+ ],
+ "python3-dev": [
+  "python3"
+ ],
+ "python3-distro": [
+  "python3Packages.distro"
+ ],
+ "python3-distutils": [
+  "python3"
+ ],
+ "python3-docker": [
+  "python3Packages.docker"
+ ],
+ "python3-docopt": [
+  "python3Packages.docopt"
+ ],
+ "python3-docstring-parser": [
+  "python3Packages.docstring-parser"
+ ],
+ "python3-docutils": [
+  "python3Packages.docutils"
+ ],
+ "python3-empy": [
+  "python3Packages.empy"
+ ],
+ "python3-expiringdict": [
+  "python3Packages.expiringdict"
+ ],
+ "python3-ezdxf": [
+  "python3Packages.ezdxf"
+ ],
+ "python3-fabric": [
+  "Fabric"
+ ],
+ "python3-fastapi": [
+  "python3Packages.fastapi"
+ ],
+ "python3-filelock": [
+  "python3Packages.filelock"
+ ],
+ "python3-fiona": [
+  "python3Packages.fiona"
+ ],
+ "python3-flake8": [
+  "python3Packages.flake8"
+ ],
+ "python3-flake8-blind-except": [
+  "python3Packages.flake8-blind-except"
+ ],
+ "python3-flake8-builtins": [],
+ "python3-flake8-class-newline": [
+  "python3Packages.flake8-class-newline"
+ ],
+ "python3-flake8-comprehensions": [],
+ "python3-flake8-deprecated": [
+  "python3Packages.flake8-deprecated"
+ ],
+ "python3-flake8-docstrings": [
+  "python3Packages.flake8-docstrings"
+ ],
+ "python3-flake8-import-order": [
+  "python3Packages.flake8-import-order"
+ ],
+ "python3-flake8-quotes": [],
+ "python3-flaky": [
+  "python%{python3_pkgversion}Packages.flaky"
+ ],
+ "python3-flask": [
+  "python3Packages.flask"
+ ],
+ "python3-flask-bcrypt": [
+  "python3Packages.flask-bcrypt"
+ ],
+ "python3-flask-cors": [
+  "python3Packages.flask-cors"
+ ],
+ "python3-flask-jwt-extended": [
+  "python3Packages.flask-jwt-extended"
+ ],
+ "python3-flask-socketio": [
+  "python3Packages.flask-socketio"
+ ],
+ "python3-flask-sqlalchemy": [
+  "python3Packages.flask_sqlalchemy"
+ ],
+ "python3-ftdi": [
+  "python3Packages.pyftdi"
+ ],
+ "python3-ftdi1": [
+  "libftdi1"
+ ],
+ "python3-future": [
+  "python3Packages.future"
+ ],
+ "python3-geographiclib": [
+  "python3Packages.geographiclib"
+ ],
+ "python3-geopy": [
+  "python3Packages.geopy"
+ ],
+ "python3-gi": [
+  "python3Packages.pygobject3"
+ ],
+ "python3-gi-cairo": [
+  "python3Packages.pygobject3"
+ ],
+ "python3-git": [
+  "python3Packages.gitpython"
+ ],
+ "python3-github": [
+  "python3Packages.pygithub"
+ ],
+ "python3-gnupg": [
+  "python3Packages.python-gnupg"
+ ],
+ "python3-graphviz": [
+  "python3Packages.graphviz"
+ ],
+ "python3-grpc-tools": [
+  "python3Packages.grpcio-tools"
+ ],
+ "python3-grpcio": [
+  "python3Packages.grpcio"
+ ],
+ "python3-h5py": [
+  "python3Packages.h5py"
+ ],
+ "python3-httpx": [
+  "python3Packages.httpx"
+ ],
+ "python3-imageio": [
+  "python3Packages.imageio"
+ ],
+ "python3-img2pdf": [
+  "python3Packages.img2pdf"
+ ],
+ "python3-importlib-metadata": [
+  "python3Packages.importlib-metadata"
+ ],
+ "python3-importlib-resources": [
+  "python3Packages.importlib-resources"
+ ],
+ "python3-inflection": [
+  "python3Packages.inflection"
+ ],
+ "python3-influxdb": [
+  "python3Packages.influxdb"
+ ],
+ "python3-interpreter": [
+  "python3"
+ ],
+ "python3-jinja2": [
+  "python3Packages.jinja2"
+ ],
+ "python3-jmespath": [
+  "python3Packages.jmespath"
+ ],
+ "python3-joblib": [
+  "python3Packages.joblib"
+ ],
+ "python3-jsonschema": [
+  "python3Packages.jsonschema"
+ ],
+ "python3-jwt": [
+  "python3Packages.pyjwt"
+ ],
+ "python3-kitchen": [
+  "python3Packages.kitchen"
+ ],
+ "python3-lark-parser": [
+  "python3Packages.lark"
+ ],
+ "python3-lensfun": [
+  "lensfun"
+ ],
+ "python3-libgpiod": [
+  "python3Packages.libgpiod"
+ ],
+ "python3-lockfile": [
+  "python3Packages.lockfile"
+ ],
+ "python3-lttng": [
+  "python3Packages.lttng"
+ ],
+ "python3-lxml": [
+  "python3Packages.lxml"
+ ],
+ "python3-magic": [
+  "python3Packages.magic"
+ ],
+ "python3-mapnik": [
+  "python3Packages.python-mapnik"
+ ],
+ "python3-marisa": [
+  "python3Packages.marisa"
+ ],
+ "python3-markdown": [
+  "python3Packages.markdown"
+ ],
+ "python3-marshmallow": [
+  "python3Packages.marshmallow"
+ ],
+ "python3-matplotlib": [
+  "python3Packages.matplotlib"
+ ],
+ "python3-mccabe": [
+  "python3Packages.mccabe"
+ ],
+ "python3-mechanize": [
+  "python3Packages.mechanize"
+ ],
+ "python3-mistune": [
+  "python3Packages.mistune"
+ ],
+ "python3-mock": [
+  "python3Packages.mock"
+ ],
+ "python3-msgpack": [
+  "python3Packages.msgpack"
+ ],
+ "python3-msgpack-numpy": [
+  "python3Packages.msgpack-numpy"
+ ],
+ "python3-multipledispatch": [
+  "python3Packages.multipledispatch"
+ ],
+ "python3-munkres": [
+  "python3Packages.munkre"
+ ],
+ "python3-mypy": [
+  "python3Packages.mypy"
+ ],
+ "python3-natsort": [
+  "python3Packages.natsort"
+ ],
+ "python3-nest-asyncio": [
+  "python3Packages.nest-asyncio"
+ ],
+ "python3-netcdf4": [
+  "python3Packages.netcdf4"
+ ],
+ "python3-netifaces": [
+  "python3Packages.netifaces"
+ ],
+ "python3-networkx": [
+  "python3Packages.networkx"
+ ],
+ "python3-nose": [
+  "python3Packages.nose"
+ ],
+ "python3-ntplib": [
+  "python3Packages.ntplib"
+ ],
+ "python3-numpy": [
+  "python3Packages.numpy"
+ ],
+ "python3-numpy-stl": [
+  "python3Packages.numpy-stl"
+ ],
+ "python3-omniorb": [
+  "python3Packages.omniorb"
+ ],
+ "python3-opencv": [
+  "python3Packages.opencv4"
+ ],
+ "python3-opengl": [
+  "python3Packages.pyopengl"
+ ],
+ "python3-orjson": [
+  "python%{python3_pkgversion}Packages.orjson"
+ ],
+ "python3-osrf-pycommon": [
+  "python3Packages.osrf-pycommon"
+ ],
+ "python3-overpy": [
+  "python3Packages.overpy"
+ ],
+ "python3-owslib": [
+  "python3Packages.owslib"
+ ],
+ "python3-packaging": [
+  "python3Packages.packaging"
+ ],
+ "python3-paho-mqtt": [
+  "python3Packages.paho-mqtt"
+ ],
+ "python3-pandas": [
+  "python3Packages.pandas"
+ ],
+ "python3-paramiko": [
+  "python3Packages.paramiko"
+ ],
+ "python3-pep8": [
+  "python3Packages.pep8"
+ ],
+ "python3-pexpect": [
+  "python3Packages.pexpect"
+ ],
+ "python3-pil": [
+  "python3Packages.pillow"
+ ],
+ "python3-pil-imagetk": [
+  "python3Packages.pillow"
+ ],
+ "python3-pip": [
+  "python3Packages.pip"
+ ],
+ "python3-pkg-resources": [
+  "python3Packages.setuptools"
+ ],
+ "python3-platformdirs": [
+  "python3Packages.platformdirs"
+ ],
+ "python3-plotly": [
+  "python3Packages.plotly"
+ ],
+ "python3-ply": [
+  "python3Packages.ply"
+ ],
+ "python3-pre-commit": [
+  "pre-commit"
+ ],
+ "python3-prettytable": [
+  "python3Packages.prettytable"
+ ],
+ "python3-progressbar": [
+  "python3Packages.progressbar"
+ ],
+ "python3-protobuf": [
+  "python3Packages.protobuf"
+ ],
+ "python3-psutil": [
+  "python3Packages.psutil"
+ ],
+ "python3-pyaudio": [
+  "python3Packages.pyaudio"
+ ],
+ "python3-pyclipper": [
+  "python3Packages.pyclipper"
+ ],
+ "python3-pycodestyle": [
+  "python3Packages.pycodestyle"
+ ],
+ "python3-pycryptodome": [
+  "python3Packages.pycryptodomex"
+ ],
+ "python3-pydantic": [
+  "python3Packages.pydantic"
+ ],
+ "python3-pydot": [
+  "python3Packages.pydot"
+ ],
+ "python3-pydub": [
+  "python3Packages.pydub"
+ ],
+ "python3-pygame": [
+  "python3Packages.pygame"
+ ],
+ "python3-pygraphviz": [
+  "python3Packages.pygraphviz"
+ ],
+ "python3-pyinotify": [
+  "python3Packages.pyinotify"
+ ],
+ "python3-pykdl": [
+  "python3Packages.pykdl"
+ ],
+ "python3-pymongo": [
+  "python3Packages.pymongo"
+ ],
+ "python3-pynvml": [
+  "python3Packages.pynvml"
+ ],
+ "python3-pyosmium": [
+  "python3Packages.pyosmium"
+ ],
+ "python3-pyparsing": [
+  "python3Packages.pyparsing"
+ ],
+ "python3-pyproj": [
+  "python3Packages.pyproj"
+ ],
+ "python3-pyqrcode": [
+  "python3Packages.pyqrcode"
+ ],
+ "python3-pyqt5": [
+  "python3Packages.pyqt5"
+ ],
+ "python3-pyqt5.qtwebengine": [
+  "python3Packages.pyqtwebengine"
+ ],
+ "python3-pyqt6": [
+  "python3Packages.pyqt6"
+ ],
+ "python3-pyqtgraph": [
+  "python3Packages.pyqtgraph"
+ ],
+ "python3-pyside2": [
+  "python3Packages.pyside2"
+ ],
+ "python3-pysnmp": [
+  "python3Packages.pysnmp"
+ ],
+ "python3-pystemd": [
+  "python3Packages.pystemd"
+ ],
+ "python3-pytest": [
+  "python3Packages.pytest"
+ ],
+ "python3-pytest-asyncio": [
+  "python3Packages.pytest-asyncio"
+ ],
+ "python3-pytest-cov": [
+  "python3Packages.pytestcov"
+ ],
+ "python3-pytest-dependency": [
+  "python3Packages.pytest-dependency"
+ ],
+ "python3-pytest-mock": [
+  "python3Packages.pytest-mock"
+ ],
+ "python3-pytest-order": [
+  "python3Packages.pytest-order"
+ ],
+ "python3-pytest-timeout": [
+  "python3Packages.pytest-timeout"
+ ],
+ "python3-pytest-xdist": [
+  "python3Packages.pytest-xdist"
+ ],
+ "python3-pytest-xvfb": [
+  "python3Packages.pytest-xvfb"
+ ],
+ "python3-pyudev": [
+  "python3Packages.pyudev"
+ ],
+ "python3-pyzbar": [
+  "python3Packages.pyzbar"
+ ],
+ "python3-qrcode": [
+  "python3Packages.qrcode"
+ ],
+ "python3-qt-bindings": [
+  "python-qt-bindings-deps"
+ ],
+ "python3-qt5-bindings": [
+  "python3Packages.pyqt5"
+ ],
+ "python3-qt5-bindings-gl": [
+  "python3Packages.pyqt5"
+ ],
+ "python3-qt5-bindings-webkit": [
+  "python3Packages.pyqt5_with_qtwebkit"
+ ],
+ "python3-qtpy": [
+  "python3Packages.qtpy"
+ ],
+ "python3-questionary": [
+  "python3Packages.questionary"
+ ],
+ "python3-rdflib": [
+  "python3Packages.rdflib"
+ ],
+ "python3-regex": [
+  "python3Packages.regex"
+ ],
+ "python3-reportlab": [
+  "python3Packages.reportlab"
+ ],
+ "python3-requests": [
+  "python3Packages.requests"
+ ],
+ "python3-requests-oauthlib": [
+  "python3Packages.requests_oauthlib"
+ ],
+ "python3-requests-toolbelt": [
+  "python3Packages.requests-toolbelt"
+ ],
+ "python3-retrying": [
+  "python3Packages.retrying"
+ ],
+ "python3-rich": [
+  "python3Packages.rich"
+ ],
+ "python3-rosdep-modules": [
+  "python3Packages.rosdep"
+ ],
+ "python3-rosdistro-modules": [
+  "python3Packages.rosdistro"
+ ],
+ "python3-rospkg": [
+  "python3Packages.rospkg"
+ ],
+ "python3-rospkg-modules": [
+  "python3Packages.rospkg"
+ ],
+ "python3-rsa": [
+  "python3Packages.rsa"
+ ],
+ "python3-rtree": [
+  "python3Packages.rtree"
+ ],
+ "python3-ruamel.yaml": [
+  "python3Packages.ruamel-yaml"
+ ],
+ "python3-schedule": [
+  "python3Packages.schedule"
+ ],
+ "python3-schema": [
+  "python3Packages.schema"
+ ],
+ "python3-scipy": [
+  "python3Packages.scipy"
+ ],
+ "python3-scp": [
+  "python3Packages.scp"
+ ],
+ "python3-seaborn": [
+  "python3Packages.seaborn"
+ ],
+ "python3-segno": [
+  "python3Packages.segno"
+ ],
+ "python3-selenium": [
+  "python3Packages.selenium"
+ ],
+ "python3-semantic-version": [
+  "python3Packages.semantic-version"
+ ],
+ "python3-semver": [
+  "python3Packages.semver"
+ ],
+ "python3-serial": [
+  "python3Packages.pyserial"
+ ],
+ "python3-setproctitle": [
+  "python3Packages.setproctitle"
+ ],
+ "python3-setuptools": [
+  "python3Packages.setuptools"
+ ],
+ "python3-sexpdata": [
+  "python3Packages.sexpdata"
+ ],
+ "python3-sh": [
+  "python3Packages.sh"
+ ],
+ "python3-shapely": [
+  "python3Packages.shapely"
+ ],
+ "python3-simplejson": [
+  "python3Packages.simplejson"
+ ],
+ "python3-sip": [
+  "python3Packages.sip_4"
+ ],
+ "python3-six": [
+  "python3Packages.six"
+ ],
+ "python3-skimage": [
+  "python3Packages.scikitimage"
+ ],
+ "python3-sklearn": [
+  "python3Packages.scikitlearn"
+ ],
+ "python3-smbus": [
+  "python3Packages.i2c-tools"
+ ],
+ "python3-smbus2": [
+  "python3Packages.smbus2"
+ ],
+ "python3-soundfile": [
+  "python3Packages.soundfile"
+ ],
+ "python3-sphinx": [
+  "python3Packages.sphinx"
+ ],
+ "python3-sphinx-argparse": [
+  "python3Packages.sphinx-argparse"
+ ],
+ "python3-sphinx-rtd-theme": [
+  "python3Packages.sphinx_rtd_theme"
+ ],
+ "python3-sqlalchemy": [
+  "python3Packages.sqlalchemy"
+ ],
+ "python3-sqlalchemy-utils": [
+  "python3Packages.sqlalchemy-utils"
+ ],
+ "python3-structlog": [
+  "python3Packages.structlog"
+ ],
+ "python3-svg.path": [
+  "python3Packages.svg-path"
+ ],
+ "python3-sympy": [
+  "python3Packages.sympy"
+ ],
+ "python3-systemd": [
+  "python3Packages.systemd"
+ ],
+ "python3-tabulate": [
+  "python3Packages.tabulate"
+ ],
+ "python3-termcolor": [
+  "python3Packages.termcolor"
+ ],
+ "python3-texttable": [
+  "python3Packages.texttable"
+ ],
+ "python3-textual": [
+  "python3Packages.textual"
+ ],
+ "python3-tk": [
+  "python3Packages.tkinter"
+ ],
+ "python3-toml": [
+  "python3Packages.toml"
+ ],
+ "python3-torch": [
+  "python3Packages.torch"
+ ],
+ "python3-torchvision": [
+  "python3Packages.torchvision"
+ ],
+ "python3-tornado": [
+  "python3Packages.tornado"
+ ],
+ "python3-tqdm": [
+  "python3Packages.tqdm"
+ ],
+ "python3-transforms3d": [
+  "python3Packages.transforms3d"
+ ],
+ "python3-twilio": [
+  "python3Packages.twilio"
+ ],
+ "python3-twisted": [
+  "python3Packages.twisted"
+ ],
+ "python3-typeguard": [
+  "python3Packages.typeguard"
+ ],
+ "python3-types-pyyaml": [
+  "python3Packages.types-pyyaml"
+ ],
+ "python3-typing-extensions": [
+  "python3Packages.typing-extensions"
+ ],
+ "python3-tz": [
+  "python3Packages.pytz"
+ ],
+ "python3-ubjson": [
+  "python3Packages.py-ubjson"
+ ],
+ "python3-ujson": [
+  "python3Packages.ujson"
+ ],
+ "python3-ultralytics-pip": [
+  "python3Packages.ultralytics"
+ ],
+ "python3-unidecode": [
+  "python3Packages.unidecode"
+ ],
+ "python3-unidiff": [
+  "python3Packages.unidiff"
+ ],
+ "python3-urllib3": [
+  "python3Packages.urllib3"
+ ],
+ "python3-usb": [
+  "python3Packages.pyusb"
+ ],
+ "python3-uvicorn": [
+  "python3Packages.uvicorn"
+ ],
+ "python3-uvloop": [
+  "python3Packages.uvloop"
+ ],
+ "python3-vcstool": [
+  "vcstool"
+ ],
+ "python3-venv": [
+  "python3"
+ ],
+ "python3-waitress": [
+  "python3Packages.waitress"
+ ],
+ "python3-wand": [
+  "python3Packages.wand"
+ ],
+ "python3-watchdog": [
+  "python3Packages.watchdog"
+ ],
+ "python3-webargs": [
+  "python3Packages.webargs"
+ ],
+ "python3-websocket": [
+  "python3Packages.websocket-client"
+ ],
+ "python3-websockets": [
+  "python3Packages.websockets"
+ ],
+ "python3-wheel": [
+  "python3Packages.wheel"
+ ],
+ "python3-whichcraft": [
+  "python3Packages.whichcraft"
+ ],
+ "python3-wrapt": [
+  "python3Packages.wrapt"
+ ],
+ "python3-wxgtk4.0": [
+  "python3Packages.wxPython_4_0"
+ ],
+ "python3-xdot": [
+  "xdot"
+ ],
+ "python3-xmlschema": [
+  "python3Packages.xmlschema"
+ ],
+ "python3-xmltodict": [
+  "python3Packages.xmltodict"
+ ],
+ "python3-yaml": [
+  "python3Packages.pyyaml"
+ ],
+ "python3-zeroconf": [
+  "python3Packages.zeroconf"
+ ],
+ "python3-zmq": [
+  "python3Packages.pyzmq"
+ ],
+ "qhull-bin": [
+  "qhull"
+ ],
+ "qml-module-qt-labs-folderlistmodel": [
+  "qt5.qtdeclarative"
+ ],
+ "qml-module-qt-labs-platform": [
+  "qt5.qtquickcontrols2"
+ ],
+ "qml-module-qt-labs-settings": [
+  "qt5.qtdeclarative"
+ ],
+ "qml-module-qtcharts": [
+  "qt5.qtcharts"
+ ],
+ "qml-module-qtgraphicaleffects": [
+  "qt5.qtgraphicaleffects"
+ ],
+ "qml-module-qtlocation": [
+  "qt5.qtlocation"
+ ],
+ "qml-module-qtmultimedia": [
+  "qt5.qtmultimedia"
+ ],
+ "qml-module-qtpositioning": [
+  "qt5.qtpositioning"
+ ],
+ "qml-module-qtquick-controls": [
+  "qt5.qtquickcontrols"
+ ],
+ "qml-module-qtquick-controls2": [
+  "qt5.qtquickcontrols2"
+ ],
+ "qml-module-qtquick-dialogs": [
+  "qt5.qtquickcontrols"
+ ],
+ "qml-module-qtquick-extras": [
+  "qt5.qtquickcontrols"
+ ],
+ "qml-module-qtquick-layouts": [
+  "qt5.qtdeclarative"
+ ],
+ "qml-module-qtquick-templates2": [
+  "qt5.qtquickcontrols2"
+ ],
+ "qml-module-qtquick-window2": [
+  "qt5.qtdeclarative"
+ ],
+ "qml-module-qtquick2": [
+  "qt5.qtquickcontrols2"
+ ],
+ "qml6-module-qt-labs-folderlistmodel": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qt-labs-platform": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qt-labs-qmlmodels": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qt-labs-settings": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qt5compat-graphicaleffects": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qtcharts": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qtcore": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qtmultimedia": [
+  "qt6.qtdeclarative",
+  "qt6.qtmultimedia"
+ ],
+ "qml6-module-qtpositioning": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qtqml": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qtqml-models": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qtqml-workerscript": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qtquick": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qtquick-controls": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qtquick-dialogs": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qtquick-layouts": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qtquick-templates": [
+  "qt6.qtdeclarative"
+ ],
+ "qml6-module-qtquick-window": [
+  "qt6.qtdeclarative"
+ ],
+ "qrencode": [
+  "qrencode"
+ ],
+ "qt-base-dev": [
+  "qt5or6.qtbase"
+ ],
+ "qt-svg-dev": [
+  "qt5or6.qtsvg"
+ ],
+ "qt4-dev-tools": [
+  "qt4"
+ ],
+ "qt4-qmake": [
+  "qt4"
+ ],
+ "qt5-image-formats-plugins": [
+  "qt5.qtimageformats"
+ ],
+ "qt5-qmake": [
+  "qt5.qtbase"
+ ],
+ "qt6-5compat-dev": [
+  "qt6.qt5compat"
+ ],
+ "qt6-base-dev": [
+  "qt6.qtbase"
+ ],
+ "qt6-base-private-dev": [
+  "qt6.qtbase"
+ ],
+ "qt6-declarative-dev": [
+  "qt6.qtdeclarative"
+ ],
+ "qt6-declarative-private-dev": [
+  "qt6.qtdeclarative"
+ ],
+ "qt6-multimedia-dev": [
+  "qt6.qtmultimedia"
+ ],
+ "qt6-qmake": [
+  "qt6.qtbase"
+ ],
+ "qt6-scxml-dev": [
+  "qt6.qtscxml"
+ ],
+ "qt6-svg-dev": [
+  "qt6.qtsvg"
+ ],
+ "qt6-websockets-dev": [
+  "qt6.qtwebsockets"
+ ],
+ "qtbase5-dev": [
+  "qt5.qtbase"
+ ],
+ "qtbase5-private-dev": [
+  "qt5.qtbase"
+ ],
+ "qtdeclarative5-dev": [
+  "qt5.qtdeclarative"
+ ],
+ "qtmultimedia5-dev": [
+  "qt5.qtmultimedia"
+ ],
+ "qtpositioning5-dev": [
+  "qt5.qtpositioning"
+ ],
+ "qtquickcontrols2-5-dev": [
+  "qt5.qtquickcontrols"
+ ],
+ "qttools5-dev": [
+  "qt5.qttools"
+ ],
+ "qttools5-dev-tools": [
+  "qt5.qttools.dev"
+ ],
+ "qtwebengine5-dev": [
+  "libsForQt5.qt5.qtwebengine"
+ ],
+ "range-v3": [
+  "range-v3"
+ ],
+ "rapidjson-dev": [
+  "rapidjson"
+ ],
+ "readline-dev": [
+  "readline"
+ ],
+ "recode": [
+  "recode"
+ ],
+ "redis-server": [
+  "redis"
+ ],
+ "robin-map-dev": [
+  "robin-map"
+ ],
+ "rsync": [
+  "rsync"
+ ],
+ "rsyslog": [
+  "rsyslog"
+ ],
+ "rt-tests": [
+  "rt-tests"
+ ],
+ "rti-connext-dds-5.3.1": [],
+ "rti-connext-dds-6.0.1": [],
+ "rti-connext-dds-7.3.0": [],
+ "rti-connext-dds-7.7.0": [],
+ "rtmidi": [
+  "rtmidi"
+ ],
+ "sbcl": [
+  "sbcl"
+ ],
+ "scons": [
+  "scons"
+ ],
+ "screen": [
+  "screen"
+ ],
+ "sdformat": [
+  "sdformat"
+ ],
+ "sdformat11": [
+  "sdformat_11"
+ ],
+ "sdformat12": [
+  "sdformat_12"
+ ],
+ "sdformat13": [
+  "sdformat_13"
+ ],
+ "sdl": [
+  "SDL"
+ ],
+ "sdl-gfx": [
+  "SDL_gfx"
+ ],
+ "sdl-image": [
+  "SDL_image"
+ ],
+ "sdl-mixer": [
+  "SDL_mixer"
+ ],
+ "sdl-ttf": [
+  "SDL_ttf"
+ ],
+ "sdl2": [
+  "SDL2"
+ ],
+ "sdl2-image": [
+  "SDL2_image"
+ ],
+ "sdl2-ttf": [
+  "SDL2_ttf"
+ ],
+ "setserial": [
+  "setserial"
+ ],
+ "sfml-dev": [
+  "sfml"
+ ],
+ "simde": [
+  "simde"
+ ],
+ "slime": [
+  "emacsPackages.slime"
+ ],
+ "smartmontools": [
+  "smartmontools"
+ ],
+ "smbclient": [
+  "samba"
+ ],
+ "snappy": [
+  "snappy"
+ ],
+ "socat": [
+  "socat"
+ ],
+ "sound-theme-freedesktop": [
+  "sound-theme-freedesktop"
+ ],
+ "sox": [
+  "sox"
+ ],
+ "spacenavd": [
+  "spacenavd"
+ ],
+ "sparsehash": [
+  "sparsehash"
+ ],
+ "spatialite-bin": [
+  "spatialite-tools"
+ ],
+ "spdlog": [
+  "spdlog"
+ ],
+ "speech-dispatcher": [
+  "speechd"
+ ],
+ "speex": [
+  "speex"
+ ],
+ "spirv-headers": [
+  "spirv-headers"
+ ],
+ "spirv-tools": [
+  "spirv-tools"
+ ],
+ "sqlite3": [
+  "sqlite"
+ ],
+ "sshpass": [
+  "sshpass"
+ ],
+ "stm32flash": [
+  "stm32flash"
+ ],
+ "stress": [
+  "stress"
+ ],
+ "stress-ng": [
+  "stress-ng"
+ ],
+ "subversion": [
+  "subversion"
+ ],
+ "suitesparse": [
+  "suitesparse"
+ ],
+ "swi-prolog": [
+  "swiProlog"
+ ],
+ "swig": [
+  "swig"
+ ],
+ "sysbench": [
+  "sysbench"
+ ],
+ "sysstat": [
+  "sysstat"
+ ],
+ "systemd": [
+  "systemd"
+ ],
+ "tango-icon-theme": [
+  "tango-icon-theme"
+ ],
+ "tar": [
+  "libtar"
+ ],
+ "tbb": [
+  "onetbb"
+ ],
+ "tcsh": [
+  "tcsh"
+ ],
+ "terminator": [
+  "terminator"
+ ],
+ "texmaker": [
+  "texmaker"
+ ],
+ "tftp-hpa": [
+  "tftp-hpa"
+ ],
+ "tiled": [
+  "tiled"
+ ],
+ "time": [
+  "time"
+ ],
+ "tinyxml": [
+  "tinyxml"
+ ],
+ "tinyxml2": [
+  "tinyxml-2"
+ ],
+ "tix": [
+  "tix"
+ ],
+ "tmux": [
+  "tmux"
+ ],
+ "touchegg": [
+  "touchegg"
+ ],
+ "tree": [
+  "tree"
+ ],
+ "tshark": [
+  "tshark"
+ ],
+ "udev": [
+  "udev"
+ ],
+ "uhubctl": [
+  "uhubctl"
+ ],
+ "unclutter": [
+  "unclutter"
+ ],
+ "uncrustify": [
+  "uncrustify"
+ ],
+ "unison": [
+  "unison"
+ ],
+ "unoconv": [
+  "unoconv"
+ ],
+ "unrar": [
+  "unrar"
+ ],
+ "unzip": [
+  "unzip"
+ ],
+ "usbutils": [
+  "usbutils"
+ ],
+ "util-linux": [
+  "util-linux"
+ ],
+ "uuid": [
+  "util-linux"
+ ],
+ "uvcdynctrl": [
+  "uvcdynctrl"
+ ],
+ "v4l-utils": [
+  "v4l-utils"
+ ],
+ "valgrind": [
+  "valgrind"
+ ],
+ "vim": [
+  "vim"
+ ],
+ "virtualenv": [
+  "python3Packages.virtualenv"
+ ],
+ "vlc": [
+  "vlc"
+ ],
+ "vorbis-tools": [
+  "vorbis-tools"
+ ],
+ "wayland": [
+  "wayland"
+ ],
+ "wayland-dev": [
+  "wayland"
+ ],
+ "websockify": [
+  "python313Packages.websockify"
+ ],
+ "wget": [
+  "wget"
+ ],
+ "wireguard": [
+  "wireguard-tools"
+ ],
+ "wireless-tools": [
+  "wirelesstools"
+ ],
+ "wireshark": [
+  "wireshark"
+ ],
+ "wireshark-common": [
+  "wireshark-cli"
+ ],
+ "wkhtmltopdf": [
+  "wkhtmltopdf"
+ ],
+ "wmctrl": [
+  "wmctrl"
+ ],
+ "workrave": [
+  "workrave"
+ ],
+ "wx-common": [
+  "wxwidgets_3_2"
+ ],
+ "wxpython": [
+  "pythonPackages.wxPython"
+ ],
+ "wxwidgets": [
+  "wxwidgets_3_2"
+ ],
+ "xclip": [
+  "xclip"
+ ],
+ "xdg-utils": [
+  "xdg-utils"
+ ],
+ "xdotool": [
+  "xdotool"
+ ],
+ "xerces": [
+  "xercesc"
+ ],
+ "xfonts-100dpi": [
+  "font-adobe-100dpi",
+  "font-bh-100dpi",
+  "font-bh-lucidatypewriter-100dpi",
+  "font-bitstream-100dpi"
+ ],
+ "xfonts-75dpi": [
+  "font-adobe-75dpi",
+  "font-bh-75dpi",
+  "font-bh-lucidatypewriter-75dpi",
+  "font-bitstream-75dpi"
+ ],
+ "xpath-perl": [
+  "perlPackages.XMLXPath"
+ ],
+ "xsimd": [
+  "xsimd"
+ ],
+ "xsltproc": [
+  "libxslt"
+ ],
+ "xtensor": [
+  "xtensor"
+ ],
+ "xterm": [
+  "xterm"
+ ],
+ "xvfb": [
+  "xorg.xorgserver"
+ ],
+ "xz-utils": [
+  "xz"
+ ],
+ "yaml": [
+  "libyaml"
+ ],
+ "yaml-cpp": [
+  "yaml-cpp"
+ ],
+ "yamllint": [
+  "yamllint"
+ ],
+ "yapf": [
+  "python3Packages.yapf"
+ ],
+ "yapf3": [
+  "python3Packages.yapf"
+ ],
+ "yarn": [
+  "yarn"
+ ],
+ "yasm": [
+  "yasm"
+ ],
+ "zbar": [
+  "zbar"
+ ],
+ "zenity": [
+  "gnome.zenity"
+ ],
+ "zeromq3": [
+  "zeromq"
+ ],
+ "zip": [
+  "zip"
+ ],
+ "zlib": [
+  "zlib"
+ ],
+ "zsh": [
+  "zsh"
+ ],
+ "zziplib": [
+  "zziplib"
+ ]
+}

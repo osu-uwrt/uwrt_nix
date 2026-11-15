@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "chameleon_tf": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1688312553,
+        "narHash": "sha256-sa1rjWJE5bJvBicKTlsTxmnaxrRvErsGx88hV0YKaYY=",
+        "owner": "coalman321",
+        "repo": "chameleon_tf",
+        "rev": "fe161bf96970e52b29fa8a39a256958fbe1f4065",
+        "type": "github"
+      },
+      "original": {
+        "owner": "coalman321",
+        "repo": "chameleon_tf",
+        "rev": "fe161bf96970e52b29fa8a39a256958fbe1f4065",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -110,14 +127,52 @@
         "type": "github"
       }
     },
+    "nortek_dvl": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1679252906,
+        "narHash": "sha256-xUFMAPDUJu+8qnf/nFpixyF5qJqLeTpNtVnIpZxl664=",
+        "owner": "osu-uwrt",
+        "repo": "nortek_dvl",
+        "rev": "be21db9ffc60f040b2c0287a60ec43423da80d0f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "osu-uwrt",
+        "repo": "nortek_dvl",
+        "rev": "be21db9ffc60f040b2c0287a60ec43423da80d0f",
+        "type": "github"
+      }
+    },
+    "riptide_setup": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1708230239,
+        "narHash": "sha256-/2z9KX0VY4iMPsPC16BdsS0v8TmX/QcrrKLCFkvwVWQ=",
+        "owner": "osu-uwrt",
+        "repo": "riptide_setup",
+        "rev": "3f5cb8a15466a5d3b9aa52013929a7882bfe4fdb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "osu-uwrt",
+        "ref": "matlab-install",
+        "repo": "riptide_setup",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
+        "chameleon_tf": "chameleon_tf",
         "nix-ros-overlay": "nix-ros-overlay",
         "nix-ros-overlay-release": "nix-ros-overlay-release",
         "nixpkgs": [
           "nix-ros-overlay",
           "nixpkgs"
-        ]
+        ],
+        "nortek_dvl": "nortek_dvl",
+        "riptide_setup": "riptide_setup",
+        "zed_interfaces": "zed_interfaces"
       }
     },
     "rosdistro": {
@@ -179,6 +234,23 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "zed_interfaces": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1698685201,
+        "narHash": "sha256-BtsWQ1O79nbRQJjqQ64j3AohXmSlUvVvBt4r1WdNygQ=",
+        "owner": "stereolabs",
+        "repo": "zed-ros2-interfaces",
+        "rev": "f7f90f11f818c3dda23219cd05d8c854a569fc85",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stereolabs",
+        "repo": "zed-ros2-interfaces",
+        "rev": "f7f90f11f818c3dda23219cd05d8c854a569fc85",
         "type": "github"
       }
     }
