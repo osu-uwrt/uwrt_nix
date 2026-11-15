@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# prints the rmw exports for this machine, for `eval "$(uwrt-env)"` (the .envrc does it).
+# replaces release's config_rmw.bash: no prompts, no /home/$USER paths.
+#   fastdds-local: fastdds on localhost, a spare domain. nothing waits for the robot. macos default
+#   zenoh: client to the robot's router (orin2:7447), the team domain. linux default
+# per-user settings go in ~/.uwrt/env (KEY=value lines, `uwrt rmw` writes UWRT_RMW there):
+#   UWRT_RMW, UWRT_LOCAL_DOMAIN (93), UWRT_ROBOT_DOMAIN (4), UWRT_ZENOH_CONFIG, UWRT_RELEASE_WS
+set -euo pipefail
+
+conf=${UWRT_CONFIG_DIR:-$HOME/.uwrt}/env
+share=@share@
+
+# read the config without running it
+declare -A c=()
+if [ -f "$conf" ]; then
+  while IFS= read -r line || [ -n "$line" ]; do
+    [[ $line =~ ^[[:space:]]*(export[[:space:]]+)?(UWRT_[A-Z_]+)=[\"\']?([^\"\']*)[\"\']?[[:space:]]*$ ]] || continue
+    c[${BASH_REMATCH[2]}]=${BASH_REMATCH[3]/#\~/$HOME}
+  done < "$conf"
+fi
+
+if [ "$(uname -s)" = Darwin ]; then def=fastdds-local; else def=zenoh; fi
+rmw=${c[UWRT_RMW]:-$def}
+q() { printf '%q' "$1"; }
+
+case $rmw in
+  fastdds-local)
+    echo "export UWRT_RMW=fastdds-local RMW_IMPLEMENTATION=rmw_fastrtps_cpp ROS_LOCALHOST_ONLY=1"
+    echo "export ROS_DOMAIN_ID=$(q "${c[UWRT_LOCAL_DOMAIN]:-93}")"
+    echo "unset ZENOH_SESSION_CONFIG_URI ZENOH_ROUTER_CONFIG_URI ZENOH_ROUTER_CHECK_ATTEMPTS ZENOH_CONFIG_OVERRIDE"
+    ;;
+  zenoh)
+    # release's client config if there is a release checkout, else the copy shipped with uwrt
+    rel=${c[UWRT_RELEASE_WS]:-$HOME/osu-uwrt/release}/scripts/dds_scripts/zenoh/zenoh_client.json5
+    cfg=${c[UWRT_ZENOH_CONFIG]:-}
+    [ -n "$cfg" ] || { [ -f "$rel" ] && cfg=$rel || cfg=$share/zenoh_client.json5; }
+    echo "export UWRT_RMW=zenoh RMW_IMPLEMENTATION=rmw_zenoh_cpp ZENOH_ROUTER_CHECK_ATTEMPTS=10"
+    echo "export ROS_DOMAIN_ID=$(q "${c[UWRT_ROBOT_DOMAIN]:-4}") ZENOH_SESSION_CONFIG_URI=$(q "$cfg")"
+    echo "unset ROS_LOCALHOST_ONLY ZENOH_ROUTER_CONFIG_URI ZENOH_CONFIG_OVERRIDE"
+    ;;
+  *)
+    echo "uwrt-env: unknown UWRT_RMW '$rmw' in $conf (zenoh or fastdds-local)" >&2
+    exit 1
+    ;;
+esac

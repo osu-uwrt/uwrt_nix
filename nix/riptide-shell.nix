@@ -1,7 +1,7 @@
 # one riptide shell: the ros env for a workspace's package.xml deps, colcon_riptide's colcon,
 # and on mac the DYLD_LIBRARY_PATH fix in every ros program.
 # the workspace is $UWRT_WS (its src/ is scanned), or ~/<defaultWorkspace>. needs --impure
-{ lib, pkgs, ros, colcon, skip, name, defaultWorkspace, extraRos ? [ ], tools ? [ ] }:
+{ lib, pkgs, ros, colcon, skip, uwrt, name, defaultWorkspace, extraRos ? [ ], tools ? [ ] }:
 let
   darwin = pkgs.stdenv.hostPlatform.isDarwin;
 
@@ -47,16 +47,17 @@ let
 in
 pkgs.mkShell {
   inherit name;
-  packages = lib.optional darwin dyldWrappers ++ [ colcon.colcon env pkgs.rsync pkgs.openssh ] ++ tools;
+  packages = lib.optional darwin dyldWrappers ++ [ colcon.colcon env uwrt pkgs.rsync pkgs.openssh ] ++ tools;
 
   COLCON_DEFAULTS_FILE = colcon.defaultsFile;
   UWRT_NIX_SHELL = name;
 
   passthru = { inherit env dyldWrappers; workspace = ws; };
 
-  shellHook = if scanned then ''
+  # apt ros and outer workspaces out first (see strip-apt.sh), then say what was scanned
+  shellHook = "source ${./strip-apt.sh}\n" + (if scanned then ''
     echo "${name}: deps from ${ws}/src${lib.optionalString (deps.skipped != [ ]) ", skipping ${lib.concatStringsSep " " deps.skipped}"}" >&2
   '' else ''
     echo "${name}: no workspace scanned (${if home == "" then "pure eval, use --impure" else "${ws}/src not found, set UWRT_WS"}), base ros only" >&2
-  '';
+  '');
 }

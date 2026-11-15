@@ -1,0 +1,337 @@
+#!/usr/bin/env bash
+# uwrt: the team's entry point to the uwrt_nix shells. `uwrt help` for the commands.
+# settings: ~/.uwrt/env (KEY=value), or the same names in the environment:
+#   UWRT_NIX (~/osu-uwrt/uwrt_nix), UWRT_DEV_WS (~/osu-uwrt/development/software),
+#   UWRT_RELEASE_WS (~/osu-uwrt/release), UWRT_RMW (see uwrt-env)
+set -euo pipefail
+
+version=@version@
+share=@share@
+python=@python@
+
+cfg_dir=${UWRT_CONFIG_DIR:-$HOME/.uwrt}
+cfg=$cfg_dir/env
+
+die() { echo "uwrt: $*" >&2; exit 1; }
+
+# setting from the environment, else ~/.uwrt/env, else the default
+setting() {
+  local name=$1 def=$2 v=${!1:-}
+  if [ -z "$v" ] && [ -f "$cfg" ]; then
+    v=$(sed -nE "s/^[[:space:]]*(export[[:space:]]+)?$name=[\"']?([^\"']*)[\"']?[[:space:]]*\$/\\2/p" "$cfg" | tail -1)
+  fi
+  v=${v:-$def}
+  echo "${v/#\~/$HOME}"
+}
+
+nix_dir() { setting UWRT_NIX "$HOME/osu-uwrt/uwrt_nix"; }
+
+ws_of() {
+  case $1 in
+    dev) setting UWRT_DEV_WS "$HOME/osu-uwrt/development/software" ;;
+    release) setting UWRT_RELEASE_WS "$HOME/osu-uwrt/release" ;;
+  esac
+}
+
+shell_of() { case $1 in dev) echo riptide-dev ;; release) echo riptide-release ;; esac; }
+
+usage() {
+  cat <<EOF
+uwrt $version
+
+  uwrt dev|release [cmd...]   run cmd (default: \$SHELL in the workspace) in that workspace's env
+  uwrt build [colcon args]    colcon build from the workspace root, then merge compile_commands.json
+  uwrt rmw [zenoh|fastdds-local|show]
+                              pick the rmw (saved in ~/.uwrt/env; direnv picks it up on the next prompt)
+  uwrt deps update            regenerate uwrt_nix's deps/system-keys.json from the pinned rosdistro
+  uwrt setup [--patch-bashrc [FILE]] [--dry-run] [--force]
+                              write the workspaces' .envrc files (and on linux guard ~/.bashrc)
+  uwrt doctor                 check the machine's nix/direnv setup
+EOF
+}
+
+# ---- dev / release
+
+envrc_text() {  # envrc_text <shell> <uwrt_nix dir>
+  cat <<EOF
+# written by \`uwrt setup\`, not tracked. rerun it to update this file
+export UWRT_WS=\$PWD   # before use flake, the shell reads it at eval
+uwrt_nix=$2
+# nix-direnv re-evals when a file watched before use flake changes: uwrt_nix and the package.xml
+# files (deps come from those). a new package needs \`direnv reload\`
+watch_file \$(git -C "\$uwrt_nix" ls-files --full-name | sed "s|^|\$uwrt_nix/|") \\
+  \$(find src -name package.xml -not -path '*/build/*' -not -path '*/install/*')
+use flake "\$uwrt_nix#$1" --impure
+watch_file "\${UWRT_CONFIG_DIR:-\$HOME/.uwrt}/env" install/local_setup.bash
+eval "\$(uwrt-env)"
+if [[ -f install/local_setup.bash ]]; then source install/local_setup.bash; fi
+# macos: local_setup exports DYLD_LIBRARY_PATH, which would shadow system libs (libyaml, ...) for
+# everything. rpaths and the ros program wrappers already find the libs
+if [[ \$(uname -s) == Darwin ]]; then unset DYLD_LIBRARY_PATH; fi
+EOF
+}
+
+enter() {  # enter <dev|release> [cmd...]
+  local which=$1; shift
+  local ws; ws=$(ws_of "$which")
+  [ -d "$ws/src" ] || die "no workspace at $ws (set UWRT_${which^^}_WS in $cfg)"
+  if [ $# -eq 0 ]; then
+    # interactive: start in the workspace, so a direnv hook in the new shell keeps the env
+    cd "$ws"
+    set -- "${SHELL:-bash}"
+  fi
+  if command -v direnv >/dev/null && [ -f "$ws/.envrc" ]; then
+    exec direnv exec "$ws" "$@"
+  fi
+  # no direnv: same thing by hand
+  echo "uwrt: no direnv or $ws/.envrc (uwrt setup), using nix develop" >&2
+  local nd; nd=$(nix_dir)
+  UWRT_WS=$ws exec nix develop --impure "$nd#$(shell_of "$which")" -c bash -c '
+    eval "$(uwrt-env)"
+    if [[ -f "$UWRT_WS/install/local_setup.bash" ]]; then source "$UWRT_WS/install/local_setup.bash"; fi
+    if [[ $(uname -s) == Darwin ]]; then unset DYLD_LIBRARY_PATH; fi
+    exec "$@"' uwrt "$@"
+}
+
+# ---- build
+
+merge_cc() {  # merge_cc <build dir>
+  "$python" -I - "$1" <<'PY'
+import json, sys
+from pathlib import Path
+b = Path(sys.argv[1])
+cmds = []
+for f in sorted(b.glob('*/compile_commands.json')):
+    try:
+        cmds += json.loads(f.read_text())
+    except ValueError as e:
+        print(f'uwrt: skipping {f}: {e}', file=sys.stderr)
+out = b / 'compile_commands.json'
+tmp = out.with_suffix('.json.tmp')
+tmp.write_text(json.dumps(cmds, indent=1) + '\n')
+tmp.replace(out)
+print(f'uwrt: {len(cmds)} entries -> {out}')
+PY
+}
+
+build() {
+  local ws=${UWRT_WS:-}
+  [ -n "$ws" ] || die "not in a uwrt workspace env (cd into one, or uwrt dev|release)"
+  cd "$ws"
+  colcon build "$@"
+  [ -d build ] || return 0
+  merge_cc "$ws/build"
+  stale_env
+}
+
+# packages whose cmake cache still points at an older ros env. nothing roots that env, so a
+# `nix store gc` would break them; reconfigure them against this one
+stale_env() {
+  local cur f stale=()
+  cur=$(tr : '\n' <<< "${AMENT_PREFIX_PATH:-}" | grep -m1 -E '^/nix/store/[a-z0-9]{32}-ros-env$') || return 0
+  for f in build/*/CMakeCache.txt; do
+    [ -f "$f" ] || continue
+    if grep -oE '/nix/store/[a-z0-9]{32}-ros-env' "$f" | sort -u | grep -qvxF "$cur"; then
+      stale+=("$(basename "$(dirname "$f")")")
+    fi
+  done
+  [ ${#stale[@]} -eq 0 ] && return 0
+  echo "uwrt: ${#stale[@]} package(s) are configured against an older env, which \`nix store gc\` can delete:" >&2
+  echo "  uwrt build --cmake-clean-cache --packages-select ${stale[*]}" >&2
+}
+
+# ---- rmw
+
+rmw() {
+  local want=${1:-show}
+  case $want in
+    show)
+      echo "configured: $(setting UWRT_RMW "$( [ "$(uname -s)" = Darwin ] && echo fastdds-local || echo zenoh )") ($cfg)"
+      echo "this shell: UWRT_RMW=${UWRT_RMW:-} RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION:-} ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-}" \
+        "ROS_LOCALHOST_ONLY=${ROS_LOCALHOST_ONLY:-} ZENOH_SESSION_CONFIG_URI=${ZENOH_SESSION_CONFIG_URI:-}"
+      ;;
+    zenoh|fastdds-local)
+      mkdir -p "$cfg_dir"
+      touch "$cfg"
+      local rest; rest=$(grep -vE '^[[:space:]]*(export[[:space:]]+)?UWRT_RMW=' "$cfg" || true)
+      printf '%s\n' ${rest:+"$rest"} "UWRT_RMW=$want" > "$cfg.tmp" && mv "$cfg.tmp" "$cfg"
+      echo "uwrt: rmw is $want (in $cfg)"
+      echo "direnv reloads on the next prompt. in a shell without direnv: eval \"\$(uwrt-env)\""
+      ;;
+    *) die "rmw: zenoh, fastdds-local or show" ;;
+  esac
+}
+
+# ---- setup
+
+setup() {
+  local patch= bashrc=$HOME/.bashrc dry= force=
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --patch-bashrc) patch=1; if [ $# -gt 1 ] && [[ $2 != --* ]]; then bashrc=$2; shift; fi ;;
+      --dry-run) dry=1 ;;
+      --force) force=1 ;;
+      *) die "setup: unknown option $1" ;;
+    esac
+    shift
+  done
+
+  local nd; nd=$(nix_dir)
+  [ -f "$nd/flake.nix" ] || die "no uwrt_nix at $nd (set UWRT_NIX)"
+  local which ws f new ex
+  for which in dev release; do
+    ws=$(ws_of "$which")
+    [ -d "$ws/src" ] || { echo "uwrt: no $which workspace at $ws, skipped"; continue; }
+    f=$ws/.envrc
+    new=$(envrc_text "$(shell_of "$which")" "$nd")
+    if [ -f "$f" ] && [ "$(cat "$f")" = "$new" ]; then
+      echo "uwrt: $f is up to date"
+    elif [ -f "$f" ] && [ -z "$force" ]; then
+      echo "uwrt: $f exists and differs (--force replaces it):"
+      diff -u "$f" <(echo "$new") || true
+      continue
+    elif [ -n "$dry" ]; then
+      echo "uwrt: (dry run) would write $f"
+    else
+      echo "$new" > "$f"
+      echo "uwrt: wrote $f"
+    fi
+    # keep it out of git where the workspace is a repo (release). never a .gitignore edit
+    if ex=$(git -C "$ws" rev-parse --path-format=absolute --git-path info/exclude 2>/dev/null) \
+      && [ "$(git -C "$ws" rev-parse --show-toplevel 2>/dev/null)" = "$(cd "$ws" && pwd -P)" ]; then
+      for p in /.envrc /.direnv/; do
+        grep -qxF "$p" "$ex" 2>/dev/null && continue
+        if [ -n "$dry" ]; then echo "uwrt: (dry run) would add $p to $ex"; else mkdir -p "$(dirname "$ex")"; echo "$p" >> "$ex"; echo "uwrt: added $p to $ex"; fi
+      done
+    fi
+    if [ -z "$dry" ] && command -v direnv >/dev/null; then direnv allow "$ws"; fi
+  done
+
+  if [ -n "$patch" ]; then
+    "$python" -I "$share/patch-bashrc.py" ${dry:+--dry-run} "$bashrc"
+  elif [ "$(uname -s)" = Linux ] && grep -qs /opt/ros "$HOME/.bashrc" \
+    && ! "$python" -I "$share/patch-bashrc.py" --check "$HOME/.bashrc" >/dev/null; then
+    echo "uwrt: ~/.bashrc sources apt ros without the uwrt guard. uwrt setup --patch-bashrc --dry-run shows the change"
+  fi
+}
+
+# ---- doctor
+
+doctor() {
+  local fails=0
+  ok() { printf '  ok    %s\n' "$*"; }
+  warn() { printf '  warn  %s\n' "$*"; }
+  bad() { printf '  FAIL  %s\n' "$*"; fails=$((fails + 1)); }
+  vge() { "$python" -I -c 'import sys; v = lambda s: [int(x) for x in s.split(".") if x.isdigit()]; sys.exit(v(sys.argv[1]) < v(sys.argv[2]))' "$1" "$2"; }  # vge <have> <need>
+  local os; os=$(uname -s)
+  local nd; nd=$(nix_dir)
+
+  echo "uwrt $version, uwrt_nix at $nd"
+  if command -v nix >/dev/null; then
+    local feat; feat=$(nix config show experimental-features 2>/dev/null || true)
+    if [[ $feat == *flakes* && $feat == *nix-command* ]]; then ok "nix $(nix --version | awk '{print $NF}'), flakes on"
+    else bad "nix: enable flakes (experimental-features = nix-command flakes in /etc/nix/nix.conf)"; fi
+    local subs; subs=$(nix config show substituters 2>/dev/null; nix config show trusted-substituters 2>/dev/null)
+    if [ "$os" = Darwin ]; then
+      [[ $subs == *ros-darwin.cachix.org* ]] && ok "ros-darwin.cachix.org is a substituter" \
+        || bad "add ros-darwin.cachix.org to substituters + trusted-substituters (/etc/nix/nix.custom.conf)"
+    else
+      [[ $subs == *ros.cachix.org* ]] && ok "ros.cachix.org is a substituter" || bad "add ros.cachix.org to substituters (/etc/nix/nix.conf)"
+    fi
+  else
+    bad "nix not found"
+  fi
+
+  if command -v direnv >/dev/null; then
+    local dv; dv=$(direnv version)
+    vge "$dv" 2.30 && ok "direnv $dv" || bad "direnv $dv is too old (need 2.30+)"
+    local rc=$HOME/.zshrc; [[ ${SHELL:-} == *bash ]] && rc=$HOME/.bashrc
+    grep -qs 'direnv hook' "$rc" && ok "direnv hook in $rc" || bad "no direnv hook in $rc (eval \"\$(direnv hook ${SHELL##*/})\")"
+    local ndv; ndv=$(direnv_nix_version)
+    if [ -z "$ndv" ]; then bad "nix-direnv isn't loaded by direnv (source its direnvrc from ~/.config/direnv/direnvrc)"
+    elif vge "$ndv" 3.0.0; then ok "nix-direnv $ndv"
+    else bad "nix-direnv $ndv is too old (need 3+)"; fi
+  else
+    bad "direnv not found (nix profile add nixpkgs#direnv nixpkgs#nix-direnv)"
+  fi
+
+  local mf; mf=$(ulimit -n)
+  if [ "$os" = Darwin ]; then
+    local lm; lm=$(launchctl limit maxfiles 2>/dev/null | awk '{print $2}')
+    [ "${lm:-0}" = unlimited ] || [ "${lm:-0}" -ge 65536 ] && ok "maxfiles $lm (this shell: $mf)" \
+      || bad "maxfiles ${lm:-?} is low (colcon/nix need 65536: sudo launchctl limit maxfiles 65536 unlimited, plus a LaunchDaemon to keep it)"
+  else
+    [ "$mf" = unlimited ] || [ "$mf" -ge 4096 ] && ok "open files $mf" || warn "open files limit is $mf"
+  fi
+
+  local gv; gv=$(git --version | awk '{print $3}')
+  vge "$gv" 2.45 && ok "git $gv (reads the reftable riptide_control/release repos)" \
+    || bad "git $gv can't read reftable repos (riptide_control, release); need 2.45+ ($(command -v git))"
+
+  if rsync --version 2>/dev/null | head -1 | grep -q 'rsync  version'; then ok "GNU rsync ($(command -v rsync))"
+  else bad "rsync is $(command -v rsync || echo missing), not GNU rsync (colcon deploy needs it; nix profile add nixpkgs#rsync)"; fi
+
+  if [ "$os" = Linux ]; then
+    if ! grep -qs /opt/ros "$HOME/.bashrc"; then ok "~/.bashrc doesn't source apt ros"
+    elif "$python" -I "$share/patch-bashrc.py" --check "$HOME/.bashrc" >/dev/null; then ok "~/.bashrc has the uwrt guard"
+    else bad "~/.bashrc sources apt ros without the uwrt guard (uwrt setup --patch-bashrc)"; fi
+  fi
+
+  if [ -d "$nd/.git" ]; then
+    local un; un=$(git -C "$nd" ls-files --others --exclude-standard)
+    [ -z "$un" ] && ok "no untracked files in uwrt_nix" \
+      || bad "untracked files in uwrt_nix are invisible to the flake, git add them: $(echo $un)"
+    local lm age
+    lm=$("$python" -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["nodes"]["nix-ros-overlay"]["locked"]["lastModified"])' "$nd/flake.lock" 2>/dev/null || echo 0)
+    age=$(( ($(date +%s) - lm) / 86400 ))
+    [ "$age" -le 90 ] && ok "nix-ros-overlay pin is $age days old" \
+      || warn "nix-ros-overlay pin is $age days old (bump: nix flake update nix-ros-overlay; caches drop old builds)"
+  else
+    bad "no uwrt_nix checkout at $nd"
+  fi
+
+  local which ws
+  for which in dev release; do
+    ws=$(ws_of "$which")
+    [ -d "$ws/src" ] || { warn "no $which workspace at $ws"; continue; }
+    [ -f "$ws/.envrc" ] && ok "$ws/.envrc" || bad "no $ws/.envrc (uwrt setup)"
+  done
+  [ "$os" = Darwin ] && echo "  note  a fresh mac's first load builds ~100 core ros packages locally (about 8 minutes)"
+
+  [ "$fails" -eq 0 ] && echo "all good" || { echo "$fails problem(s)"; return 1; }
+}
+
+direnv_nix_version() {
+  # the nix-direnv that direnvrc (or direnv/lib) loads, or nothing
+  local d=${XDG_CONFIG_HOME:-$HOME/.config}/direnv f src
+  for f in "$d/direnvrc" "$d"/lib/*.sh; do
+    [ -f "$f" ] || continue
+    src=$(sed -nE 's/^[[:space:]]*(source|\.)[[:space:]]+"?([^"]*nix-direnv[^"]*)"?.*/\2/p' "$f" | head -1)
+    src=${src//\$HOME/$HOME}
+    src=${src//\$\{HOME\}/$HOME}
+    [ -n "$src" ] && f=$src
+    [ -f "$f" ] && grep -q '^NIX_DIRENV_VERSION=' "$f" || continue
+    sed -nE 's/^NIX_DIRENV_VERSION=([0-9.]+).*/\1/p' "$f" | head -1
+    return 0
+  done
+}
+
+# ----
+
+cmd=${1:-help}
+[ $# -gt 0 ] && shift
+case $cmd in
+  dev|release) enter "$cmd" "$@" ;;
+  build) build "$@" ;;
+  rmw) rmw "$@" ;;
+  deps)
+    [ "${1:-}" = update ] || die "deps: only 'update'"
+    cd "$(nix_dir)"
+    nix run .#deps-update
+    ;;
+  setup) setup "$@" ;;
+  doctor) doctor ;;
+  help|-h|--help) usage ;;
+  --version) echo "uwrt $version" ;;
+  *) usage >&2; exit 1 ;;
+esac

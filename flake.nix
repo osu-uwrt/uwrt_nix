@@ -38,15 +38,17 @@
         lib = pkgs.lib;
 
         skip = import ./nix/skip.nix { inherit lib; inherit (pkgs) stdenv; };
-        colconFor = p: import ./nix/colcon.nix { inherit (p) lib; pkgs = p; inherit (inputs) riptide_setup; inherit skip; };
 
-        # colcon comes from the same pin as the ros env, so ament_python builds use its python
+        # one colcon and one uwrt for both shells, from the dev pin (user, 2026-11-15). colcon runs
+        # ament_python setup.py builds with its own python, so once the release pin's python differs
+        # from the dev pin's, release python packages may need their own colcon again
+        colcon = import ./nix/colcon.nix { inherit lib pkgs skip; inherit (inputs) riptide_setup; };
+        uwrt = pkgs.callPackage ./nix/uwrt.nix { };
         mkShell = p: args: import ./nix/riptide-shell.nix ({
           inherit (p) lib;
           pkgs = p;
           ros = p.rosPackages.${rosDistro};
-          colcon = colconFor p;
-          inherit skip;
+          inherit colcon skip uwrt;
         } // args);
         ros = pkgs.rosPackages.${rosDistro};
       in {
@@ -65,7 +67,8 @@
         };
 
         packages = {
-          inherit (colconFor pkgs) colcon colcon-riptide;
+          inherit (colcon) colcon colcon-riptide;
+          inherit uwrt;
         };
 
         apps.deps-update = {
