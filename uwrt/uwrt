@@ -46,7 +46,7 @@ uwrt $version
   uwrt rmw [zenoh|fastdds-local|show]
                               pick the rmw (saved in ~/.uwrt/env; direnv picks it up on the next prompt)
   uwrt deps update            regenerate uwrt_nix's deps/system-keys.json from the pinned rosdistro
-  uwrt setup [--patch-bashrc [FILE]] [--dry-run] [--force]
+  uwrt setup [--patch-bashrc [FILE] | --unpatch-bashrc [FILE]] [--dry-run] [--force]
                               write the workspaces' .envrc files (and on linux guard ~/.bashrc)
   uwrt doctor                 check the machine's nix/direnv setup
 EOF
@@ -173,7 +173,8 @@ setup() {
   local patch= bashrc=$HOME/.bashrc dry= force=
   while [ $# -gt 0 ]; do
     case $1 in
-      --patch-bashrc) patch=1; if [ $# -gt 1 ] && [[ $2 != --* ]]; then bashrc=$2; shift; fi ;;
+      --patch-bashrc|--unpatch-bashrc)
+        patch=${1#--}; if [ $# -gt 1 ] && [[ $2 != --* ]]; then bashrc=$2; shift; fi ;;
       --dry-run) dry=1 ;;
       --force) force=1 ;;
       *) die "setup: unknown option $1" ;;
@@ -213,7 +214,7 @@ setup() {
   done
 
   if [ -n "$patch" ]; then
-    "$python" -I "$share/patch-bashrc.py" ${dry:+--dry-run} "$bashrc"
+    "$python" -I "$share/patch-bashrc.py" ${dry:+--dry-run} $([ "$patch" = unpatch-bashrc ] && echo --unpatch) "$bashrc"
   elif [ "$(uname -s)" = Linux ] && grep -qs /opt/ros "$HOME/.bashrc" \
     && ! "$python" -I "$share/patch-bashrc.py" --check "$HOME/.bashrc" >/dev/null; then
     echo "uwrt: ~/.bashrc sources apt ros without the uwrt guard. uwrt setup --patch-bashrc --dry-run shows the change"
