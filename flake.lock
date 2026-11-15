@@ -56,18 +56,18 @@
     "nereus": {
       "flake": false,
       "locked": {
-        "lastModified": 1794512511,
-        "narHash": "sha256-vBSwlWJonUuabMUE/qcBhS7z4YtCi6u+Q0bvUKkRNOc=",
-        "ref": "main",
-        "rev": "47e552a936abc1a578564103c62d6a57aeec501e",
-        "revCount": 286,
+        "lastModified": 1794731400,
+        "narHash": "sha256-3ak12m5oYw2i+lQXxe9us9aqlE8oQzBjrlt9wJo4E7A=",
+        "ref": "nix-macos",
+        "rev": "cdf2ede3711d1f950d7d6f8084b1f67831e25477",
+        "revCount": 292,
         "type": "git",
-        "url": "https://github.com/osu-uwrt/nereus"
+        "url": "file:///Users/ethan/osu-uwrt/development/software/src/nereus"
       },
       "original": {
-        "ref": "main",
+        "ref": "nix-macos",
         "type": "git",
-        "url": "https://github.com/osu-uwrt/nereus"
+        "url": "file:///Users/ethan/osu-uwrt/development/software/src/nereus"
       }
     },
     "nix-ros-overlay": {
@@ -109,6 +109,30 @@
         "owner": "lopsided98",
         "repo": "nix-ros-overlay",
         "rev": "84ede7becd81f206251f4cd709c551f43c3eb376",
+        "type": "github"
+      }
+    },
+    "nixgl": {
+      "inputs": {
+        "flake-utils": [
+          "nix-ros-overlay",
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793798159,
+        "narHash": "sha256-c263mBFrDLv2/sguzQeKL99aJ4PkCdcUzcAuA5Cpzjo=",
+        "owner": "nix-community",
+        "repo": "nixGL",
+        "rev": "4306ae1d15adf3d386f1462b330d4f2648404711",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixGL",
         "type": "github"
       }
     },
@@ -164,18 +188,18 @@
     "notgroot": {
       "flake": false,
       "locked": {
-        "lastModified": 1794520416,
-        "narHash": "sha256-PT/18HDkd6bCFD/5+MIqiH4zeivqi6vncuIts14M5rs=",
-        "ref": "run-replay",
-        "rev": "ac9c126128e2ba69a70633877a55067057c6039a",
-        "revCount": 58,
+        "lastModified": 1794731405,
+        "narHash": "sha256-2S8B/NOT/nIe6qwo3ZXqs/kSXhfZVAChPZLixT2VoKg=",
+        "ref": "nix-macos",
+        "rev": "7ed75ba0dc8d3e2c690e247f6b158a0b4ab272de",
+        "revCount": 64,
         "type": "git",
-        "url": "ssh://git@github.com/osu-uwrt/notgroot"
+        "url": "file:///Users/ethan/osu-uwrt/notgroot"
       },
       "original": {
-        "ref": "run-replay",
+        "ref": "nix-macos",
         "type": "git",
-        "url": "ssh://git@github.com/osu-uwrt/notgroot"
+        "url": "file:///Users/ethan/osu-uwrt/notgroot"
       }
     },
     "riptide_setup": {
@@ -201,6 +225,7 @@
         "nereus": "nereus",
         "nix-ros-overlay": "nix-ros-overlay",
         "nix-ros-overlay-release": "nix-ros-overlay-release",
+        "nixgl": "nixgl",
         "nixpkgs": [
           "nix-ros-overlay",
           "nixpkgs"

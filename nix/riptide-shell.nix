@@ -1,7 +1,7 @@
 # one riptide shell: the ros env for a workspace's package.xml deps, colcon_riptide's colcon,
 # and on mac the DYLD_LIBRARY_PATH fix in every ros program.
 # the workspace is $UWRT_WS (its src/ is scanned), or ~/<defaultWorkspace>. needs --impure
-{ lib, pkgs, ros, colcon, skip, uwrt, name, defaultWorkspace, extraRos ? [ ], tools ? [ ] }:
+{ lib, pkgs, ros, colcon, skip, uwrt, tools, name, defaultWorkspace, extraRos ? [ ], nereusBuild ? false }:
 let
   darwin = pkgs.stdenv.hostPlatform.isDarwin;
 
@@ -45,13 +45,22 @@ let
     done
   '';
 in
-pkgs.mkShell {
+pkgs.mkShell ({
   inherit name;
-  packages = lib.optional darwin dyldWrappers ++ [ colcon.colcon env uwrt pkgs.rsync pkgs.openssh ] ++ tools;
+  packages = lib.optional darwin dyldWrappers ++ [ colcon.colcon env uwrt tools.riptide-tools pkgs.rsync pkgs.openssh ]
+    ++ lib.optionals nereusBuild [ pkgs.cmake pkgs.uv pkgs.pkg-config ];  # cmake: its hook puts buildInputs on CMAKE_PREFIX_PATH
+  # nereus' ros-viewer preset (build.sh in src/nereus) builds against these and the workspace, and notgroot's
+  # build.sh against the rest
+  buildInputs = lib.optionals nereusBuild (lib.unique (tools.nereusDeps ++ tools.notgrootDeps));
 
   COLCON_DEFAULTS_FILE = colcon.defaultsFile;
+  FONTCONFIG_FILE = tools.fontsConf;
   UWRT_NIX_SHELL = name;
-
+} // lib.optionalAttrs nereusBuild {
+  # build.sh's uv sync makes .venv from nix's python, never a downloaded one
+  UV_PYTHON = "${pkgs.python3}/bin/python3";
+  UV_PYTHON_DOWNLOADS = "never";
+} // {
   passthru = { inherit env dyldWrappers; workspace = ws; };
 
   # apt ros and outer workspaces out first (see strip-apt.sh), then say what was scanned
@@ -63,4 +72,4 @@ pkgs.mkShell {
   '' else ''
     echo "${name}: no workspace scanned (${if home == "" then "pure eval, use --impure" else "${ws}/src not found, set UWRT_WS"}), base ros only" >&2
   '');
-}
+})

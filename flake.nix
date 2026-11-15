@@ -8,10 +8,14 @@
 
     riptide_setup = { url = "github:osu-uwrt/riptide_setup/matlab-install"; flake = false; };
 
-    # riptide-tools sources. notgroot is private, so ssh. test local edits with
-    # --override-input notgroot path:$HOME/osu-uwrt/notgroot
-    nereus = { url = "git+https://github.com/osu-uwrt/nereus?ref=main"; flake = false; };
-    notgroot = { url = "git+ssh://git@github.com/osu-uwrt/notgroot?ref=run-replay"; flake = false; };
+    # riptide-tools sources: the local, unpushed nix-macos branches for now. once they're pushed, back to
+    #   git+https://github.com/osu-uwrt/nereus?ref=<branch>  and  git+ssh://git@github.com/osu-uwrt/notgroot?ref=<branch>
+    # test uncommitted edits with --override-input notgroot git+file://$HOME/osu-uwrt/notgroot
+    nereus = { url = "git+file:///Users/ethan/osu-uwrt/development/software/src/nereus?ref=nix-macos"; flake = false; };
+    notgroot = { url = "git+file:///Users/ethan/osu-uwrt/notgroot?ref=nix-macos"; flake = false; };
+
+    # gl for nix programs on non-nixos linux
+    nixgl = { url = "github:nix-community/nixGL"; inputs.nixpkgs.follows = "nixpkgs"; inputs.flake-utils.follows = "nix-ros-overlay/flake-utils"; };
 
     # ros-extra, the commits development/dependencies used. no vectornav, the fork is deprecated
     chameleon_tf = { url = "github:coalman321/chameleon_tf/fe161bf96970e52b29fa8a39a256958fbe1f4065"; flake = false; };
@@ -49,9 +53,16 @@
           inherit (p) lib;
           pkgs = p;
           ros = p.rosPackages.${rosDistro};
-          inherit colcon skip uwrt;
+          inherit colcon skip uwrt tools;
         } // args);
         ros = pkgs.rosPackages.${rosDistro};
+
+        # nereus + notgroot, one build from the dev pin for both shells
+        tools = import ./nix/riptide-tools.nix {
+          inherit lib pkgs;
+          inherit (inputs) nereus notgroot;
+          nixgl = if pkgs.stdenv.hostPlatform.isLinux then inputs.nixgl.packages.${system} else null;
+        };
       in {
         devShells = rec {
           riptide-dev = mkShell pkgs {
@@ -59,6 +70,7 @@
             defaultWorkspace = "osu-uwrt/development/software";
             # release vendors these as submodules, dev gets them from here
             extraRos = with ros; [ chameleon-tf chameleon-tf-msgs nortek-dvl nortek-dvl-msgs zed-interfaces ];
+            nereusBuild = true;
           };
           riptide-release = mkShell pkgsRelease {
             name = "riptide-release";
@@ -70,7 +82,12 @@
         packages = {
           inherit (colcon) colcon colcon-riptide;
           inherit uwrt;
+          inherit (tools) riptide-tools;
+          nereus = tools.nereus-tool;
+          notgroot = tools.notgroot-tool;
         };
+
+        checks = { inherit (tools) notgroot-tests nereus-tests; };
 
         apps.deps-update = {
           type = "app";
