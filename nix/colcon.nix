@@ -25,6 +25,10 @@ let
         "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
         "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
         "-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON"
+        # match jammy's toolchain defaults: gcc 11 builds C as gnu17 (gcc 15 is c23, where
+        # `void f()` means f(void)), and cmake 3.22 still took cmake_minimum_required < 3.5
+        "-DCMAKE_C_STANDARD=17"
+        "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
       ];
     };
     test = verbArgs;
