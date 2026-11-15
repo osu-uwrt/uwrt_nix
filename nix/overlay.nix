@@ -39,6 +39,6 @@ in {
       rcpputils = rosPrev.rcpputils.overrideAttrs (old: {
         patches = (old.patches or [ ]) ++ [ ./patches/rcpputils-ament-prefix-path.patch ];
       });
-    })).overrideScope (if rosExtra == null then (_: _: { }) else import ./ros-extra.nix { inherit lib; sources = rosExtra; });
+    })).overrideScope (if rosExtra == null then (_: _: { }) else import ./ros-extra.nix { inherit lib darwin; sources = rosExtra; });
   };
 }

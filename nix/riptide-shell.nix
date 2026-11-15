@@ -23,7 +23,7 @@ let
   ];
 
   # SIP strips DYLD_* through /bin/sh and /usr/bin/env, AMENT_PREFIX_PATH survives. rebuild it
-  # from there in every wrapped program, so workspace libs in install/*/lib are found too
+  # from there, so workspace libs in install/*/lib are found too
   dyld = ''
     _uwrt_d=; IFS=: read -ra _uwrt_p <<< "''${AMENT_PREFIX_PATH-}"
     for _uwrt_x in "''${_uwrt_p[@]}"; do if [ -d "$_uwrt_x/lib" ]; then _uwrt_d="''${_uwrt_d:+$_uwrt_d:}$_uwrt_x/lib"; fi; done
@@ -33,19 +33,26 @@ let
   env = ros.buildEnv {
     underlay = true;
     paths = lib.unique (base ++ deps.deps ++ extraRos);
-    postBuild = lib.optionalString darwin ''
-      rosWrapperArgs=(--run ${lib.escapeShellArg dyld})
-    '';
   };
+
+  # mac only: every program in the env again, wrapped to run the snippet above first. it goes
+  # ahead of env on PATH. (buildEnv's own rosWrapperArgs is expanded unquoted, so it can't take it)
+  dyldWrappers = pkgs.runCommand "${name}-dyld-wrappers" { nativeBuildInputs = [ pkgs.makeWrapper ]; } ''
+    mkdir -p $out/bin
+    for f in ${env}/bin/*; do
+      [ -f "$f" ] && [ -x "$f" ] || continue
+      makeWrapper "$f" "$out/bin/$(basename "$f")" --run ${lib.escapeShellArg dyld}
+    done
+  '';
 in
 pkgs.mkShell {
   inherit name;
-  packages = [ colcon.colcon env pkgs.rsync pkgs.openssh ] ++ tools;
+  packages = lib.optional darwin dyldWrappers ++ [ colcon.colcon env pkgs.rsync pkgs.openssh ] ++ tools;
 
   COLCON_DEFAULTS_FILE = colcon.defaultsFile;
   UWRT_NIX_SHELL = name;
 
-  passthru = { inherit env; workspace = ws; };
+  passthru = { inherit env dyldWrappers; workspace = ws; };
 
   shellHook = if scanned then ''
     echo "${name}: deps from ${ws}/src${lib.optionalString (deps.skipped != [ ]) ", skipping ${lib.concatStringsSep " " deps.skipped}"}" >&2

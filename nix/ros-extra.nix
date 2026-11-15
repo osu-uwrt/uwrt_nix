@@ -1,7 +1,7 @@
 # ros packages we need that aren't in rosdistro (replaces development/dependencies).
 # sources are flake inputs so package.xml can be read at eval time without IFD.
 # to edit one, clone it into the workspace's src, colcon's copy shadows this one
-{ lib, sources }:
+{ lib, darwin, sources }:
 rosFinal: rosPrev:
 let
   tagged = tags: xml: lib.unique (lib.concatMap (m: if lib.isList m then [ (lib.trim (lib.elemAt m 1)) ] else [ ])
@@ -28,6 +28,8 @@ let
       '';
       nativeBuildInputs = pkgs (tagged "buildtool_depend|buildtool_export_depend" xml);
       propagatedBuildInputs = pkgs (tagged "depend|build_depend|build_export_depend|exec_depend" xml ++ extra);
+      # clang -Werror=format-security on RCLCPP_DEBUG(logger, msg.c_str()) (nortek_dvl)
+      env = lib.optionalAttrs darwin { NIX_CFLAGS_COMPILE = "-Wno-error=format-security"; };
       doCheck = false;
       meta.description = field "description";
     };
