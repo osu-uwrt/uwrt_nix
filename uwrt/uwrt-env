@@ -19,6 +19,11 @@ if [ -f "$conf" ]; then
   done < "$conf"
 fi
 
+# the environment overrides the file, except UWRT_RMW (we export it, so it's the last loaded one)
+for k in UWRT_LOCAL_DOMAIN UWRT_ROBOT_DOMAIN UWRT_ZENOH_CONFIG UWRT_RELEASE_WS; do
+  if [ -n "${!k:-}" ]; then c[$k]=${!k}; fi
+done
+
 if [ "$(uname -s)" = Darwin ]; then def=fastdds-local; else def=zenoh; fi
 rmw=${c[UWRT_RMW]:-$def}
 q() { printf '%q' "$1"; }
