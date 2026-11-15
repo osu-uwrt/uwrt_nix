@@ -4,7 +4,14 @@
   "gpiod": "riptide_hardware2 exec_depend. jammy ships libgpiod 1.6. linux only, nothing on macos (gpio nodes would fail at runtime there)",
   "riptide_SINB": "deprecated, no such package. remove from riptide_bringup/package.xml (future work)",
   "libqt5-charts-dev": "upstream key has no nixos rule. declared by riptide_imu but unused there",
-  "nlohmann-json3-dev": "not a real rosdep key (fails on ubuntu too), riptide_imu should use nlohmann-json-dev"
+  "nlohmann-json3-dev": "not a real rosdep key (fails on ubuntu too), riptide_imu should use nlohmann-json-dev",
+  "CUDA": "tensor_detector. find_package(CUDA) is optional and the package installs only python + launch files. no CUDA in the shells",
+  "ultralytics": "tensor_detector's YOLO node (needs ultralytics + TensorRT). not in the shells: the node exits at start, the rest of bringup runs",
+  "collections": "tensor_detector. python stdlib, not a rosdep key",
+  "OpenCV": "tensor_detector. not a rosdep key (opencv is)",
+  "cv2": "tensor_detector. not a rosdep key (python3-opencv is)",
+  "numpy": "tensor_detector. not a rosdep key (python3-numpy is)",
+  "scipy": "tensor_detector. not a rosdep key (python3-scipy is)"
  },
  "gpiod": {
   "linux": [
@@ -18,5 +25,20 @@
  "nlohmann-json3-dev": [
   "nlohmann_json"
  ],
- "riptide_SINB": []
+ "riptide_SINB": [],
+ "CUDA": [],
+ "ultralytics": [],
+ "collections": [],
+ "OpenCV": [
+  "opencv"
+ ],
+ "cv2": [
+  "python3Packages.opencv4"
+ ],
+ "numpy": [
+  "python3Packages.numpy"
+ ],
+ "scipy": [
+  "python3Packages.scipy"
+ ]
 }
