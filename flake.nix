@@ -15,14 +15,24 @@
         lib = pkgs.lib;
         ros = pkgs.rosPackages.humble;
 
+        # camera_ros is only for apriltag_ros' example launch and needs libcamera (linux only).
+        # nobody runs real camera hardware on a mac, so drop it there
+        apriltag-ros = if pkgs.stdenv.hostPlatform.isDarwin
+          then ros.apriltag-ros.overrideAttrs (old: {
+            propagatedBuildInputs = lib.filter (p: (p.pname or "") != "ros-humble-camera-ros") old.propagatedBuildInputs;
+          })
+          else ros.apriltag-ros;
+
         # phase 0 spike, temporary. gets replaced by the real shells in phase 1
         spikeRos = with ros; {
           inherit ros-base rclcpp rclpy rmw-fastrtps-cpp rmw-zenoh-cpp rosbag2 cv-bridge tf2-ros
-            image-transport behaviortree-cpp-v3 robot-localization apriltag-ros control-toolbox
+            image-transport behaviortree-cpp-v3 robot-localization control-toolbox
             tf-transformations xacro robot-state-publisher joint-state-publisher diagnostic-updater
             vision-msgs pluginlib;
+          inherit apriltag-ros;
         };
-        spikePy = { inherit (pkgs.python3Packages) pybullet transforms3d fabric; };
+        # no pybullet, only the deprecated c_simulator used it
+        spikePy = { inherit (pkgs.python3Packages) transforms3d fabric; };
         spikeFw = { inherit (pkgs) gcc-arm-embedded-13 gcc-arm-embedded-14 openocd; };
 
         # drop whatever won't eval on this platform so the shell still loads
