@@ -19,8 +19,9 @@ let
 
   verbArgs = { packages-ignore = skip; };
   defaults = {
+    # no symlink-install (the plan had it): symlinked install(PROGRAMS) scripts keep their source mode, and most
+    # team scripts are 644 in git, so ros2 launch can't run them. the apt workflow copies (and chmods) them too
     build = verbArgs // {
-      symlink-install = true;
       cmake-args = [
         "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
         "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
@@ -29,6 +30,11 @@ let
         # `void f()` means f(void)), and cmake 3.22 still took cmake_minimum_required < 3.5
         "-DCMAKE_C_STANDARD=17"
         "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+      ] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
+        # copied (not symlinked) dylibs keep @rpath ids, and a package's own libs aren't on its install rpath, so
+        # e.g. a msg package's python extension can't find its generator_py lib. scripts start through
+        # /usr/bin/env, so SIP drops DYLD_LIBRARY_PATH. absolute install names, like nix's own cmake hook gives
+        "-DCMAKE_INSTALL_NAME_DIR=$<INSTALL_PREFIX>/lib"
       ];
     };
     test = verbArgs;
