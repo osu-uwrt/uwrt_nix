@@ -141,7 +141,7 @@ let
   '';
   # the projects' own test suites (ctest), built the same way. window tests skip without a display. on linux
   # the sandbox has no gl driver, so egl gets mesa's software one (llvmpipe, surfaceless) and the offscreen tests run
-  withTests = drv: drv.overrideAttrs (old: {
+  withTests = drv: exclude: drv.overrideAttrs (old: {
     pname = "${old.pname}-tests";
     buildInputs = old.buildInputs ++ [ pkgs.gtest ];
     cmakeFlags = lib.remove "-DBUILD_TESTING=OFF" old.cmakeFlags ++ [ "-DBUILD_TESTING=ON" ];
@@ -152,14 +152,17 @@ let
     '';
     checkPhase = ''
       runHook preCheck
-      ctest --output-on-failure -LE live -j$NIX_BUILD_CORES
+      ctest --output-on-failure -LE live -j$NIX_BUILD_CORES ${lib.optionalString (exclude != "") "-E '${exclude}'"}
       runHook postCheck
     '';
     installPhase = "touch $out";
   });
 in rec {
-  notgroot-tests = withTests notgroot-unwrapped;
-  nereus-tests = withTests nereus-unwrapped;
+  notgroot-tests = withTests notgroot-unwrapped "";
+  # macos only: these compare against recordings made on linux. clang's arm64 fma moves the contact one by 1e-5, and
+  # the replays' sensor noise differs (most likely libc++'s normal_distribution). see docs/riptide-tools.md
+  nereus-tests = withTests nereus-unwrapped (lib.optionalString darwin
+    "^(BoxContacts.PlantMatchesOriginalPreAndPostIntegrationContactSequence|PackRuntime.MatchesReferencePlantParametersFramesAndDynamics|Session.ReplaysTheRecordedScriptWithTasksDisabled|Session.ReplaysTheRecordedScriptWithTasksAndRunControl)$");
   inherit assimp5 fontsConf nereusDeps notgrootDeps notgroot-unwrapped nereus-unwrapped nereus-python nixGLIntel;
 
   notgroot-tool = pkgs.symlinkJoin {

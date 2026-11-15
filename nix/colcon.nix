@@ -33,7 +33,9 @@ let
       ] ++ lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
         # copied (not symlinked) dylibs keep @rpath ids, and a package's own libs aren't on its install rpath, so
         # e.g. a msg package's python extension can't find its generator_py lib. scripts start through
-        # /usr/bin/env, so SIP drops DYLD_LIBRARY_PATH. absolute install names, like nix's own cmake hook gives
+        # /usr/bin/env, so SIP drops DYLD_LIBRARY_PATH. absolute install names, like nix's own cmake hook gives.
+        # assumes linked libs install to <prefix>/lib (true for the workspace). a --cmake-args on the command line
+        # replaces this whole list
         "-DCMAKE_INSTALL_NAME_DIR=$<INSTALL_PREFIX>/lib"
       ];
     };
