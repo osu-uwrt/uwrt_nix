@@ -87,6 +87,8 @@ let
     cmakeFlags = [
       "-DBUILD_TESTING=OFF"
       "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
+      # cmake links some libs by full path (X11_LIBRARIES' libSM/libICE), which gets no rpath from the ld wrapper
+      "-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON"
     ];
     # a writable copy: BT.CPP's cmake writes a .clangd into its source
     preConfigure = ''
@@ -105,7 +107,7 @@ let
     # the datasets preset without tests: renderer, offscreen cameras, dataset generator. no ros
     cmakeFlags = map (o: "-DNEREUS_BUILD_${o}=ON") [
       "SIMULATION" "SCENE_RENDERER" "OFFSCREEN_RENDERER" "MESH_ASSETS" "CAMERAS" "SESSION" "PACK_SCENE" "DATASETS"
-    ] ++ [ "-DBUILD_TESTING=OFF" ];
+    ] ++ [ "-DBUILD_TESTING=OFF" "-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON" ];  # as notgroot
     meta.mainProgram = "nereus-dataset-render";
   };
 
