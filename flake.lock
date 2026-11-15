@@ -43,17 +43,17 @@
         "rosdistro": "rosdistro"
       },
       "locked": {
-        "lastModified": 1794039692,
-        "narHash": "sha256-LxoRIHc9WMcpcGpfmj1sYbwuBa8HjHenE+3N2iUgKTg=",
+        "lastModified": 1794583556,
+        "narHash": "sha256-JAfeamIY8Xh1aQqPrPES9iGvyTl2HsnbN5FP85JggPc=",
         "owner": "lopsided98",
         "repo": "nix-ros-overlay",
-        "rev": "971fa9ca86c79a4997e7c6b2f9df0cb754e7256a",
+        "rev": "84ede7becd81f206251f4cd709c551f43c3eb376",
         "type": "github"
       },
       "original": {
         "owner": "lopsided98",
         "repo": "nix-ros-overlay",
-        "rev": "971fa9ca86c79a4997e7c6b2f9df0cb754e7256a",
+        "rev": "84ede7becd81f206251f4cd709c551f43c3eb376",
         "type": "github"
       }
     },
@@ -64,17 +64,17 @@
         "rosdistro": "rosdistro_2"
       },
       "locked": {
-        "lastModified": 1794039692,
-        "narHash": "sha256-LxoRIHc9WMcpcGpfmj1sYbwuBa8HjHenE+3N2iUgKTg=",
+        "lastModified": 1794583556,
+        "narHash": "sha256-JAfeamIY8Xh1aQqPrPES9iGvyTl2HsnbN5FP85JggPc=",
         "owner": "lopsided98",
         "repo": "nix-ros-overlay",
-        "rev": "971fa9ca86c79a4997e7c6b2f9df0cb754e7256a",
+        "rev": "84ede7becd81f206251f4cd709c551f43c3eb376",
         "type": "github"
       },
       "original": {
         "owner": "lopsided98",
         "repo": "nix-ros-overlay",
-        "rev": "971fa9ca86c79a4997e7c6b2f9df0cb754e7256a",
+        "rev": "84ede7becd81f206251f4cd709c551f43c3eb376",
         "type": "github"
       }
     },
@@ -123,11 +123,11 @@
     "rosdistro": {
       "flake": false,
       "locked": {
-        "lastModified": 1791856650,
-        "narHash": "sha256-CwJlC/+WJgk02mEAn2/DJu67EVlnHjdSORE/IF8WBjs=",
+        "lastModified": 1794012933,
+        "narHash": "sha256-CyykBEo3yuijURK69OqN6nZ69Gpoa3MuPEJNmvTjwrs=",
         "owner": "ros",
         "repo": "rosdistro",
-        "rev": "2080626b0e2090677be8c0b5f14953ca22fa18e6",
+        "rev": "2cb51ba9773af0d09e7543cda138fbe6e452bf8e",
         "type": "github"
       },
       "original": {
@@ -139,11 +139,11 @@
     "rosdistro_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1791856650,
-        "narHash": "sha256-CwJlC/+WJgk02mEAn2/DJu67EVlnHjdSORE/IF8WBjs=",
+        "lastModified": 1794012933,
+        "narHash": "sha256-CyykBEo3yuijURK69OqN6nZ69Gpoa3MuPEJNmvTjwrs=",
         "owner": "ros",
         "repo": "rosdistro",
-        "rev": "2080626b0e2090677be8c0b5f14953ca22fa18e6",
+        "rev": "2cb51ba9773af0d09e7543cda138fbe6e452bf8e",
         "type": "github"
       },
       "original": {

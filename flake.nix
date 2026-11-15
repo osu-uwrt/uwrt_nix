@@ -1,8 +1,8 @@
 {
   inputs = {
-    # both pinned to master with darwin support (#913), bump on purpose
-    nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay/971fa9ca86c79a4997e7c6b2f9df0cb754e7256a";
-    nix-ros-overlay-release.url = "github:lopsided98/nix-ros-overlay/971fa9ca86c79a4997e7c6b2f9df0cb754e7256a";
+    # both pinned to develop (cached on ros + ros-darwin), bump on purpose
+    nix-ros-overlay.url = "github:lopsided98/nix-ros-overlay/84ede7becd81f206251f4cd709c551f43c3eb376";
+    nix-ros-overlay-release.url = "github:lopsided98/nix-ros-overlay/84ede7becd81f206251f4cd709c551f43c3eb376";
     nixpkgs.follows = "nix-ros-overlay/nixpkgs";  # IMPORTANT!!!
   };
   outputs = { self, nix-ros-overlay, nix-ros-overlay-release, nixpkgs }:
