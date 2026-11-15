@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- fastdds-local's transport (uwrt-env points FASTRTPS_DEFAULT_PROFILES_FILE here instead of setting
+     ROS_LOCALHOST_ONLY=1). same loopback-only udp that ROS_LOCALHOST_ONLY gives, but with big socket
+     buffers: macos' default (768 KB) drops the sim's 9 MB depth frames whole, and most rgb frames.
+     linux caps these at net.core.rmem_max/wmem_max -->
+<profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+  <transport_descriptors>
+    <transport_descriptor>
+      <transport_id>uwrt_loopback</transport_id>
+      <type>UDPv4</type>
+      <!-- just under macos' kern.ipc.maxsockbuf (8 MiB) -->
+      <sendBufferSize>7000000</sendBufferSize>
+      <receiveBufferSize>7000000</receiveBufferSize>
+      <interfaceWhiteList>
+        <address>127.0.0.1</address>
+      </interfaceWhiteList>
+    </transport_descriptor>
+  </transport_descriptors>
+  <participant profile_name="uwrt_fastdds_local" is_default_profile="true">
+    <rtps>
+      <userTransports>
+        <transport_id>uwrt_loopback</transport_id>
+      </userTransports>
+      <useBuiltinTransports>false</useBuiltinTransports>
+    </rtps>
+  </participant>
+</profiles>

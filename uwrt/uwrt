@@ -71,7 +71,10 @@ fi
 mapfile -t -O \${#_w[@]} _w < <(find src -name package.xml -not -path '*/build/*' -not -path '*/install/*')
 watch_file "\${_w[@]}"
 unset _w
+# the dev env exports its own SHELL (nix bash) and nix-direnv doesn't restore it. keep the user's
+_shell=\$SHELL
 use flake "\$uwrt_nix#$1" --impure
+if [[ -n \$_shell ]]; then export SHELL=\$_shell; fi; unset _shell
 watch_file "\${UWRT_CONFIG_DIR:-\$HOME/.uwrt}/env" install/local_setup.bash
 eval "\$(uwrt-env)"
 if [[ -f install/local_setup.bash ]]; then source install/local_setup.bash; fi
@@ -180,7 +183,7 @@ rmw() {
     show)
       echo "configured: $(setting UWRT_RMW "$( [ "$(uname -s)" = Darwin ] && echo fastdds-local || echo zenoh )") ($cfg)"
       echo "this shell: UWRT_RMW=${UWRT_RMW:-} RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION:-} ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-}" \
-        "ROS_LOCALHOST_ONLY=${ROS_LOCALHOST_ONLY:-} ZENOH_SESSION_CONFIG_URI=${ZENOH_SESSION_CONFIG_URI:-}"
+        "FASTRTPS_DEFAULT_PROFILES_FILE=${FASTRTPS_DEFAULT_PROFILES_FILE:-} ZENOH_SESSION_CONFIG_URI=${ZENOH_SESSION_CONFIG_URI:-}"
       ;;
     zenoh|fastdds-local)
       mkdir -p "$cfg_dir"

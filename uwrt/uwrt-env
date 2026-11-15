@@ -31,11 +31,13 @@ fastdds_net="ROS_DISCOVERY_SERVER ROS_SUPER_CLIENT FASTRTPS_DEFAULT_PROFILES_FIL
 
 case $rmw in
   fastdds-local)
-    echo "export UWRT_RMW=fastdds-local RMW_IMPLEMENTATION=rmw_fastrtps_cpp ROS_LOCALHOST_ONLY=1"
+    # loopback only like ROS_LOCALHOST_ONLY=1, but with big udp buffers (see the xml). ROS_LOCALHOST_ONLY
+    # has to stay unset: rmw_fastrtps would swap in its own small-buffer transport
+    echo "export UWRT_RMW=fastdds-local RMW_IMPLEMENTATION=rmw_fastrtps_cpp FASTRTPS_DEFAULT_PROFILES_FILE=$(q "$share/fastdds_local.xml")"
     echo "export ROS_DOMAIN_ID=$(q "${c[UWRT_LOCAL_DOMAIN]:-93}")"
-    echo "unset ZENOH_SESSION_CONFIG_URI ZENOH_ROUTER_CONFIG_URI ZENOH_ROUTER_CHECK_ATTEMPTS ZENOH_CONFIG_OVERRIDE"
+    echo "unset ROS_LOCALHOST_ONLY ZENOH_SESSION_CONFIG_URI ZENOH_ROUTER_CONFIG_URI ZENOH_ROUTER_CHECK_ATTEMPTS ZENOH_CONFIG_OVERRIDE"
     # release's fastdds scripts point these at the robot's discovery server
-    echo "unset $fastdds_net ROS_AUTOMATIC_DISCOVERY_RANGE ROS_STATIC_PEERS"
+    echo "unset ROS_DISCOVERY_SERVER ROS_SUPER_CLIENT FASTDDS_DEFAULT_PROFILES_FILE ROS_AUTOMATIC_DISCOVERY_RANGE ROS_STATIC_PEERS"
     ;;
   zenoh)
     # release's client config if there is a release checkout, else the copy shipped with uwrt

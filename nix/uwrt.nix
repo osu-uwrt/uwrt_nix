@@ -15,6 +15,7 @@ stdenvNoCC.mkDerivation {
     install -Dm755 uwrt-env $out/bin/uwrt-env
     install -Dm644 patch-bashrc.py $out/share/uwrt/patch-bashrc.py
     install -Dm644 zenoh_client.json5 $out/share/uwrt/zenoh_client.json5
+    install -Dm644 fastdds_local.xml $out/share/uwrt/fastdds_local.xml
     substituteInPlace $out/bin/uwrt $out/bin/uwrt-env \
       --replace-fail @share@ $out/share/uwrt --replace-quiet @version@ "$version+${rev}" --replace-quiet @python@ ${python3}/bin/python3
     # the patcher asks bash itself where statements end
