@@ -30,7 +30,12 @@ in {
         nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ final.fixDarwinDylibNames ];
       });
 
-      # rmw/typesupport dlopen only searches DYLD_LIBRARY_PATH, which SIP strips through /bin/sh
+      # libzenohc.dylib's id is its path in the build sandbox, rmw_zenoh only found it by leaf name
+      zenoh-cpp-vendor = rosPrev.zenoh-cpp-vendor.overrideAttrs (old: {
+        nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ final.fixDarwinDylibNames ];
+      });
+
+      # rmw/SharedLibrary dlopen only searches DYLD_LIBRARY_PATH, which SIP strips through /bin/sh
       rcpputils = rosPrev.rcpputils.overrideAttrs (old: {
         patches = (old.patches or [ ]) ++ [ ./patches/rcpputils-ament-prefix-path.patch ];
       });

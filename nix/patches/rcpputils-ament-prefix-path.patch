@@ -1,6 +1,6 @@
 diff -ru a/src/find_library.cpp b/src/find_library.cpp
---- a/src/find_library.cpp	2026-11-14 23:01:50
-+++ b/src/find_library.cpp	2026-11-14 23:01:50
+--- a/src/find_library.cpp	2026-11-14 23:11:04
++++ b/src/find_library.cpp	2026-11-14 23:11:04
 @@ -66,6 +66,15 @@
        return path;
      }
@@ -17,3 +17,47 @@ diff -ru a/src/find_library.cpp b/src/find_library.cpp
    return "";
  }
  
+diff -ru a/src/shared_library.cpp b/src/shared_library.cpp
+--- a/src/shared_library.cpp	2026-11-14 23:11:04
++++ b/src/shared_library.cpp	2026-11-14 23:11:04
+@@ -19,14 +19,39 @@
+ 
+ #include "rcpputils/shared_library.hpp"
+ 
++#ifdef __APPLE__
++#include "rcutils/filesystem.h"
++
++#include "rcpputils/env.hpp"
++#include "rcpputils/split.hpp"
++#endif
++
+ namespace rcpputils
+ {
+ SharedLibrary::SharedLibrary(const std::string & library_path)
+ {
++  std::string path = library_path;
++#ifdef __APPLE__
++  // dlopen only finds a bare name through DYLD_LIBRARY_PATH, which SIP strips through
++  // /bin/sh and /usr/bin/env. so look there, then in <prefix>/lib, ourselves
++  auto find = [&path](const char * var, const std::string & sub) {
++      for (const auto & dir : rcpputils::split(get_env_var(var), ':')) {
++        std::string candidate = dir + sub + path;
++        if (rcutils_is_file(candidate.c_str())) {
++          path = candidate;
++          return true;
++        }
++      }
++      return false;
++    };
++  if (path.find('/') == std::string::npos && !find("DYLD_LIBRARY_PATH", "/")) {
++    find("AMENT_PREFIX_PATH", "/lib/");
++  }
++#endif
+   lib = rcutils_get_zero_initialized_shared_library();
+   rcutils_ret_t ret = rcutils_load_shared_library(
+     &lib,
+-    library_path.c_str(),
++    path.c_str(),
+     rcutils_get_default_allocator());
+   if (ret != RCUTILS_RET_OK) {
+     if (ret == RCUTILS_RET_BAD_ALLOC) {
