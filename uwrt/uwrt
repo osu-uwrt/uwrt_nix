@@ -63,6 +63,8 @@ uwrt_nix=$(printf %q "$2")
 # files (deps come from those). a new package or COLCON_IGNORE needs \`direnv reload\`
 if _w=\$(git -C "\$uwrt_nix" ls-files --full-name 2>/dev/null); then
   mapfile -t _w < <(sed "s|^|\$uwrt_nix/|" <<< "\$_w")
+  # a commit changes no tracked file but does change the flake's rev (uwrt's version is in the env): watch git too
+  _g=\$(git -C "\$uwrt_nix" rev-parse --absolute-git-dir) && _w+=("\$_g/HEAD" "\$_g/index" "\$_g/\$(git -C "\$uwrt_nix" symbolic-ref -q HEAD)")
 else
   mapfile -t _w < <(find "\$uwrt_nix" -type f -not -path '*/.git/*')
 fi
