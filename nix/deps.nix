@@ -39,7 +39,11 @@ let
   resolve = pkg: key:
     let
       dashed = builtins.replaceStrings [ "_" ] [ "-" ] key;
-      paths = teamKeys.${key} or systemKeys.${key} or null;
+      # team keys can be { linux = [ ]; darwin = [ ]; } when a dep only exists on one
+      entry = teamKeys.${key} or systemKeys.${key} or null;
+      paths = if lib.isAttrs entry
+        then entry.${if pkgs.stdenv.hostPlatform.isDarwin then "darwin" else "linux"} or [ ]
+        else entry;
     in
     if lib.elem key names then { ok = [ ]; }
     else if paths != null then

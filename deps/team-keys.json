@@ -1,13 +1,22 @@
 {
- "_comment": "rosdep keys upstream rosdistro can't resolve on nixos. value is a list of nixpkgs attr paths, [] to ignore the key",
+ "_comment": "rosdep keys upstream rosdistro can't resolve on nixos. value is a list of nixpkgs attr paths ([] ignores the key), or {\"linux\": [...], \"darwin\": [...]}",
  "_notes": {
-  "gpiod": "riptide_hardware2 exec_depend, linux only. jammy ships libgpiod 1.6",
+  "gpiod": "riptide_hardware2 exec_depend. jammy ships libgpiod 1.6. linux only, nothing on macos (gpio nodes would fail at runtime there)",
   "riptide_SINB": "deprecated, no such package. remove from riptide_bringup/package.xml (future work)",
   "libqt5-charts-dev": "upstream key has no nixos rule. declared by riptide_imu but unused there",
   "nlohmann-json3-dev": "not a real rosdep key (fails on ubuntu too), riptide_imu should use nlohmann-json-dev"
  },
- "gpiod": ["libgpiod_1"],
- "libqt5-charts-dev": ["libsForQt5.qtcharts"],
- "nlohmann-json3-dev": ["nlohmann_json"],
+ "gpiod": {
+  "linux": [
+   "libgpiod_1"
+  ],
+  "darwin": []
+ },
+ "libqt5-charts-dev": [
+  "libsForQt5.qtcharts"
+ ],
+ "nlohmann-json3-dev": [
+  "nlohmann_json"
+ ],
  "riptide_SINB": []
 }

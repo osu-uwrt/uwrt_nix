@@ -8,6 +8,5 @@
   "c_simulator"         # deprecated
   "camera_faker"
 ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
-  "riptide_hardware2"   # gpiod, socketcan
   "opbox_software"
 ]
