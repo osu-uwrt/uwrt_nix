@@ -66,16 +66,29 @@ let
     doCheck = false;
   });
 
+  # glew's cmake config makes GLEW::GLEW as a property copy that loses the config fallback, so a Debug build
+  # (both projects' dev presets via build.sh) linked a bare "GLEW". map the other configs to the installed one
+  glew = pkgs.glew.overrideAttrs (old: {
+    postFixup = (old.postFixup or "") + ''
+      cat >> $dev/lib/cmake/glew/glew-config.cmake <<'EOF'
+
+      foreach(_glew_config DEBUG RELWITHDEBINFO MINSIZEREL)
+        set_property(TARGET GLEW::GLEW PROPERTY MAP_IMPORTED_CONFIG_''${_glew_config} RELEASE)
+      endforeach()
+      EOF
+    '';
+  });
+
   gl = lib.optionals linux [ pkgs.libGL pkgs.libglvnd ];
   # glfw3native.h's x11 part includes Xrandr too
   x11 = lib.optionals linux [ pkgs.libX11 pkgs.libXrandr ];
 
   # what nereus' ros-viewer preset needs besides ros. the dev shell gets these too, for build.sh
   nereusDeps = with pkgs; [
-    eigen yaml-cpp nlohmann_json gtest glfw glew libpng libjpeg opencv fontconfig
-  ] ++ [ assimp5 bullet-float64 ] ++ gl ++ x11;
+    eigen yaml-cpp nlohmann_json gtest glfw libpng libjpeg opencv fontconfig
+  ] ++ [ glew assimp5 bullet-float64 ] ++ gl ++ x11;
 
-  notgrootDeps = with pkgs; [ yaml-cpp tinyxml-2 zeromq zlib glfw glew libpng fontconfig freetype ]
+  notgrootDeps = with pkgs; [ yaml-cpp tinyxml-2 zeromq zlib glfw libpng fontconfig freetype ] ++ [ glew ]
     ++ gl ++ x11 ++ lib.optionals linux [ pkgs.libXi ];
 
   notgroot-unwrapped = stdenv.mkDerivation {
