@@ -9,7 +9,9 @@ Both riptide shells put `riptide-tools` on PATH: one build, from the dev pin, so
 | `nereus-dataset-render` | nereus' headless renderer (the `datasets` preset: simulation, renderer, offscreen cameras, no ROS) |
 | `nixGLIntel` | Linux only, see below |
 
-`nix build .#riptide-tools` (or `.#nereus`, `.#notgroot`) builds them on their own. `nix build .#checks.<system>.notgroot-tests` / `nereus-tests` run the projects' own ctest suites the same way.
+`nix build .#riptide-tools` (or `.#nereus`, `.#notgroot`) builds them on their own. `nix build .#checks.<system>.notgroot-tests` / `nereus-tests` run the projects' own ctest suites the same way. On Linux the build sandbox has no GL driver, so the tests get Mesa's software EGL (llvmpipe, surfaceless) and the offscreen/renderer tests really run; tests that need a window skip.
+
+**Assimp 5.2.5, not nixpkgs' 6.x.** Assimp 6 orders mesh indices differently, so nereus' recorded mesh references (made with jammy's Assimp 5.2) fail with it (`MeshAssets.EveryOriginalSubmesh…`: same vertices and statistics, different index hashes). nereus builds against both; `riptide-tools.nix` pins 5.2.5 (without its MMD importer, which gcc 15 can't compile) for the package, the tests and the dev shell's `build.sh`.
 
 ## nereus' ROS bridge and viewer: built in the dev workspace
 
@@ -34,6 +36,7 @@ ros2 launch src/nereus/integrations/uwrt/launch/sim.launch.py
 - **nereus viewer** keeps the system title bar (the custom one needs X11).
 - **Fonts**: `FONTCONFIG_FILE` points at a config that adds `/System/Library/Fonts`, `/Library/Fonts`, `~/Library/Fonts` (Linux: `/usr/share/fonts`, ...) to nixpkgs' default, which only knows its own DejaVu. The shells export it too, for the workspace-built viewer.
 - Bullet: nereus links Debian's double-precision `libBullet*-float64`; the flake builds bullet with `USE_DOUBLE_PRECISION` and those names.
+- **Known test differences (macOS only)**, 4 of nereus' 343 tests: `BoxContacts.PlantMatchesOriginal…` misses its 1e-9 contact reference by 1e-5 because clang contracts multiply-adds into FMA on arm64 (it passes with `-ffp-contract=off`). `PackRuntime.MatchesReference…` and the two `Session.ReplaysTheRecordedScript…` replays (recorded on Linux) differ from the first depth sample on, by about 1.5 cm: most likely sensor noise, since `std::normal_distribution` is implementation-defined and libc++ draws other values than libstdc++ from the same seed. So a Mac run is not bit-identical to a Linux run with the same seed.
 
 ## Linux (non-NixOS): nixGL
 

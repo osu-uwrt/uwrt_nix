@@ -56,11 +56,11 @@
     "nereus": {
       "flake": false,
       "locked": {
-        "lastModified": 1794731400,
-        "narHash": "sha256-3ak12m5oYw2i+lQXxe9us9aqlE8oQzBjrlt9wJo4E7A=",
+        "lastModified": 1794756254,
+        "narHash": "sha256-0uITXapZArIDkdBhCbwzAZmtsx5gPMt+LbjkhY27zLw=",
         "ref": "nix-macos",
-        "rev": "cdf2ede3711d1f950d7d6f8084b1f67831e25477",
-        "revCount": 292,
+        "rev": "6f589e5c1d8a9758b56f9e7e08fc76cb9b2eac00",
+        "revCount": 294,
         "type": "git",
         "url": "file:///Users/ethan/osu-uwrt/development/software/src/nereus"
       },
@@ -188,11 +188,11 @@
     "notgroot": {
       "flake": false,
       "locked": {
-        "lastModified": 1794731405,
-        "narHash": "sha256-2S8B/NOT/nIe6qwo3ZXqs/kSXhfZVAChPZLixT2VoKg=",
+        "lastModified": 1794756244,
+        "narHash": "sha256-9nXul0PxA9DonsZdik2x5FHsOoboDLLGNZXiEfhXlzI=",
         "ref": "nix-macos",
-        "rev": "7ed75ba0dc8d3e2c690e247f6b158a0b4ab272de",
-        "revCount": 64,
+        "rev": "384c70d320d180ac46408a0e5ec89214c5b85796",
+        "revCount": 65,
         "type": "git",
         "url": "file:///Users/ethan/osu-uwrt/notgroot"
       },

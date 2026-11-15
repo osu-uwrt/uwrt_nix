@@ -47,14 +47,33 @@ let
     '';
   });
 
+  # assimp 6 (nixpkgs) orders mesh indices differently from 5.x, so nereus' recorded mesh references (made on
+  # jammy's 5.2) don't match. 5.2.5 does. nereus builds against both
+  assimp5 = pkgs.assimp.overrideAttrs (old: rec {
+    version = "5.2.5";
+    src = pkgs.fetchFromGitHub {
+      owner = "assimp";
+      repo = "assimp";
+      rev = "v${version}";
+      hash = "sha256-vQx+PaET5mlvvIGHk6pEnZvM3qw8DiC3hd1Po6OAHxQ=";
+    };
+    patches = [ ];
+    postPatch = "";  # nixpkgs' substitutions are for 6.x test files
+    # the mmd importer doesn't build with gcc 15, and nereus has no mmd models
+    cmakeFlags = (old.cmakeFlags or [ ]) ++ [
+      "-DASSIMP_WARNINGS_AS_ERRORS=OFF" "-DASSIMP_BUILD_TESTS=OFF" "-DASSIMP_BUILD_MMD_IMPORTER=OFF"
+    ];
+    doCheck = false;
+  });
+
   gl = lib.optionals linux [ pkgs.libGL pkgs.libglvnd ];
   # glfw3native.h's x11 part includes Xrandr too
   x11 = lib.optionals linux [ pkgs.libX11 pkgs.libXrandr ];
 
   # what nereus' ros-viewer preset needs besides ros. the dev shell gets these too, for build.sh
   nereusDeps = with pkgs; [
-    eigen yaml-cpp nlohmann_json gtest assimp glfw glew libpng libjpeg opencv fontconfig
-  ] ++ [ bullet-float64 ] ++ gl ++ x11;
+    eigen yaml-cpp nlohmann_json gtest glfw glew libpng libjpeg opencv fontconfig
+  ] ++ [ assimp5 bullet-float64 ] ++ gl ++ x11;
 
   notgrootDeps = with pkgs; [ yaml-cpp tinyxml-2 zeromq zlib glfw glew libpng fontconfig freetype ]
     ++ gl ++ x11 ++ lib.optionals linux [ pkgs.libXi ];
@@ -74,7 +93,6 @@ let
       cp -r ${btcpp} $NIX_BUILD_TOP/btcpp && chmod -R u+w $NIX_BUILD_TOP/btcpp
       cmakeFlagsArray+=("-DFETCHCONTENT_SOURCE_DIR_BEHAVIORTREE_CPP=$NIX_BUILD_TOP/btcpp")
     '';
-    ninjaFlags = [ "-k0" ]; # TMPK
     meta.mainProgram = "notgroot";
   };
 
@@ -88,7 +106,6 @@ let
     cmakeFlags = map (o: "-DNEREUS_BUILD_${o}=ON") [
       "SIMULATION" "SCENE_RENDERER" "OFFSCREEN_RENDERER" "MESH_ASSETS" "CAMERAS" "SESSION" "PACK_SCENE" "DATASETS"
     ] ++ [ "-DBUILD_TESTING=OFF" ];
-    ninjaFlags = [ "-k0" ]; # TMPK
     meta.mainProgram = "nereus-dataset-render";
   };
 
@@ -120,19 +137,28 @@ let
   renderWrapper = wrap "nereus-dataset-render" (lib.getExe nereus-unwrapped) ''
     export NEREUS_SHADER_DIR=''${NEREUS_SHADER_DIR:-${nereus-unwrapped}/share/nereus/shaders}
   '';
-  # the projects' own test suites (ctest), built the same way. gl tests skip without a display
+  # the projects' own test suites (ctest), built the same way. window tests skip without a display. on linux
+  # the sandbox has no gl driver, so egl gets mesa's software one (llvmpipe, surfaceless) and the offscreen tests run
   withTests = drv: drv.overrideAttrs (old: {
     pname = "${old.pname}-tests";
     buildInputs = old.buildInputs ++ [ pkgs.gtest ];
     cmakeFlags = lib.remove "-DBUILD_TESTING=OFF" old.cmakeFlags ++ [ "-DBUILD_TESTING=ON" ];
     doCheck = true;
-    checkPhase = "ctest --output-on-failure -LE live -j$NIX_BUILD_CORES";
+    preCheck = lib.optionalString linux ''
+      export __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa}/share/glvnd/egl_vendor.d/50_mesa.json
+      export LIBGL_DRIVERS_PATH=${pkgs.mesa}/lib/dri LIBGL_ALWAYS_SOFTWARE=1
+    '';
+    checkPhase = ''
+      runHook preCheck
+      ctest --output-on-failure -LE live -j$NIX_BUILD_CORES
+      runHook postCheck
+    '';
     installPhase = "touch $out";
   });
 in rec {
   notgroot-tests = withTests notgroot-unwrapped;
   nereus-tests = withTests nereus-unwrapped;
-  inherit fontsConf nereusDeps notgrootDeps notgroot-unwrapped nereus-unwrapped nereus-python nixGLIntel;
+  inherit assimp5 fontsConf nereusDeps notgrootDeps notgroot-unwrapped nereus-unwrapped nereus-python nixGLIntel;
 
   notgroot-tool = pkgs.symlinkJoin {
     name = "notgroot-${notgroot-unwrapped.version}";
