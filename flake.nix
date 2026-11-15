@@ -8,6 +8,11 @@
 
     riptide_setup = { url = "github:osu-uwrt/riptide_setup/matlab-install"; flake = false; };
 
+    # riptide-tools sources. notgroot is private, so ssh. test local edits with
+    # --override-input notgroot path:$HOME/osu-uwrt/notgroot
+    nereus = { url = "git+https://github.com/osu-uwrt/nereus?ref=main"; flake = false; };
+    notgroot = { url = "git+ssh://git@github.com/osu-uwrt/notgroot?ref=run-replay"; flake = false; };
+
     # ros-extra, the commits development/dependencies used. no vectornav, the fork is deprecated
     chameleon_tf = { url = "github:coalman321/chameleon_tf/fe161bf96970e52b29fa8a39a256958fbe1f4065"; flake = false; };
     nortek_dvl = { url = "github:osu-uwrt/nortek_dvl/be21db9ffc60f040b2c0287a60ec43423da80d0f"; flake = false; };

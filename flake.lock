@@ -53,6 +53,23 @@
         "type": "github"
       }
     },
+    "nereus": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794512511,
+        "narHash": "sha256-vBSwlWJonUuabMUE/qcBhS7z4YtCi6u+Q0bvUKkRNOc=",
+        "ref": "main",
+        "rev": "47e552a936abc1a578564103c62d6a57aeec501e",
+        "revCount": 286,
+        "type": "git",
+        "url": "https://github.com/osu-uwrt/nereus"
+      },
+      "original": {
+        "ref": "main",
+        "type": "git",
+        "url": "https://github.com/osu-uwrt/nereus"
+      }
+    },
     "nix-ros-overlay": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -144,6 +161,23 @@
         "type": "github"
       }
     },
+    "notgroot": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794520416,
+        "narHash": "sha256-PT/18HDkd6bCFD/5+MIqiH4zeivqi6vncuIts14M5rs=",
+        "ref": "run-replay",
+        "rev": "ac9c126128e2ba69a70633877a55067057c6039a",
+        "revCount": 58,
+        "type": "git",
+        "url": "ssh://git@github.com/osu-uwrt/notgroot"
+      },
+      "original": {
+        "ref": "run-replay",
+        "type": "git",
+        "url": "ssh://git@github.com/osu-uwrt/notgroot"
+      }
+    },
     "riptide_setup": {
       "flake": false,
       "locked": {
@@ -164,6 +198,7 @@
     "root": {
       "inputs": {
         "chameleon_tf": "chameleon_tf",
+        "nereus": "nereus",
         "nix-ros-overlay": "nix-ros-overlay",
         "nix-ros-overlay-release": "nix-ros-overlay-release",
         "nixpkgs": [
@@ -171,6 +206,7 @@
           "nixpkgs"
         ],
         "nortek_dvl": "nortek_dvl",
+        "notgroot": "notgroot",
         "riptide_setup": "riptide_setup",
         "zed_interfaces": "zed_interfaces"
       }
