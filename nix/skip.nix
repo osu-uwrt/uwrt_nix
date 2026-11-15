@@ -7,6 +7,4 @@
   "riptide_rviz"        # rviz is out of scope
   "c_simulator"         # deprecated
   "camera_faker"
-] ++ lib.optionals stdenv.hostPlatform.isDarwin [
-  "opbox_software"
 ]
