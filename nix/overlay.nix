@@ -1,10 +1,18 @@
-# darwin fixes for upstream ros packages, plus ros-extra (ros packages not in rosdistro)
+# darwin fixes for upstream ros (and python) packages, plus ros-extra (ros packages not in rosdistro)
 { rosDistro ? "humble", sipFixes ? true, rosExtra ? null }:
 final: prev:
 let
   lib = prev.lib;
   darwin = prev.stdenv.hostPlatform.isDarwin;
 in {
+  # mac builds aren't sandboxed, so test_data_utils really downloads coco8-pose.zip, which 404s now.
+  # hydra has no darwin build of ultralytics to fetch instead
+  pythonPackagesExtensions = prev.pythonPackagesExtensions ++ lib.optional darwin (pyFinal: pyPrev: {
+    ultralytics = pyPrev.ultralytics.overridePythonAttrs (old: {
+      disabledTests = (old.disabledTests or [ ]) ++ [ "test_data_utils" ];
+    });
+  });
+
   rosPackages = prev.rosPackages // {
     ${rosDistro} = (prev.rosPackages.${rosDistro}.overrideScope (rosFinal: rosPrev: lib.optionalAttrs darwin {
       # upstream only guards _WIN32, so libcap/sched_fifo/affinity get used on mac too

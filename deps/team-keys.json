@@ -6,7 +6,7 @@
   "libqt5-charts-dev": "upstream key has no nixos rule. declared by riptide_imu but unused there",
   "nlohmann-json3-dev": "not a real rosdep key (fails on ubuntu too), riptide_imu should use nlohmann-json-dev",
   "CUDA": "tensor_detector. find_package(CUDA) is optional and the package installs only python + launch files. no CUDA in the shells",
-  "ultralytics": "tensor_detector's YOLO node (needs ultralytics + TensorRT). not in the shells: the node exits at start, the rest of bringup runs",
+  "ultralytics": "tensor_detector's YOLO node. macos: ultralytics + cpu torch from nixpkgs (no cuda, the node falls back to the .pt). torch listed too: ultralytics only propagates torch.dev, which ros.buildEnv doesn't follow to torch's out. linux: not in the shells (nixpkgs torch has no cuda, the robot uses TensorRT), the node exits at start",
   "collections": "tensor_detector. python stdlib, not a rosdep key",
   "OpenCV": "tensor_detector. not a rosdep key (opencv is)",
   "cv2": "tensor_detector. not a rosdep key (python3-opencv is)",
@@ -27,7 +27,13 @@
  ],
  "riptide_SINB": [],
  "CUDA": [],
- "ultralytics": [],
+ "ultralytics": {
+  "linux": [],
+  "darwin": [
+   "python3Packages.ultralytics",
+   "python3Packages.torch"
+  ]
+ },
  "collections": [],
  "OpenCV": [
   "opencv"
