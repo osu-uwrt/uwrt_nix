@@ -60,33 +60,43 @@ let
       "-DUAGENT_ISOLATED_INSTALL=OFF"
     ];
   };
-in
-ros.buildRosPackage {
-  pname = "ros-humble-micro-ros-agent";
-  version = "0-unstable-bf1c950";
-  src = pkgs.fetchFromGitHub {
-    owner = "osu-uwrt";
-    repo = "micro-ROS-agent-impl";
-    rev = "bf1c9502ba2e2bd3bdc560b38e333d1fb957faa0";
-    hash = "sha256-yEyvIOY/Se2N1hEvCUwSyGJbpD33ySLVQQPBYlGXizo=";
+
+  agent = ros.buildRosPackage {
+    pname = "ros-humble-micro-ros-agent";
+    version = "0-unstable-bf1c950";
+    src = pkgs.fetchFromGitHub {
+      owner = "osu-uwrt";
+      repo = "micro-ROS-agent-impl";
+      rev = "bf1c9502ba2e2bd3bdc560b38e333d1fb957faa0";
+      hash = "sha256-yEyvIOY/Se2N1hEvCUwSyGJbpD33ySLVQQPBYlGXizo=";
+    };
+    sourceRoot = "source/micro_ros_agent";
+    buildType = "ament_cmake";
+    # its cmake asks for the lint/gtest packages even with tests off
+    nativeBuildInputs = with ros; [ ament-cmake rosidl-cmake ament-lint-auto ament-cmake-gtest ];
+    # propagated so the env below gets them (rmw_dds_common's typesupport, the msgs)
+    propagatedBuildInputs = with ros; [
+      fastcdr fastrtps fastrtps-cmake-module rmw-dds-common rmw rcutils rmw-fastrtps-shared-cpp rcl std-msgs
+      rosidl-typesupport-fastrtps-cpp rosidl-runtime-cpp rosidl-typesupport-cpp
+    ] ++ [ microxrcedds-agent micro-ros-msgs riptide-msgs2 titan-canmore ];
+    cmakeFlags = [ "-DMICROROSAGENT_SUPERBUILD=OFF" "-DBUILD_TESTING=OFF" ];
   };
-  sourceRoot = "source/micro_ros_agent";
-  buildType = "ament_cmake";
-  # its cmake asks for the lint/gtest packages even with tests off
-  nativeBuildInputs = with ros; [ ament-cmake rosidl-cmake ament-lint-auto ament-cmake-gtest ];
-  buildInputs = with ros; [
-    fastcdr fastrtps fastrtps-cmake-module rmw-dds-common rmw rcutils rmw-fastrtps-shared-cpp rcl std-msgs
-    rosidl-typesupport-fastrtps-cpp rosidl-runtime-cpp rosidl-typesupport-cpp
-  ] ++ [ microxrcedds-agent micro-ros-msgs riptide-msgs2 titan-canmore ];
-  cmakeFlags = [ "-DMICROROSAGENT_SUPERBUILD=OFF" "-DBUILD_TESTING=OFF" ];
-  # ros installs it under lib/ for `ros2 run`. the firmware shell has no ros2, so put it on PATH too
-  postInstall = ''
-    mkdir -p $out/bin
-    ln -s ../lib/micro_ros_agent/micro_ros_agent $out/bin/micro_ros_agent
-  '';
-  passthru = { inherit riptide-msgs2 microxrcedds-agent micro-ros-msgs titan-canmore; };
+
+  # rcl and rosidl dlopen the rmw and the typesupport libs (rmw_dds_common's for the graph manager) from
+  # AMENT_PREFIX_PATH (rcpputils), so the agent runs on a ros env of its own closure
+  env = ros.buildEnv { paths = [ agent ros.rmw-fastrtps-cpp ]; };
+in
+# ros installs it under lib/ for `ros2 run`. the firmware shell has no ros, so this puts it on PATH with its env.
+# the agent only bridges into fast dds, so it stays on that rmw whatever `uwrt rmw` says
+pkgs.runCommand "micro-ros-agent-${agent.version}" {
+  nativeBuildInputs = [ pkgs.makeWrapper ];
+  passthru = { inherit agent env riptide-msgs2 microxrcedds-agent micro-ros-msgs titan-canmore; };
   meta = {
     description = "UWRT's micro-ROS agent";
     mainProgram = "micro_ros_agent";
   };
-}
+} ''
+  makeWrapper ${agent}/lib/micro_ros_agent/micro_ros_agent $out/bin/micro_ros_agent \
+    --set AMENT_PREFIX_PATH ${env} \
+    --set RMW_IMPLEMENTATION rmw_fastrtps_cpp
+''
