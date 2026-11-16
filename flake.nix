@@ -21,6 +21,15 @@
     chameleon_tf = { url = "github:coalman321/chameleon_tf/fe161bf96970e52b29fa8a39a256958fbe1f4065"; flake = false; };
     nortek_dvl = { url = "github:osu-uwrt/nortek_dvl/be21db9ffc60f040b2c0287a60ec43423da80d0f"; flake = false; };
     zed_interfaces = { url = "github:stereolabs/zed-ros2-interfaces/f7f90f11f818c3dda23219cd05d8c854a569fc85"; flake = false; };
+
+    # upstream uwrt_nix (ATK422): its firmware shell, pico-sdk and libmicroros (cached on uwrt.cachix.org).
+    # no follows, so those keep their cache hits. phase4/RECONCILE_REPORT.md has the plan to merge the two
+    uwrt-upstream.url = "github:osu-uwrt/uwrt_nix";
+
+    # titan's host tools: the local, unpushed nix-macos branches for now (like nereus/notgroot above). once
+    # pushed, git+https://github.com/osu-uwrt/titan_firmware?ref=<branch> and the same for titan_canmore
+    titan_firmware = { url = "git+file:///Users/ethan/osu-uwrt/development/titan_firmware?ref=nix-macos"; flake = false; };
+    titan_canmore = { url = "git+file:///Users/ethan/osu-uwrt/development/titan_firmware/lib/titan_canmore?ref=nix-macos"; flake = false; };
   };
 
   outputs = { self, nix-ros-overlay, nix-ros-overlay-release, nixpkgs, ... }@inputs:
@@ -63,6 +72,13 @@
           inherit (inputs) nereus notgroot;
           nixgl = if pkgs.stdenv.hostPlatform.isLinux then inputs.nixgl.packages.${system} else null;
         };
+
+        upstream = inputs.uwrt-upstream;
+        titanTools = import ./nix/titan-tools.nix {
+          inherit lib pkgs;
+          inherit (inputs) titan_firmware titan_canmore;
+          inherit (upstream.packages.${system}) pico-sdk;
+        };
       in {
         devShells = rec {
           riptide-dev = mkShell pkgs {
@@ -76,12 +92,17 @@
             name = "riptide-release";
             defaultWorkspace = "osu-uwrt/release";
           };
+          firmware = import ./nix/firmware-shell.nix {
+            inherit pkgs uwrt titanTools;
+            upstream = upstream.devShells.${system}.firmware;
+          };
           default = riptide-dev;
         };
 
         packages = {
           inherit (colcon) colcon colcon-riptide;
           inherit uwrt;
+          inherit (titanTools) upload-tool canmore-cli;
           inherit (tools) riptide-tools;
           nereus = tools.nereus-tool;
           notgroot = tools.notgroot-tool;
@@ -99,10 +120,11 @@
       });
 
   nixConfig = {
-    extra-substituters = [ "https://ros.cachix.org" "https://ros-darwin.cachix.org" ];
+    extra-substituters = [ "https://ros.cachix.org" "https://ros-darwin.cachix.org" "https://uwrt.cachix.org" ];
     extra-trusted-public-keys = [
       "ros.cachix.org-1:dSyZxI8geDCJrwgvCOHDoAfOm5sV1wCPjBkKL+38Rvo="
       "ros-darwin.cachix.org-1:2czU3rRAUlPoUSW6Gaj+oBLj5wGAi9lWrNldgoQF/PM="
+      "uwrt.cachix.org-1:8jsEBONNUB05TKTqyzw8rWFHZ8cKaBc4PagJJI09qco="
     ];
   };
 }
