@@ -480,11 +480,11 @@
     "titan_canmore": {
       "flake": false,
       "locked": {
-        "lastModified": 1794868568,
-        "narHash": "sha256-VpPt4xR8s7326XGIGTXWkgEZ+H9DHarR32N9E5CRscc=",
+        "lastModified": 1794869852,
+        "narHash": "sha256-OoCPhrW1FczdcpZaEr5kZ3HK2beMvSWKG/OodWUlgEA=",
         "ref": "nix-macos",
-        "rev": "5b94be1a195a116a6fd976306253b9c64dfb3bf9",
-        "revCount": 21,
+        "rev": "43649b18974c157732c19447ada492eb325c561c",
+        "revCount": 23,
         "type": "git",
         "url": "file:///Users/ethan/osu-uwrt/development/titan_firmware/lib/titan_canmore"
       },
@@ -497,11 +497,11 @@
     "titan_firmware": {
       "flake": false,
       "locked": {
-        "lastModified": 1794868586,
-        "narHash": "sha256-Fb66mYVQOWBYl+IdtljrISNf1LaFwk8mhsezSGm9SWs=",
+        "lastModified": 1794869852,
+        "narHash": "sha256-F4yhEWSBLoVhvpTqCQOojfxe4DJTdZ1O5yBefW7cEbo=",
         "ref": "nix-macos",
-        "rev": "85ed264b84a5085b84c22e9144deea5bc1287254",
-        "revCount": 788,
+        "rev": "ce8fa595e8e6520a10d8e627872b24c164103040",
+        "revCount": 791,
         "type": "git",
         "url": "file:///Users/ethan/osu-uwrt/development/titan_firmware"
       },
