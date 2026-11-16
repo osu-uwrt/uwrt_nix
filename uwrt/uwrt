@@ -2,7 +2,8 @@
 # uwrt: the team's entry point to the uwrt_nix shells. `uwrt help` for the commands.
 # settings: ~/.uwrt/env (KEY=value), or the same names in the environment:
 #   UWRT_NIX (~/osu-uwrt/uwrt_nix), UWRT_DEV_WS (~/osu-uwrt/development/software),
-#   UWRT_RELEASE_WS (~/osu-uwrt/release), UWRT_RMW (see uwrt-env)
+#   UWRT_RELEASE_WS (~/osu-uwrt/release), UWRT_FW_DIR (~/osu-uwrt/development/titan_firmware),
+#   UWRT_RMW (see uwrt-env)
 set -euo pipefail
 
 version=@version@
@@ -32,22 +33,27 @@ ws_of() {
   case $1 in
     dev) setting UWRT_DEV_WS "$HOME/osu-uwrt/development/software" ;;
     release) setting UWRT_RELEASE_WS "$HOME/osu-uwrt/release" ;;
+    fw) setting UWRT_FW_DIR "$HOME/osu-uwrt/development/titan_firmware" ;;
   esac
 }
 
-shell_of() { case $1 in dev) echo riptide-dev ;; release) echo riptide-release ;; esac; }
+shell_of() { case $1 in dev) echo riptide-dev ;; release) echo riptide-release ;; fw) echo firmware ;; esac; }
+
+# is the dir there: a colcon workspace, or a titan_firmware checkout for fw
+ws_ok() { if [ "$1" = fw ]; then [ -f "$2/global_defs.cmake" ]; else [ -d "$2/src" ]; fi; }
 
 usage() {
   cat <<EOF
 uwrt $version
 
   uwrt dev|release [cmd...]   run cmd (default: \$SHELL in the workspace) in that workspace's env
+  uwrt fw [cmd...]            same for titan_firmware, in the firmware shell
   uwrt build [colcon args]    colcon build from the workspace root, then merge compile_commands.json
   uwrt rmw [zenoh|fastdds-local|show]
                               pick the rmw (saved in ~/.uwrt/env; direnv picks it up on the next prompt)
   uwrt deps update            regenerate uwrt_nix's deps/system-keys.json from the pinned rosdistro
   uwrt setup [--patch-bashrc [FILE] | --unpatch-bashrc [FILE]] [--dry-run] [--force]
-                              write the workspaces' .envrc files (and on linux guard ~/.bashrc)
+                              write the workspaces' and titan_firmware's .envrc files (and on linux guard ~/.bashrc)
   uwrt doctor                 check the machine's nix/direnv setup
 EOF
 }
@@ -55,6 +61,7 @@ EOF
 # ---- dev / release
 
 envrc_text() {  # envrc_text <shell> <uwrt_nix dir>
+  if [ "$1" = firmware ]; then envrc_fw_text "$2"; return; fi
   cat <<EOF
 # written by \`uwrt setup\`, not tracked. \`uwrt setup --force\` rewrites it
 export UWRT_WS=\$PWD   # before use flake, the shell reads it at eval
@@ -84,10 +91,35 @@ if [[ \$(uname -s) == Darwin ]]; then unset DYLD_LIBRARY_PATH; fi
 EOF
 }
 
+# titan_firmware's: no workspace to scan, so no --impure or package.xml watching
+envrc_fw_text() {  # envrc_fw_text <uwrt_nix dir>
+  cat <<EOF
+# written by \`uwrt setup\`, not tracked. \`uwrt setup --force\` rewrites it
+uwrt_nix=$(printf %q "$1")
+if _w=\$(git -C "\$uwrt_nix" ls-files --full-name 2>/dev/null); then
+  mapfile -t _w < <(sed "s|^|\$uwrt_nix/|" <<< "\$_w")
+  _g=\$(git -C "\$uwrt_nix" rev-parse --absolute-git-dir) && _w+=("\$_g/HEAD" "\$_g/index" "\$_g/\$(git -C "\$uwrt_nix" symbolic-ref -q HEAD)")
+else
+  mapfile -t _w < <(find "\$uwrt_nix" -type f -not -path '*/.git/*')
+fi
+watch_file "\${_w[@]}"
+unset _w
+_shell=\$SHELL
+use flake "\$uwrt_nix#firmware"
+if [[ -n \$_shell ]]; then export SHELL=\$_shell; fi; unset _shell
+# the micro-ros agent is a ros program, it takes the same rmw settings as the workspaces
+watch_file "\${UWRT_CONFIG_DIR:-\$HOME/.uwrt}/env"
+eval "\$(uwrt-env)"
+EOF
+}
+
 enter() {  # enter <dev|release> [cmd...]
   local which=$1; shift
   local ws; ws=$(ws_of "$which")
-  [ -d "$ws/src" ] || die "no workspace at $ws (set UWRT_${which^^}_WS in $cfg)"
+  if ! ws_ok "$which" "$ws"; then
+    [ "$which" = fw ] && die "no titan_firmware at $ws (set UWRT_FW_DIR in $cfg)"
+    die "no workspace at $ws (set UWRT_${which^^}_WS in $cfg)"
+  fi
   if [ $# -eq 0 ]; then
     # interactive: start in the workspace, so a direnv hook in the new shell keeps the env
     cd "$ws"
@@ -99,6 +131,9 @@ enter() {  # enter <dev|release> [cmd...]
   # no direnv: same thing by hand
   echo "uwrt: no direnv or $ws/.envrc (uwrt setup), using nix develop" >&2
   local nd; nd=$(nix_dir)
+  if [ "$which" = fw ]; then
+    exec nix develop "$nd#firmware" -c bash -c 'eval "$(uwrt-env)"; exec "$@"' uwrt "$@"
+  fi
   UWRT_WS=$ws exec nix develop --impure "$nd#$(shell_of "$which")" -c bash -c '
     eval "$(uwrt-env)"
     if [[ -f "$UWRT_WS/install/local_setup.bash" ]]; then source "$UWRT_WS/install/local_setup.bash"; fi
@@ -215,9 +250,9 @@ setup() {
   local nd; nd=$(nix_dir)
   [ -f "$nd/flake.nix" ] || die "no uwrt_nix at $nd (set UWRT_NIX)"
   local which ws f new ex
-  for which in dev release; do
+  for which in dev release fw; do
     ws=$(ws_of "$which")
-    [ -d "$ws/src" ] || { echo "uwrt: no $which workspace at $ws, skipped"; continue; }
+    ws_ok "$which" "$ws" || { echo "uwrt: no $which workspace at $ws, skipped"; continue; }
     f=$ws/.envrc
     new=$(envrc_text "$(shell_of "$which")" "$nd")
     if [ -f "$f" ] && [ "$(cat "$f")" = "$new" ]; then
@@ -232,7 +267,7 @@ setup() {
       echo "$new" > "$f"
       echo "uwrt: wrote $f"
     fi
-    # keep it out of git where the workspace is a repo (release). never a .gitignore edit
+    # keep it out of git where the workspace is a repo (release, titan_firmware). never a .gitignore edit
     if ex=$(git -C "$ws" rev-parse --path-format=absolute --git-path info/exclude 2>/dev/null) \
       && [ "$(git -C "$ws" rev-parse --show-toplevel 2>/dev/null)" = "$(cd "$ws" && pwd -P)" ]; then
       for p in /.envrc /.direnv/; do
@@ -349,9 +384,9 @@ doctor() {
   fi
 
   local which ws
-  for which in dev release; do
+  for which in dev release fw; do
     ws=$(ws_of "$which")
-    [ -d "$ws/src" ] || { warn "no $which workspace at $ws"; continue; }
+    ws_ok "$which" "$ws" || { warn "no $which workspace at $ws"; continue; }
     [ -f "$ws/.envrc" ] && ok "$ws/.envrc" || bad "no $ws/.envrc (uwrt setup)"
   done
   if [ -n "${UWRT_NIX_SHELL:-}" ]; then
@@ -402,7 +437,7 @@ direnv_nix_version() {
 cmd=${1:-help}
 [ $# -gt 0 ] && shift
 case $cmd in
-  dev|release) enter "$cmd" "$@" ;;
+  dev|release|fw) enter "$cmd" "$@" ;;
   build) build "$@" ;;
   rmw) rmw "$@" ;;
   deps)

@@ -6,6 +6,7 @@ _uwrt() {
   cmds=(
     'dev:run a command (default: your shell) in the dev workspace env'
     'release:run a command (default: your shell) in the release workspace env'
+    'fw:run a command (default: your shell) in titan_firmware with the firmware shell'
     'build:colcon build from the workspace root'
     'rmw:pick the rmw'
     'deps:regenerate deps/system-keys.json'
@@ -19,7 +20,7 @@ _uwrt() {
   fi
 
   case $words[2] in
-    dev|release)
+    dev|release|fw)
       # the rest is a command line of its own
       shift 2 words; (( CURRENT -= 2 ))
       _normal ;;
