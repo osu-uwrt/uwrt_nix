@@ -84,8 +84,9 @@ let
     cmakeFlags = [ "-DMICROROSAGENT_SUPERBUILD=OFF" "-DBUILD_TESTING=OFF" ];
   };
 
-  # rcl and rosidl dlopen the rmw and the typesupport libs (rmw_dds_common's for the graph manager) from
-  # AMENT_PREFIX_PATH (rcpputils), so the agent runs on a ros env of its own closure
+  # rcl and rosidl dlopen the rmw and the typesupport libs (rmw_dds_common's for the graph manager) through
+  # rcpputils, so the agent runs on a ros env of its own closure. rcpputils looks in AMENT_PREFIX_PATH on macOS
+  # (our patch) and in LD_LIBRARY_PATH on linux, where setting it also keeps a sourced apt ros out
   env = ros.buildEnv { paths = [ agent ros.rmw-fastrtps-cpp ]; };
 in
 # ros installs it under lib/ for `ros2 run`. the firmware shell has no ros, so this puts it on PATH with its env.
@@ -100,5 +101,6 @@ pkgs.runCommand "micro-ros-agent-${agent.version}" {
 } ''
   makeWrapper ${agent}/lib/micro_ros_agent/micro_ros_agent $out/bin/micro_ros_agent \
     --set AMENT_PREFIX_PATH ${env} \
-    --set RMW_IMPLEMENTATION rmw_fastrtps_cpp
+    --set RMW_IMPLEMENTATION rmw_fastrtps_cpp${pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isLinux " \\
+    --set LD_LIBRARY_PATH ${env}/lib"}
 ''
