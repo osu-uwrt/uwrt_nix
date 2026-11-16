@@ -497,11 +497,11 @@
     "titan_firmware": {
       "flake": false,
       "locked": {
-        "lastModified": 1794851745,
-        "narHash": "sha256-gtTX4pf4mzZMp46fANlaI6xS+6sO0m1mk0wPK5wyYiQ=",
+        "lastModified": 1794853470,
+        "narHash": "sha256-hoLgWdtLD1I46Fkgg+sR8brVNsR0NxU+wEzk/Cb+NxU=",
         "ref": "nix-macos",
-        "rev": "32af16d0ba5f02d0595631be62f26ef5f2a97f5d",
-        "revCount": 786,
+        "rev": "24274c953aaa75fe77b2d96b21ad8927bba714df",
+        "revCount": 787,
         "type": "git",
         "url": "file:///Users/ethan/osu-uwrt/development/titan_firmware"
       },

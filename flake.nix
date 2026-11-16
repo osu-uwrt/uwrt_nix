@@ -81,6 +81,11 @@
           inherit (inputs) titan_firmware titan_canmore;
           inherit (upstream.packages.${system}) pico-sdk;
         };
+        libmicroros = import ./nix/libmicroros.nix {
+          inherit lib;
+          upstream = upstream.packages.${system}.libmicroros;
+          inherit (inputs) titan_firmware;
+        };
         micro-ros-agent = import ./nix/micro-ros-agent.nix {
           inherit lib pkgs ros;
           inherit (upstream.inputs) riptide-core;
@@ -100,7 +105,7 @@
             defaultWorkspace = "osu-uwrt/release";
           };
           firmware = import ./nix/firmware-shell.nix {
-            inherit pkgs uwrt titanTools;
+            inherit pkgs uwrt titanTools libmicroros;
             upstream = upstream.devShells.${system}.firmware;
             extraPackages = [ micro-ros-agent ];
           };
@@ -111,7 +116,7 @@
           inherit (colcon) colcon colcon-riptide;
           inherit uwrt;
           inherit (titanTools) upload-tool canmore-cli;
-          inherit micro-ros-agent;
+          inherit micro-ros-agent libmicroros;
           inherit (tools) riptide-tools;
           nereus = tools.nereus-tool;
           notgroot = tools.notgroot-tool;
