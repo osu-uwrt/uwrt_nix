@@ -91,11 +91,11 @@
     "microxrcedds_agent": {
       "flake": false,
       "locked": {
-        "lastModified": 1794868591,
-        "narHash": "sha256-pSayG09Cbf/ggpLgRfnQFYDK5rzH2//fKdzLq4yDiAk=",
+        "lastModified": 1794871150,
+        "narHash": "sha256-Kg+lSuum1n+n7qI69IwlumS4IiSV6HP+/UfRBsUo+oE=",
         "ref": "nix-macos",
-        "rev": "674334b4897d695be8e99854a361ffc59b47f8f4",
-        "revCount": 716,
+        "rev": "cc92eb324b228988bd3eaf7aa017e1d1d481f542",
+        "revCount": 717,
         "type": "git",
         "url": "file:///Users/ethan/osu-uwrt/development/micro_ros_agent/Micro-XRCE-DDS-Agent"
       },
@@ -480,11 +480,11 @@
     "titan_canmore": {
       "flake": false,
       "locked": {
-        "lastModified": 1794869852,
-        "narHash": "sha256-OoCPhrW1FczdcpZaEr5kZ3HK2beMvSWKG/OodWUlgEA=",
+        "lastModified": 1794871149,
+        "narHash": "sha256-XKxfDi5hQLdZKYg59KNE1sX81n8r7bq1K6zsDoFnsLU=",
         "ref": "nix-macos",
-        "rev": "43649b18974c157732c19447ada492eb325c561c",
-        "revCount": 23,
+        "rev": "1d0e0bb72e14934e1a4c3b95edaf7319f409a73d",
+        "revCount": 24,
         "type": "git",
         "url": "file:///Users/ethan/osu-uwrt/development/titan_firmware/lib/titan_canmore"
       },
@@ -497,11 +497,11 @@
     "titan_firmware": {
       "flake": false,
       "locked": {
-        "lastModified": 1794869852,
-        "narHash": "sha256-F4yhEWSBLoVhvpTqCQOojfxe4DJTdZ1O5yBefW7cEbo=",
+        "lastModified": 1794871150,
+        "narHash": "sha256-serdEicjVBNgo1DHlHudh5XFEZ97YIZ3XNSECZSev2M=",
         "ref": "nix-macos",
-        "rev": "ce8fa595e8e6520a10d8e627872b24c164103040",
-        "revCount": 791,
+        "rev": "a8d4e801765c8c64920c2b068c876712e3dd17d0",
+        "revCount": 792,
         "type": "git",
         "url": "file:///Users/ethan/osu-uwrt/development/titan_firmware"
       },
