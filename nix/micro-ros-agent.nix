@@ -2,8 +2,8 @@
 # local nix-macos fmt fix), on the
 # dev pin's ros with its system fastdds, like build_agent.bash + meta.meta build it on the robot.
 # riptide_msgs2 comes from upstream uwrt_nix's riptide-core input, the same revision its libmicroros uses, so the
-# boards and the agent agree on the messages. the socketcan transport is linux only (the fork turns it off on
-# darwin), so on macos the agent does serial and udp until phase 5
+# boards and the agent agree on the messages. its can transport goes through titan_canmore's CANTransport, so
+# `-D` takes can0, a canmore_can up name (gsusb0), or a gsusb:/slcan:/cannelloni: spec
 { lib, pkgs, ros, riptide-core, titan_canmore, microxrcedds_agent }:
 let
   riptide-msgs2 = ros.buildRosPackage {
@@ -21,7 +21,9 @@ let
     version = "0-unstable-${titan_canmore.shortRev or "dirty"}";
     src = titan_canmore;
     buildType = "ament_cmake";
-    nativeBuildInputs = [ ros.ament-cmake ];
+    # libusb for the gs_usb backend, linked by path
+    nativeBuildInputs = [ ros.ament-cmake pkgs.pkg-config ];
+    buildInputs = [ pkgs.libusb1 ];
   };
 
   # the agent's own micro_ros_msgs (3.0.1), the overlay's is older

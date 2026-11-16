@@ -115,7 +115,7 @@
         packages = {
           inherit (colcon) colcon colcon-riptide;
           inherit uwrt;
-          inherit (titanTools) upload-tool canmore-cli;
+          inherit (titanTools) upload-tool canmore-cli canmore-can;
           inherit micro-ros-agent libmicroros;
           inherit (tools) riptide-tools;
           nereus = tools.nereus-tool;

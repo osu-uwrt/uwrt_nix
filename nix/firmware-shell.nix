@@ -1,12 +1,13 @@
 # the firmware shell: upstream uwrt_nix's firmware shell (arm gcc 13, pico-sdk 1.5.1, libmicroros, rust with
-# thumbv6m, picotool, probe-rs) plus what it lacks: openocd, titan's host tools, the micro-ros agent and uwrt.
+# thumbv6m, picotool, probe-rs) plus what it lacks: openocd, titan's host tools (upload_tool, canmore_cli,
+# canmore_can for usb can adapters), the micro-ros agent and uwrt.
 # titan_firmware builds against its own lib/pico-sdk submodule (global_defs.cmake sets PICO_SDK_PATH), the
 # shell's PICO_SDK_PATH is for other repos. titan's cmake reads MICRO_ROS_LIB_DIR and UWRT_UPLOAD_TOOL
 { pkgs, upstream, titanTools, uwrt, libmicroros, extraPackages ? [ ] }:
 pkgs.mkShell {
   name = "firmware";
   inputsFrom = [ upstream ];
-  packages = [ pkgs.openocd titanTools.upload-tool titanTools.canmore-cli uwrt ] ++ extraPackages;
+  packages = [ pkgs.openocd titanTools.upload-tool titanTools.canmore-cli titanTools.canmore-can uwrt ] ++ extraPackages;
 
   # inputsFrom brings the packages but not the variables
   inherit (upstream) PICO_SDK_PATH PICO_TOOLCHAIN_PATH CMAKE_POLICY_VERSION_MINIMUM;

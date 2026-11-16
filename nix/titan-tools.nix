@@ -1,7 +1,7 @@
-# titan_firmware's host tools: upload_tool and canmore_cli. built from the titan_firmware input with upstream
-# uwrt_nix's pico-sdk (the same 1.5.1 tag as the submodule) and the titan_canmore input put where the submodules
-# go (the git+file inputs don't carry submodules). no socketcan off linux until phase 5, so on macos they only
-# reach boards over usb and ethernet
+# titan_firmware's host tools: upload_tool, canmore_cli and canmore_can. built from the titan_firmware input with
+# upstream uwrt_nix's pico-sdk (the same 1.5.1 tag as the submodule) and the titan_canmore input put where the
+# submodules go (the git+file inputs don't carry submodules). off linux they reach can through titan_canmore's
+# gs_usb/slcan/cannelloni backends (canmore_can up), libusb for gs_usb
 { lib, pkgs, titan_firmware, titan_canmore, pico-sdk }:
 let
   src = pkgs.runCommand "titan-firmware-tools-src" { } ''
@@ -33,4 +33,5 @@ let
 in {
   upload-tool = mkTool "upload_tool";
   canmore-cli = mkTool "canmore_cli";
+  canmore-can = mkTool "canmore_can";
 }
