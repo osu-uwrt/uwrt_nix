@@ -249,6 +249,16 @@ setup() {
     && ! "$python" -I "$share/patch-bashrc.py" --check "$HOME/.bashrc" >/dev/null; then
     echo "uwrt: ~/.bashrc has ros lines outside the uwrt guard. uwrt setup --patch-bashrc --dry-run shows the change"
   fi
+
+  # quiet direnv: no loading lines or env diff on cd, the shell says "Activating <name>" itself.
+  # errors still show. never touches an existing file
+  local dt=${XDG_CONFIG_HOME:-$HOME/.config}/direnv/direnv.toml
+  if [ ! -f "$dt" ]; then
+    if [ -n "$dry" ]; then echo "uwrt: (dry run) would write $dt"
+    else mkdir -p "$(dirname "$dt")"; printf '[global]\nhide_env_diff = true\nlog_format = "-"\n' > "$dt"; echo "uwrt: wrote $dt"; fi
+  elif ! direnv_quiet; then
+    echo "uwrt: $dt exists, left alone. for quiet cds add hide_env_diff = true and log_format = \"-\" under [global]"
+  fi
 }
 
 # ---- doctor
@@ -289,6 +299,7 @@ doctor() {
     if [ -z "$ndv" ]; then bad "nix-direnv isn't loaded by direnv (source its direnvrc from ~/.config/direnv/direnvrc)"
     elif vge "$ndv" 3.0.0; then ok "nix-direnv $ndv"
     else bad "nix-direnv $ndv is too old (need 3+)"; fi
+    direnv_quiet && ok "direnv is quiet (direnv.toml)" || warn "direnv prints its env diff on every cd (uwrt setup writes a quiet direnv.toml)"
   else
     bad "direnv not found (nix profile add nixpkgs#direnv nixpkgs#nix-direnv)"
   fi
@@ -343,6 +354,9 @@ doctor() {
     [ -d "$ws/src" ] || { warn "no $which workspace at $ws"; continue; }
     [ -f "$ws/.envrc" ] && ok "$ws/.envrc" || bad "no $ws/.envrc (uwrt setup)"
   done
+  if [ -n "${UWRT_NIX_SHELL:-}" ]; then
+    echo "  note  in $UWRT_NIX_SHELL, deps from ${UWRT_WS:-?}/src${UWRT_SKIPPED:+, skipping $UWRT_SKIPPED}"
+  fi
   [ "$os" = Darwin ] && echo "  note  a fresh mac's first load builds ~100 core ros packages locally (about 8 minutes)"
 
   [ "$fails" -eq 0 ] && echo "all good" || { echo "$fails problem(s)"; return 1; }
@@ -358,6 +372,12 @@ reftable_repos() {
       if grep -qiE '^[[:space:]]*refstorage[[:space:]]*=[[:space:]]*reftable' "$f"; then dirname "$f"; fi
     done
   done
+}
+
+direnv_quiet() {  # direnv.toml hides the env diff and status lines
+  local dt=${XDG_CONFIG_HOME:-$HOME/.config}/direnv/direnv.toml
+  grep -qE '^[[:space:]]*hide_env_diff[[:space:]]*=[[:space:]]*true' "$dt" 2>/dev/null \
+    && grep -qE '^[[:space:]]*log_format[[:space:]]*=[[:space:]]*"-"' "$dt"
 }
 
 direnv_nix_version() {

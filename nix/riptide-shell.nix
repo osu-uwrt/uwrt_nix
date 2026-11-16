@@ -12,6 +12,7 @@ let
   deps = if scanned
     then import ./deps.nix { inherit lib pkgs ros skip; } "${ws}/src"
     else { deps = [ ]; skipped = [ ]; };
+  skipped = lib.concatStringsSep " " deps.skipped;
 
   base = with ros; [
     ament-cmake-core
@@ -56,6 +57,8 @@ pkgs.mkShell ({
   COLCON_DEFAULTS_FILE = colcon.defaultsFile;
   FONTCONFIG_FILE = tools.fontsConf;
   UWRT_NIX_SHELL = name;
+} // lib.optionalAttrs scanned {
+  UWRT_SKIPPED = skipped;
 } // lib.optionalAttrs nereusBuild {
   # build.sh's uv sync makes .venv from nix's python, never a downloaded one
   UV_PYTHON = "${pkgs.python3}/bin/python3";
@@ -63,12 +66,16 @@ pkgs.mkShell ({
 } // {
   passthru = { inherit env dyldWrappers; workspace = ws; };
 
-  # apt ros and outer workspaces out first (see strip-apt.sh), then say what was scanned
+  # apt ros and outer workspaces out first (see strip-apt.sh), then say what was scanned.
+  # under direnv only the one Activating line, the scan detail is in uwrt doctor
   shellHook = ''
     _uwrt_own_env=${env} _uwrt_own_wrap=${if darwin then "${dyldWrappers}" else "none"}
     source ${./strip-apt.sh}
+    echo "Activating ${name}" >&2
   '' + (if scanned then ''
-    echo "${name}: deps from ${ws}/src${lib.optionalString (deps.skipped != [ ]) ", skipping ${lib.concatStringsSep " " deps.skipped}"}" >&2
+    if [ -z "''${DIRENV_IN_ENVRC:-}" ]; then
+      echo "${name}: deps from ${ws}/src${lib.optionalString (deps.skipped != [ ]) ", skipping ${skipped}"}" >&2
+    fi
   '' else ''
     echo "${name}: no workspace scanned (${if home == "" then "pure eval, use --impure" else "${ws}/src not found, set UWRT_WS"}), base ros only" >&2
   '');

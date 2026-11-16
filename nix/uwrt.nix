@@ -16,6 +16,9 @@ stdenvNoCC.mkDerivation {
     install -Dm644 patch-bashrc.py $out/share/uwrt/patch-bashrc.py
     install -Dm644 zenoh_client.json5 $out/share/uwrt/zenoh_client.json5
     install -Dm644 fastdds_local.xml $out/share/uwrt/fastdds_local.xml
+    # zsh completion. _ros2 calls whatever ros2/colcon is on PATH, so it only answers in a workspace
+    install -Dm644 _uwrt $out/share/zsh/site-functions/_uwrt
+    ${python3.pkgs.argcomplete}/bin/register-python-argcomplete --shell zsh ros2 colcon > $out/share/zsh/site-functions/_ros2
     substituteInPlace $out/bin/uwrt $out/bin/uwrt-env \
       --replace-fail @share@ $out/share/uwrt --replace-quiet @version@ "$version+${rev}" --replace-quiet @python@ ${python3}/bin/python3
     # the patcher asks bash itself where statements end

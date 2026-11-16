@@ -48,13 +48,33 @@ A cached load takes about 0.2–0.3 s. A cache miss (changed package.xml, uwrt_n
 
 With zenoh every node connects to the robot's router (`orin2:7447`) and gives up when it's off, so local work uses `fastdds-local`. Why the profile: `ROS_LOCALHOST_ONLY=1` makes rmw_fastrtps use loopback UDP with the OS's default socket buffers (768 KB on macOS), and a best-effort subscriber then loses every message bigger than that. In the nereus sim, yolo_orientation got no depth (9.2 MB 1920×1200 32FC1 frames) and about 1 Hz of RGB. With the profile, RGB, camera_info, depth and YOLO's detections all ran at 15 Hz. On Linux the kernel caps the buffers at `net.core.rmem_max`/`wmem_max` (about 208 KB by default), so big messages there need those raised too. `~/.uwrt/env` takes `KEY=value` lines; uwrt reads them without running them.
 
-**Tab completion (opt-in, zsh):** one line in `~/.zshrc`, after `compinit`, costs about 0.3 s per new shell:
+## Shell niceties (zsh)
+
+**Tab completion.** The `uwrt` package ships zsh completions in `share/zsh/site-functions`: `_uwrt`, and `_ros2` for `ros2` and `colcon` (argcomplete's script, generated at build time). `install/local_setup.bash` runs in direnv's bash, so ROS's own zsh completion hook never reaches your shell. These replace it. Add this to `~/.zshrc` (startup cost is just `compinit`):
 
 ```zsh
-eval "$(uwrt dev register-python-argcomplete --shell zsh ros2 colcon 2>/dev/null)"
+fpath+=(~/.nix-profile/share/zsh/site-functions)
+autoload -Uz compinit && compinit
 ```
 
-Completion then works wherever `ros2`/`colcon` are on PATH, i.e. inside a workspace. bash: the same with `--shell bash`.
+`_ros2` runs whichever `ros2`/`colcon` is on PATH, so `ros2 run <pkg> <exe>` and `ros2 launch <pkg> <file>` complete inside a workspace and do nothing outside one. `uwrt build` completes colcon's options.
+
+**Prompt tag.** The shells export `UWRT_NIX_SHELL`, so the prompt can show which env is active:
+
+```zsh
+setopt prompt_subst
+PROMPT='${UWRT_NIX_SHELL:+($UWRT_NIX_SHELL) }'$PROMPT
+```
+
+**Quiet activation.** Entering a workspace prints only `Activating riptide-dev` (or `riptide-release`), from the shell's own hook. Plain `nix develop` also prints what was scanned and skipped, and `uwrt doctor` shows it inside an env (`UWRT_SKIPPED`). direnv's `loading …` lines and its env diff are turned off by `~/.config/direnv/direnv.toml`. `uwrt setup` writes that file when it's missing and never changes an existing one:
+
+```toml
+[global]
+hide_env_diff = true
+log_format = "-"
+```
+
+Errors still show. A cache miss also prints nix-direnv's list of changed files and any nix warnings.
 
 ## Editors (compile_commands.json, clangd)
 

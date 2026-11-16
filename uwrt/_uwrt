@@ -1,0 +1,41 @@
+#compdef uwrt
+# zsh completion for uwrt, installed in the profile's share/zsh/site-functions
+
+_uwrt() {
+  local -a cmds
+  cmds=(
+    'dev:run a command (default: your shell) in the dev workspace env'
+    'release:run a command (default: your shell) in the release workspace env'
+    'build:colcon build from the workspace root'
+    'rmw:pick the rmw'
+    'deps:regenerate deps/system-keys.json'
+    'setup:write the workspace .envrc files'
+    'doctor:check the nix/direnv setup'
+    'help:list the commands'
+  )
+  if (( CURRENT == 2 )); then
+    _describe -t commands 'uwrt command' cmds
+    return
+  fi
+
+  case $words[2] in
+    dev|release)
+      # the rest is a command line of its own
+      shift 2 words; (( CURRENT -= 2 ))
+      _normal ;;
+    build)
+      # colcon's own completion, if it's on PATH (inside a workspace)
+      words=(colcon "${(@)words[2,-1]}")
+      _normal ;;
+    rmw) (( CURRENT == 3 )) && _values 'rmw' zenoh fastdds-local show ;;
+    deps) (( CURRENT == 3 )) && _values 'deps' update ;;
+    setup)
+      _arguments \
+        '--patch-bashrc[guard the ros parts of ~/.bashrc]::bashrc:_files' \
+        '--unpatch-bashrc[remove the ~/.bashrc guard]::bashrc:_files' \
+        '--dry-run[show what would change]' \
+        '--force[rewrite existing .envrc files]' ;;
+  esac
+}
+
+_uwrt "$@"
