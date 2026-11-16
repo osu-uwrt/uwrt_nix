@@ -30,6 +30,8 @@
     # pushed, git+https://github.com/osu-uwrt/titan_firmware?ref=<branch> and the same for titan_canmore
     titan_firmware = { url = "git+file:///Users/ethan/osu-uwrt/development/titan_firmware?ref=nix-macos"; flake = false; };
     titan_canmore = { url = "git+file:///Users/ethan/osu-uwrt/development/titan_firmware/lib/titan_canmore?ref=nix-macos"; flake = false; };
+    # the micro-ros agent's xrce half: osu-uwrt's Happyxrce + a local fmt 10 fix (nix-macos, unpushed)
+    microxrcedds_agent = { url = "git+file:///Users/ethan/osu-uwrt/development/micro_ros_agent/Micro-XRCE-DDS-Agent?ref=nix-macos"; flake = false; };
   };
 
   outputs = { self, nix-ros-overlay, nix-ros-overlay-release, nixpkgs, ... }@inputs:
@@ -79,6 +81,11 @@
           inherit (inputs) titan_firmware titan_canmore;
           inherit (upstream.packages.${system}) pico-sdk;
         };
+        micro-ros-agent = import ./nix/micro-ros-agent.nix {
+          inherit lib pkgs ros;
+          inherit (upstream.inputs) riptide-core;
+          inherit (inputs) titan_canmore microxrcedds_agent;
+        };
       in {
         devShells = rec {
           riptide-dev = mkShell pkgs {
@@ -95,6 +102,7 @@
           firmware = import ./nix/firmware-shell.nix {
             inherit pkgs uwrt titanTools;
             upstream = upstream.devShells.${system}.firmware;
+            extraPackages = [ micro-ros-agent ];
           };
           default = riptide-dev;
         };
@@ -103,6 +111,7 @@
           inherit (colcon) colcon colcon-riptide;
           inherit uwrt;
           inherit (titanTools) upload-tool canmore-cli;
+          inherit micro-ros-agent;
           inherit (tools) riptide-tools;
           nereus = tools.nereus-tool;
           notgroot = tools.notgroot-tool;

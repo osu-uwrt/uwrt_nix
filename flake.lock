@@ -88,6 +88,23 @@
         "type": "github"
       }
     },
+    "microxrcedds_agent": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794852314,
+        "narHash": "sha256-54QPMtH25wKhmraxHdp6o/D+dKpVOfGpQVP+KtaMaRk=",
+        "ref": "nix-macos",
+        "rev": "c29b3bdf0a1b52fffd42cf0b550ad434a2af69e0",
+        "revCount": 715,
+        "type": "git",
+        "url": "file:///Users/ethan/osu-uwrt/development/micro_ros_agent/Micro-XRCE-DDS-Agent"
+      },
+      "original": {
+        "ref": "nix-macos",
+        "type": "git",
+        "url": "file:///Users/ethan/osu-uwrt/development/micro_ros_agent/Micro-XRCE-DDS-Agent"
+      }
+    },
     "nereus": {
       "flake": false,
       "locked": {
@@ -328,6 +345,7 @@
     "root": {
       "inputs": {
         "chameleon_tf": "chameleon_tf",
+        "microxrcedds_agent": "microxrcedds_agent",
         "nereus": "nereus",
         "nix-ros-overlay": "nix-ros-overlay",
         "nix-ros-overlay-release": "nix-ros-overlay-release",
