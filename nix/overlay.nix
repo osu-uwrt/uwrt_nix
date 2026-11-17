@@ -33,9 +33,13 @@ in {
         patches = (old.patches or [ ]) ++ [ ./patches/behaviortree-cpp-v3-typeinfo.patch ];
       });
 
-      # camera_ros is only for apriltag_ros' example launch and needs libcamera (linux only)
+      # camera_ros is only for apriltag_ros' example launch and needs libcamera (linux only).
+      # apple's ld has no -z (release's vendored copy has the same fix, apriltag_ros 253cd93)
       apriltag-ros = rosPrev.apriltag-ros.overrideAttrs (old: {
         propagatedBuildInputs = lib.filter (p: (p.pname or "") != "ros-${rosDistro}-camera-ros") old.propagatedBuildInputs;
+        postPatch = (old.postPatch or "") + ''
+          substituteInPlace CMakeLists.txt --replace-fail 'add_link_options("-Wl,-z,relro,-z,now,-z,defs")' ""
+        '';
       });
     } // lib.optionalAttrs (darwin && sipFixes) {
       # libyaml.dylib's id is @rpath/libyaml.dylib and nothing linking it has an LC_RPATH,
