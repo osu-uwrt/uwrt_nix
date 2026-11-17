@@ -4,6 +4,8 @@ How a workspace gets its environment, and how that lives next to an apt ROS setu
 
 ## Setup (once per machine)
 
+The whole machine setup (Nix, caches, direnv, cloning) is in [setup.md](setup.md). The last step:
+
 ```bash
 nix profile add ~/osu-uwrt/uwrt_nix#uwrt   # uwrt and uwrt-env on PATH everywhere
 uwrt setup                                 # .envrc in development/software and release, then direnv allow

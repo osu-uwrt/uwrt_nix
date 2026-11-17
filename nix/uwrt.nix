@@ -15,6 +15,8 @@ stdenvNoCC.mkDerivation {
     install -Dm755 uwrt-env $out/bin/uwrt-env
     install -Dm644 patch-bashrc.py $out/share/uwrt/patch-bashrc.py
     install -Dm644 zenoh_client.json5 $out/share/uwrt/zenoh_client.json5
+    # macos: the maxfiles LaunchDaemon doctor points at
+    install -Dm644 limit.maxfiles.plist $out/share/uwrt/limit.maxfiles.plist
     install -Dm644 fastdds_local.xml $out/share/uwrt/fastdds_local.xml
     # zsh completion. _ros2 calls whatever ros2/colcon is on PATH, so it only answers in a workspace
     install -Dm644 _uwrt $out/share/zsh/site-functions/_uwrt

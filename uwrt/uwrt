@@ -319,6 +319,9 @@ doctor() {
     else
       [[ $subs == *ros.cachix.org* ]] && ok "ros.cachix.org is a substituter" || bad "add ros.cachix.org to substituters (/etc/nix/nix.conf)"
     fi
+    # only the firmware shell needs it
+    [[ $subs == *uwrt.cachix.org* ]] && ok "uwrt.cachix.org is a substituter" \
+      || warn "uwrt.cachix.org isn't a substituter, so the firmware shell builds rust and pico-sdk from source (docs/setup.md)"
   else
     bad "nix not found"
   fi
@@ -343,7 +346,7 @@ doctor() {
   if [ "$os" = Darwin ]; then
     local lm; lm=$(launchctl limit maxfiles 2>/dev/null | awk '{print $2}')
     [ "${lm:-0}" = unlimited ] || [ "${lm:-0}" -ge 65536 ] && ok "maxfiles $lm (this shell: $mf)" \
-      || bad "maxfiles ${lm:-?} is low (colcon/nix need 65536: sudo launchctl limit maxfiles 65536 unlimited, plus a LaunchDaemon to keep it)"
+      || bad "maxfiles ${lm:-?} is low, colcon/nix need 65536: sudo cp $share/limit.maxfiles.plist /Library/LaunchDaemons/ && sudo launchctl load -w /Library/LaunchDaemons/limit.maxfiles.plist"
   else
     [ "$mf" = unlimited ] || [ "$mf" -ge 4096 ] && ok "open files $mf" || warn "open files limit is $mf"
   fi
