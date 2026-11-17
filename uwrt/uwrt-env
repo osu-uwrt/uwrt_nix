@@ -4,7 +4,7 @@
 #   fastdds-local: fastdds on localhost, a spare domain. nothing waits for the robot. macos default
 #   zenoh: client to the robot's router (orin2:7447), the team domain. linux default
 # per-user settings go in ~/.uwrt/env (KEY=value lines, `uwrt rmw` writes UWRT_RMW there):
-#   UWRT_RMW, UWRT_LOCAL_DOMAIN (93), UWRT_ROBOT_DOMAIN (4), UWRT_ZENOH_CONFIG, UWRT_RELEASE_WS
+#   UWRT_RMW, UWRT_LOCAL_DOMAIN (93), UWRT_ROBOT_DOMAIN (0), UWRT_ZENOH_CONFIG, UWRT_RELEASE_WS
 set -euo pipefail
 
 conf=${UWRT_CONFIG_DIR:-$HOME/.uwrt}/env
@@ -45,7 +45,7 @@ case $rmw in
     cfg=${c[UWRT_ZENOH_CONFIG]:-}
     [ -n "$cfg" ] || { [ -f "$rel" ] && cfg=$rel || cfg=$share/zenoh_client.json5; }
     echo "export UWRT_RMW=zenoh RMW_IMPLEMENTATION=rmw_zenoh_cpp ZENOH_ROUTER_CHECK_ATTEMPTS=10"
-    echo "export ROS_DOMAIN_ID=$(q "${c[UWRT_ROBOT_DOMAIN]:-4}") ZENOH_SESSION_CONFIG_URI=$(q "$cfg")"
+    echo "export ROS_DOMAIN_ID=$(q "${c[UWRT_ROBOT_DOMAIN]:-0}") ZENOH_SESSION_CONFIG_URI=$(q "$cfg")"
     echo "unset ROS_LOCALHOST_ONLY ZENOH_ROUTER_CONFIG_URI ZENOH_CONFIG_OVERRIDE $fastdds_net"
     ;;
   *)

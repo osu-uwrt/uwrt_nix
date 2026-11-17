@@ -45,7 +45,7 @@ A cached load takes about 0.2–0.3 s. A cache miss (changed package.xml, uwrt_n
 | | `fastdds-local` (macOS default) | `zenoh` (Linux default, the team's) |
 |---|---|---|
 | `RMW_IMPLEMENTATION` | `rmw_fastrtps_cpp` | `rmw_zenoh_cpp` |
-| Domain | `93` (`UWRT_LOCAL_DOMAIN`) | `4` (`UWRT_ROBOT_DOMAIN`) |
+| Domain | `93` (`UWRT_LOCAL_DOMAIN`) | `0` (`UWRT_ROBOT_DOMAIN`) |
 | Other | `FASTRTPS_DEFAULT_PROFILES_FILE` = uwrt's `fastdds_local.xml` (loopback-only UDP like `ROS_LOCALHOST_ONLY=1`, which stays unset, but with 7 MB socket buffers); unsets `ZENOH_*` and the FastDDS discovery-server settings release's scripts export (`ROS_DISCOVERY_SERVER`, `ROS_SUPER_CLIENT`, `FASTDDS_DEFAULT_PROFILES_FILE`, `ROS_AUTOMATIC_DISCOVERY_RANGE`, `ROS_STATIC_PEERS`) | `ZENOH_SESSION_CONFIG_URI` = release's `scripts/dds_scripts/zenoh/zenoh_client.json5` (else a copy shipped with uwrt), `ZENOH_ROUTER_CHECK_ATTEMPTS=10` |
 
 With zenoh every node connects to the robot's router (`orin2:7447`) and gives up when it's off, so local work uses `fastdds-local`. Why the profile: `ROS_LOCALHOST_ONLY=1` makes rmw_fastrtps use loopback UDP with the OS's default socket buffers (768 KB on macOS), and a best-effort subscriber then loses every message bigger than that. In the nereus sim, yolo_orientation got no depth (9.2 MB 1920×1200 32FC1 frames) and about 1 Hz of RGB. With the profile, RGB, camera_info, depth and YOLO's detections all ran at 15 Hz. On Linux the kernel caps the buffers at `net.core.rmem_max`/`wmem_max` (about 208 KB by default), so big messages there need those raised too. `~/.uwrt/env` takes `KEY=value` lines; uwrt reads them without running them.
