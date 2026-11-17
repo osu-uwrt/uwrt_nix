@@ -57,6 +57,11 @@ in {
       rcpputils = rosPrev.rcpputils.overrideAttrs (old: {
         patches = (old.patches or [ ]) ++ [ ./patches/rcpputils-ament-prefix-path.patch ];
       });
+    } // lib.optionalAttrs (!darwin) {
+      # finds libcamera through pkg-config, but the overlay doesn't give it one (apriltag-ros propagates it)
+      camera-ros = rosPrev.camera-ros.overrideAttrs (old: {
+        nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ final.pkg-config ];
+      });
     })).overrideScope (if rosExtra == null then (_: _: { }) else import ./ros-extra.nix { inherit lib darwin; sources = rosExtra; });
   };
 }
