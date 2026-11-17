@@ -10,7 +10,7 @@ The model links handwritten C through its configuration: `CustomSource` / `SimUs
 
 ## What changed
 
-- **`send_thruster_cmd_canbus.c` is guarded, committed** (riptide_control `nix-macos`, `bb23bf2` in dev, `36cf038` in release). It isn't legacy-only: riptide_mpc builds it into `thruster_can` and calls it. The SocketCAN code sits under `#ifdef __linux__`. Elsewhere `send_thruster_cmd_canbus()` reports once and returns `ENOTSUP`, then returns 0, the same as a failed CAN init on Linux. Linux behavior is unchanged.
+- **`send_thruster_cmd_canbus.c` is guarded, committed** (riptide_control `nix-macos` `36cf038`, which the dev workspace gets through a merge). It isn't legacy-only: riptide_mpc builds it into `thruster_can` and calls it. The SocketCAN code sits under `#ifdef __linux__`. Elsewhere `send_thruster_cmd_canbus()` reports once and returns `ENOTSUP`, then returns 0, the same as a failed CAN init on Linux. Linux behavior is unchanged.
 - **No model, config or generated-code edits.** The guard reaches the generated package because generation copies the custom source in.
 
 ## How it was regenerated
