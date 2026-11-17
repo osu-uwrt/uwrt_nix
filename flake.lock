@@ -97,12 +97,12 @@
         "rev": "cc92eb324b228988bd3eaf7aa017e1d1d481f542",
         "revCount": 717,
         "type": "git",
-        "url": "file:///Users/ethan/osu-uwrt/development/micro_ros_agent/Micro-XRCE-DDS-Agent"
+        "url": "https://github.com/osu-uwrt/Micro-XRCE-DDS-Agent"
       },
       "original": {
         "ref": "nix-macos",
         "type": "git",
-        "url": "file:///Users/ethan/osu-uwrt/development/micro_ros_agent/Micro-XRCE-DDS-Agent"
+        "url": "https://github.com/osu-uwrt/Micro-XRCE-DDS-Agent"
       }
     },
     "nereus": {
@@ -114,12 +114,12 @@
         "rev": "977670b638b5952a86f8e8f34c37def7ef64aa87",
         "revCount": 296,
         "type": "git",
-        "url": "file:///Users/ethan/osu-uwrt/development/software/src/nereus"
+        "url": "https://github.com/osu-uwrt/nereus"
       },
       "original": {
         "ref": "nix-macos",
         "type": "git",
-        "url": "file:///Users/ethan/osu-uwrt/development/software/src/nereus"
+        "url": "https://github.com/osu-uwrt/nereus"
       }
     },
     "nix-ros-overlay": {
@@ -300,12 +300,12 @@
         "rev": "7d3a58598d8c3c311fe99557dbb02b0bed170e94",
         "revCount": 68,
         "type": "git",
-        "url": "file:///Users/ethan/osu-uwrt/notgroot"
+        "url": "ssh://git@github.com/osu-uwrt/notgroot"
       },
       "original": {
         "ref": "nix-macos",
         "type": "git",
-        "url": "file:///Users/ethan/osu-uwrt/notgroot"
+        "url": "ssh://git@github.com/osu-uwrt/notgroot"
       }
     },
     "riptide-core": {
@@ -486,12 +486,12 @@
         "rev": "1d0e0bb72e14934e1a4c3b95edaf7319f409a73d",
         "revCount": 24,
         "type": "git",
-        "url": "file:///Users/ethan/osu-uwrt/development/titan_firmware/lib/titan_canmore"
+        "url": "https://github.com/osu-uwrt/titan_canmore"
       },
       "original": {
         "ref": "nix-macos",
         "type": "git",
-        "url": "file:///Users/ethan/osu-uwrt/development/titan_firmware/lib/titan_canmore"
+        "url": "https://github.com/osu-uwrt/titan_canmore"
       }
     },
     "titan_firmware": {
@@ -503,12 +503,12 @@
         "rev": "a8d4e801765c8c64920c2b068c876712e3dd17d0",
         "revCount": 792,
         "type": "git",
-        "url": "file:///Users/ethan/osu-uwrt/development/titan_firmware"
+        "url": "https://github.com/osu-uwrt/titan_firmware"
       },
       "original": {
         "ref": "nix-macos",
         "type": "git",
-        "url": "file:///Users/ethan/osu-uwrt/development/titan_firmware"
+        "url": "https://github.com/osu-uwrt/titan_firmware"
       }
     },
     "uwrt-upstream": {

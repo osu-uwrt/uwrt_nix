@@ -8,11 +8,10 @@
 
     riptide_setup = { url = "github:osu-uwrt/riptide_setup/matlab-install"; flake = false; };
 
-    # riptide-tools sources: the local, unpushed nix-macos branches for now. once they're pushed, back to
-    #   git+https://github.com/osu-uwrt/nereus?ref=<branch>  and  git+ssh://git@github.com/osu-uwrt/notgroot?ref=<branch>
+    # riptide-tools sources. notgroot is private, so ssh
     # test uncommitted edits with --override-input notgroot git+file://$HOME/osu-uwrt/notgroot
-    nereus = { url = "git+file:///Users/ethan/osu-uwrt/development/software/src/nereus?ref=nix-macos"; flake = false; };
-    notgroot = { url = "git+file:///Users/ethan/osu-uwrt/notgroot?ref=nix-macos"; flake = false; };
+    nereus = { url = "git+https://github.com/osu-uwrt/nereus?ref=nix-macos"; flake = false; };
+    notgroot = { url = "git+ssh://git@github.com/osu-uwrt/notgroot?ref=nix-macos"; flake = false; };
 
     # gl for nix programs on non-nixos linux
     nixgl = { url = "github:nix-community/nixGL"; inputs.nixpkgs.follows = "nixpkgs"; inputs.flake-utils.follows = "nix-ros-overlay/flake-utils"; };
@@ -26,12 +25,11 @@
     # no follows, so those keep their cache hits. phase4/RECONCILE_REPORT.md has the plan to merge the two
     uwrt-upstream.url = "github:osu-uwrt/uwrt_nix";
 
-    # titan's host tools: the local, unpushed nix-macos branches for now (like nereus/notgroot above). once
-    # pushed, git+https://github.com/osu-uwrt/titan_firmware?ref=<branch> and the same for titan_canmore
-    titan_firmware = { url = "git+file:///Users/ethan/osu-uwrt/development/titan_firmware?ref=nix-macos"; flake = false; };
-    titan_canmore = { url = "git+file:///Users/ethan/osu-uwrt/development/titan_firmware/lib/titan_canmore?ref=nix-macos"; flake = false; };
-    # the micro-ros agent's xrce half: osu-uwrt's Happyxrce + a local fmt 10 fix (nix-macos, unpushed)
-    microxrcedds_agent = { url = "git+file:///Users/ethan/osu-uwrt/development/micro_ros_agent/Micro-XRCE-DDS-Agent?ref=nix-macos"; flake = false; };
+    # titan's host tools
+    titan_firmware = { url = "git+https://github.com/osu-uwrt/titan_firmware?ref=nix-macos"; flake = false; };
+    titan_canmore = { url = "git+https://github.com/osu-uwrt/titan_canmore?ref=nix-macos"; flake = false; };
+    # the micro-ros agent's xrce half: osu-uwrt's Happyxrce + a fmt 10 fix (nix-macos)
+    microxrcedds_agent = { url = "git+https://github.com/osu-uwrt/Micro-XRCE-DDS-Agent?ref=nix-macos"; flake = false; };
   };
 
   outputs = { self, nix-ros-overlay, nix-ros-overlay-release, nixpkgs, ... }@inputs:

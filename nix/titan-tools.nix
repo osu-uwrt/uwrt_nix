@@ -1,6 +1,6 @@
 # titan_firmware's host tools: upload_tool, canmore_cli and canmore_can. built from the titan_firmware input with
 # upstream uwrt_nix's pico-sdk (the same 1.5.1 tag as the submodule) and the titan_canmore input put where the
-# submodules go (the git+file inputs don't carry submodules). off linux they reach can through titan_canmore's
+# submodules go (the git inputs don't carry submodules). off linux they reach can through titan_canmore's
 # gs_usb/slcan/cannelloni backends (canmore_can up), libusb for gs_usb
 { lib, pkgs, titan_firmware, titan_canmore, pico-sdk }:
 let
