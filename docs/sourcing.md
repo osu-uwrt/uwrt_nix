@@ -101,18 +101,18 @@ fi # <<< uwrt nix guard <<<
 
 - It finds the parts by statement, not by line number: bash itself (`bash -n`) says where each top-level statement ends, and statements mentioning ROS (`/opt/ros`, `ros2`, `ROS_*`, `RMW_*`, `ZENOH*`, the `sr`/`srd` selection functions, workspace `install/setup.bash`, …) are wrapped. Other lines (GPG_TTY, aliases, cargo) stay outside.
 - `--dry-run` prints the diff. It keeps a timestamped backup and refuses a file that doesn't parse (or a result that wouldn't). On a partly guarded file it wraps only what's left; on a fully guarded one it does nothing. Heredocs stay whole. `uwrt setup --unpatch-bashrc` removes the guard again, byte-identical to before (including CRLF line endings and a missing final newline).
-- Note: aliases and functions that would work fine with Nix's `ros2` (`ros_restart`, `zenohd`, `rviz()` on xps) are inside the guard too, because they mention ROS. An alias *called* elsewhere in the file without a ROS word (e.g. an uncommented `srd` autoselect) stays outside and would say "command not found" in a Nix shell; guard such a line by hand.
+- Note: aliases and functions that would work fine with Nix's `ros2` (for example `ros_restart`, `zenohd` or an `rviz()` function) are inside the guard too, because they mention ROS. An alias *called* elsewhere in the file without a ROS word (e.g. an uncommented `srd` autoselect) stays outside and would say "command not found" in a Nix shell; guard such a line by hand.
 - `touch ~/.uwrt/use_nix` turns apt ROS off for every new shell, not just inside Nix shells.
 - `uwrt doctor` fails on Linux when `~/.bashrc` has a ROS statement outside the guard (the same detection the patcher uses, so it covers workspaces like `~/ros2_ws/install/setup.bash` too).
 
 The shells also strip apt paths themselves (step 3 above), so the env is clean even when the outer shell had apt ROS sourced. The guard covers shells started *inside* a Nix env. The strip also drops another riptide shell's ROS env, so a `nix develop` of one shell nested inside the other ends up with only its own.
 
-## Known limits and decisions
+## Known limits and design notes
 
-- **One colcon for both shells** (user decision, 2026-11-15). colcon and colcon_riptide come from the dev overlay pin in `riptide-release` too. colcon runs ament_python `setup.py` builds with its own Python, so once the release pin's Python differs from the dev pin's, release Python packages may break and need a per-pin colcon again. Today both pins are the same commit.
+- **One colcon for both shells.** colcon and colcon_riptide come from the dev overlay pin in `riptide-release` too, so both shells share one build of them. colcon runs ament_python `setup.py` builds with its own Python, so once the release pin's Python differs from the dev pin's, release Python packages may break and need a per-pin colcon again. Currently both pins are the same commit.
 - **Envs and garbage collection.** A colcon workspace links against the ROS env it was configured with. nix-direnv only roots the *current* env (under `.direnv/`), and already-configured packages keep pointing at the old one after the env changes (a uwrt_nix edit or bump). So `uwrt build` keeps a GC root in `build/.uwrt-gcroots/` for every ROS env any package's CMake cache uses, drops roots nothing uses any more, and names the packages still on an older env (`uwrt build --cmake-clean-cache --packages-select …` moves them over). Builds made with plain `colcon build` get their roots at the next `uwrt build`. `rm -rf build` drops the roots with it.
 - uwrt's closure is the dev pin's python3, the same store path the ROS env already uses, so the profile install adds nothing on a machine with the shells.
-- `uwrt fw` and titan_firmware's `.envrc` come with the firmware shell (Phase 4).
+- `uwrt fw` and titan_firmware's `.envrc` work the same way for the firmware shell, see [firmware.md](firmware.md).
 
 ## colcon arguments
 

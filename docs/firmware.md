@@ -105,5 +105,3 @@ The C boards use ROS domain 0, so `ros2` only sees them on domain 0 unless a boa
 ## macOS limits
 
 - No SocketCAN: CAN goes through gs_usb/slcan adapters (`canmore_can up`) or cannelloni, see [CAN](#can).
-- titan_firmware, titan_canmore and the agent's Micro-XRCE-DDS-Agent come from local `nix-macos` branches
-  (`git+file` inputs) until those are pushed.

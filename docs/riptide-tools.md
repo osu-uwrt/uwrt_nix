@@ -30,7 +30,7 @@ ros2 launch src/nereus/integrations/uwrt/launch/sim.launch.py
 
 ## macOS
 
-- **Offscreen cameras**: CGL (`libraries/rendering/src/offscreen_cgl.cpp`), a windowless core-profile context, instead of EGL. The plan said a hidden GLFW window; GLFW can only make windows on the main thread on macOS, while camera hosts are created and used on worker threads (and a GLFW window would give `nereus-sim` a Dock icon). CGL has neither problem and also renders with the display off.
+- **Offscreen cameras**: CGL (`libraries/rendering/src/offscreen_cgl.cpp`), a windowless core-profile context, instead of EGL, and not a hidden GLFW window: GLFW can only make windows on the main thread on macOS, while camera hosts are created and used on worker threads (and a GLFW window would give `nereus-sim` a Dock icon). CGL has neither problem and also renders with the display off.
 - **File dialogs**: `osascript` (`choose file` / `choose folder` / `choose file name`) when there's no zenity or kdialog.
 - **notgroot pinch**: the trackpad's magnify events (`app/src/pinch_cocoa.mm`). Cmd+scroll zooms too (ImGui maps macOS Cmd to Ctrl).
 - **nereus viewer** keeps the system title bar (the custom one needs X11).
@@ -58,8 +58,8 @@ nix run --impure github:nix-community/nixGL#nixGLNvidia -- <program>
 # or once:   nix build --impure github:nix-community/nixGL#nixGLNvidia   and set UWRT_NIXGL to result/bin/nixGLNvidia-<version>
 ```
 
-It reads the driver version from `/proc/driver/nvidia/version` at eval time, and must be rebuilt after a driver update. Hybrid laptops can stay on the iGPU with nixGLIntel (ethan-XPS does: the RTX 3050 has no driver loaded).
+It reads the driver version from `/proc/driver/nvidia/version` at eval time, and must be rebuilt after a driver update. Hybrid laptops can stay on the iGPU with nixGLIntel, for example when the NVIDIA GPU has no driver loaded.
 
 ## Sources
 
-The flake inputs `nereus` and `notgroot` point at the local `nix-macos` branches (`git+file://...?ref=nix-macos`) until those are pushed. Then repoint them at GitHub (`git+https://github.com/osu-uwrt/nereus?ref=<branch>`, `git+ssh://git@github.com/osu-uwrt/notgroot?ref=<branch>`) and `nix flake update nereus notgroot`, before sharing uwrt_nix: nobody else has those paths. Uncommitted edits: `--override-input notgroot git+file://$HOME/osu-uwrt/notgroot`.
+The flake inputs `nereus` and `notgroot` fetch the repos' `nix-macos` branches from GitHub (notgroot is private, so over ssh). `nix flake update nereus notgroot` moves them to the branches' current commits. Uncommitted edits: `--override-input notgroot git+file://$HOME/osu-uwrt/notgroot`.

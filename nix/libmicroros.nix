@@ -1,5 +1,5 @@
 # upstream uwrt_nix's libmicroros, built with titan_firmware's own colcon.meta instead of upstream's copy of
-# master's. titan's nix-macos branch has 25 publishers/subscriptions (user, 2026-11-16: at least one board faults
+# master's. titan's nix-macos branch has 25 publishers/subscriptions (at least one board faults
 # with master's 15), so the library follows whatever titan's file says. not on uwrt.cachix.org, builds locally once
 { lib, upstream, titan_firmware }:
 let

@@ -22,7 +22,7 @@
     zed_interfaces = { url = "github:stereolabs/zed-ros2-interfaces/f7f90f11f818c3dda23219cd05d8c854a569fc85"; flake = false; };
 
     # upstream uwrt_nix (ATK422): its firmware shell, pico-sdk and libmicroros (cached on uwrt.cachix.org).
-    # no follows, so those keep their cache hits. phase4/RECONCILE_REPORT.md has the plan to merge the two
+    # no follows, so those keep their cache hits
     uwrt-upstream.url = "github:osu-uwrt/uwrt_nix";
 
     # titan's host tools
@@ -52,7 +52,7 @@
 
         skip = import ./nix/skip.nix { inherit lib; inherit (pkgs) stdenv; };
 
-        # one colcon and one uwrt for both shells, from the dev pin (user, 2026-11-15). colcon runs
+        # one colcon and one uwrt for both shells, from the dev pin, so they're built once. colcon runs
         # ament_python setup.py builds with its own python, so once the release pin's python differs
         # from the dev pin's, release python packages may need their own colcon again
         colcon = import ./nix/colcon.nix { inherit lib pkgs skip; inherit (inputs) riptide_setup; };

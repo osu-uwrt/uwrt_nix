@@ -19,7 +19,7 @@ let
 
   verbArgs = { packages-ignore = skip; };
   defaults = {
-    # no symlink-install (the plan had it): symlinked install(PROGRAMS) scripts keep their source mode, and most
+    # no symlink-install: symlinked install(PROGRAMS) scripts keep their source mode, and most
     # team scripts are 644 in git, so ros2 launch can't run them. the apt workflow copies (and chmods) them too
     build = verbArgs // {
       cmake-args = [
