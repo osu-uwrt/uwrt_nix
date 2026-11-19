@@ -7,7 +7,7 @@ silicon) and Linux it gives every machine the same ROS 2 Humble, colcon, compile
 | Shell | For | Loaded in |
 |---|---|---|
 | `riptide-dev` (default) | the dev colcon workspace: a ROS env built from its package.xml dependencies, colcon with colcon_riptide, nereus' and notgroot's tools and build libraries | `~/osu-uwrt/development/software` |
-| `riptide-release` | the release workspace, same idea on the release pin | `~/osu-uwrt/release` |
+| `riptide-release` | the release workspace, same idea on the release pin (nereus' build libraries from that pin) | `~/osu-uwrt/release` |
 | `firmware` | titan_firmware: Arm GCC 13, pico-sdk, libmicroros, openocd, Rust, titan's host tools, the micro-ROS agent | `~/osu-uwrt/development/titan_firmware` |
 
 ## Quick start

@@ -66,12 +66,15 @@
         } // args);
         ros = pkgs.rosPackages.${rosDistro};
 
-        # nereus + notgroot, one build from the dev pin for both shells
-        tools = import ./nix/riptide-tools.nix {
-          inherit lib pkgs;
+        # nereus + notgroot, one build from the dev pin for both shells. build.sh's libs come from each
+        # shell's own pin (toolsFor), so they match what that pin's ros links
+        toolsFor = p: import ./nix/riptide-tools.nix {
+          inherit (p) lib;
+          pkgs = p;
           inherit (inputs) nereus notgroot;
-          nixgl = if pkgs.stdenv.hostPlatform.isLinux then inputs.nixgl.packages.${system} else null;
+          nixgl = if p.stdenv.hostPlatform.isLinux then inputs.nixgl.packages.${system} else null;
         };
+        tools = toolsFor pkgs;
 
         upstream = inputs.uwrt-upstream;
         titanTools = import ./nix/titan-tools.nix {
@@ -101,6 +104,8 @@
           riptide-release = mkShell pkgsRelease {
             name = "riptide-release";
             defaultWorkspace = "osu-uwrt/release";
+            nereusBuild = true;
+            buildTools = toolsFor pkgsRelease;
           };
           firmware = import ./nix/firmware-shell.nix {
             inherit pkgs uwrt titanTools libmicroros;

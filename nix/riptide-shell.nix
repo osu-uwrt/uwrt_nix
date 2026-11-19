@@ -1,7 +1,7 @@
 # one riptide shell: the ros env for a workspace's package.xml deps, colcon_riptide's colcon,
 # and on mac the DYLD_LIBRARY_PATH fix in every ros program.
 # the workspace is $UWRT_WS (its src/ is scanned), or ~/<defaultWorkspace>. needs --impure
-{ lib, pkgs, ros, colcon, skip, uwrt, tools, name, defaultWorkspace, extraRos ? [ ], nereusBuild ? false }:
+{ lib, pkgs, ros, colcon, skip, uwrt, tools, name, defaultWorkspace, extraRos ? [ ], nereusBuild ? false, buildTools ? tools }:
 let
   darwin = pkgs.stdenv.hostPlatform.isDarwin;
 
@@ -50,9 +50,9 @@ pkgs.mkShell ({
   inherit name;
   packages = lib.optional darwin dyldWrappers ++ [ colcon.colcon env uwrt tools.riptide-tools pkgs.rsync pkgs.openssh ]
     ++ lib.optionals nereusBuild [ pkgs.cmake pkgs.uv pkgs.pkg-config ];  # cmake: its hook puts buildInputs on CMAKE_PREFIX_PATH
-  # nereus' ros-viewer preset (build.sh in src/nereus) builds against these and the workspace, and notgroot's
+  # nereus' ros-viewer preset (its build.sh) builds against these and the workspace, and notgroot's
   # build.sh against the rest
-  buildInputs = lib.optionals nereusBuild (lib.unique (tools.nereusDeps ++ tools.notgrootDeps));
+  buildInputs = lib.optionals nereusBuild (lib.unique (buildTools.nereusDeps ++ buildTools.notgrootDeps));
 
   COLCON_DEFAULTS_FILE = colcon.defaultsFile;
   FONTCONFIG_FILE = tools.fontsConf;

@@ -11,11 +11,11 @@ Both riptide shells put `riptide-tools` on PATH: one build, from the dev pin, so
 
 `nix build .#riptide-tools` (or `.#nereus`, `.#notgroot`) builds them on their own. `nix build .#checks.<system>.notgroot-tests` / `nereus-tests` run the projects' own ctest suites the same way. On Linux the build sandbox has no GL driver, so the tests get Mesa's software EGL (llvmpipe, surfaceless) and the offscreen/renderer tests really run; tests that need a window skip.
 
-**Assimp 5.2.5, not nixpkgs' 6.x.** Assimp 6 orders mesh indices differently, so nereus' recorded mesh references (made with jammy's Assimp 5.2) fail with it (`MeshAssets.EveryOriginalSubmesh…`: same vertices and statistics, different index hashes). nereus builds against both; `riptide-tools.nix` pins 5.2.5 (without its MMD importer, which gcc 15 can't compile) for the package, the tests and the dev shell's `build.sh`.
+**Assimp 5.2.5, not nixpkgs' 6.x.** Assimp 6 orders mesh indices differently, so nereus' recorded mesh references (made with jammy's Assimp 5.2) fail with it (`MeshAssets.EveryOriginalSubmesh…`: same vertices and statistics, different index hashes). nereus builds against both; `riptide-tools.nix` pins 5.2.5 (without its MMD importer, which gcc 15 can't compile) for the package, the tests and the shells' `build.sh`.
 
-## nereus' ROS bridge and viewer: built in the dev workspace
+## nereus' ROS bridge and viewer: built in the workspace
 
-`nereus-sim` and `nereus-viewer` need the workspace's `riptide_msgs2` (the UWRT panels), and nereus' launch files run them from `src/nereus/build/ros-viewer/`. So they're not in the Nix package; build them with nereus' own script inside `riptide-dev`, which carries every library they need (`buildInputs`, found through `NIXPKGS_CMAKE_PREFIX_PATH`) plus `uv`:
+`nereus-sim` and `nereus-viewer` need the workspace's `riptide_msgs2` (the UWRT panels), and nereus' launch files run them from nereus' own `build/ros-viewer/`. So they're not in the Nix package; build them with nereus' own script inside `riptide-dev` or `riptide-release`, which carry every library they need (`buildInputs`, found through `NIXPKGS_CMAKE_PREFIX_PATH`, from each shell's own pin) plus `uv`:
 
 ```bash
 cd ~/osu-uwrt/development/software        # direnv loads riptide-dev
@@ -24,9 +24,17 @@ uwrt build                                # riptide_msgs2 and the rest first
 ros2 launch src/nereus/integrations/uwrt/launch/sim.launch.py
 ```
 
+Release has nereus as a submodule at the workspace root, not in `src/`:
+
+```bash
+cd ~/osu-uwrt/release                 # direnv loads riptide-release
+uwrt build
+(cd nereus && ./build.sh ros-viewer)
+ros2 launch nereus/integrations/uwrt/launch/sim.launch.py
+```
+
 - `uv sync` makes `.venv` from Nix's Python (`UV_PYTHON`), never a downloaded one (`UV_PYTHON_DOWNLOADS=never`). Its packages still come from nereus' `uv.lock` (PyPI wheels), as on apt machines.
 - notgroot's `./build.sh` works in the same shell.
-- `riptide-release` only gets the binaries; release's `nereus` submodule isn't built there.
 
 ## macOS
 

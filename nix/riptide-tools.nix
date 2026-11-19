@@ -1,6 +1,6 @@
 # riptide-tools: notgroot and nereus' ros-free parts (pack/dataset tools, headless dataset renderer), built once
 # from the dev pin so both riptide shells get the same store paths. nereus' ros bridge and viewer need the
-# workspace's riptide_msgs2, so those build in the dev workspace with nereus' own build.sh (see buildInputs below).
+# workspace's riptide_msgs2, so those build in the workspace with nereus' own build.sh (see nereusDeps below).
 # linux: the gui programs go through nixGL unless on nixos (UWRT_NIXGL picks another wrapper, or none)
 { lib, pkgs, nereus, notgroot, nixgl ? null }:
 let
