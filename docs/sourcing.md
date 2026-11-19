@@ -59,7 +59,7 @@ fpath+=(~/.nix-profile/share/zsh/site-functions)
 autoload -Uz compinit && compinit
 ```
 
-`_ros2` runs whichever `ros2`/`colcon` is on PATH, so `ros2 run <pkg> <exe>` and `ros2 launch <pkg> <file>` complete inside a workspace and do nothing outside one. `uwrt build` completes colcon's options.
+`_ros2` runs whichever `ros2`/`colcon` is on PATH, so `ros2 run <pkg> <exe>` and `ros2 launch <pkg> <file>` complete inside a workspace. When argcomplete has nothing (outside a workspace, or a path like `ros2 launch nereus/integrations/uwrt/launch/sim.launch.py`) it falls back to file names, as bash's completion does. `uwrt build` completes colcon's options.
 
 **Prompt tag.** The shells export `UWRT_NIX_SHELL`, so the prompt can show which env is active:
 

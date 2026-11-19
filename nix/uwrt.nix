@@ -21,6 +21,9 @@ stdenvNoCC.mkDerivation {
     # zsh completion. _ros2 calls whatever ros2/colcon is on PATH, so it only answers in a workspace
     install -Dm644 _uwrt $out/share/zsh/site-functions/_uwrt
     ${python3.pkgs.argcomplete}/bin/register-python-argcomplete --shell zsh ros2 colcon > $out/share/zsh/site-functions/_ros2
+    # bash falls back to file names when argcomplete has nothing (-o default), zsh doesn't. without it
+    # `ros2 launch nereus/...` can't complete a path
+    substituteInPlace $out/share/zsh/site-functions/_ros2 --replace-fail '_python_argcomplete "$@"' '_python_argcomplete "$@" || _files'
     substituteInPlace $out/bin/uwrt $out/bin/uwrt-env \
       --replace-fail @share@ $out/share/uwrt --replace-quiet @version@ "$version+${rev}" --replace-quiet @python@ ${python3}/bin/python3
     # the patcher asks bash itself where statements end
