@@ -42,7 +42,15 @@ make upload                                # UWRT_UPLOAD_TOOL: the shell's uploa
 
 ## The micro-ROS agent
 
-`micro_ros_agent serial --dev /dev/cu.usbmodem…` (or `udp4 -p 8888`). It takes `ROS_DOMAIN_ID` and the
+The shell has no `ros2`, so the agent is a plain command on PATH instead of `ros2 run micro_ros_agent
+micro_ros_agent`, with the same arguments:
+
+```sh
+micro_ros_agent serial --dev /dev/cu.usbmodem103   # -v4 to watch the session and entities get created
+```
+
+A board with micro-ROS over USB shows up as two ports: the lower-numbered one is its log, the other is micro-ROS
+(e.g. `usbmodem101` and `usbmodem103`). `udp4 -p 8888` works too. It takes the
 fastdds-local profile from `uwrt-env`, like the workspaces, and always runs on Fast DDS, whatever `uwrt rmw`
 says. Over CAN: `micro_ros_agent can -D <bus>`, where the bus is anything from [CAN](#can) (`can0`, `gsusb0`, ...).
 
@@ -100,7 +108,8 @@ CANMORE_CAN=cannelloni:127.0.0.1:20000@1M/5M upload_tool talos/PoacBoard/build/p
 micro_ros_agent can -D cannelloni:127.0.0.1:20000@1M/5M
 ```
 
-The C boards use ROS domain 0, so `ros2` only sees them on domain 0 unless a board is rebuilt with another one.
+The board picks the ROS domain, not the agent's `ROS_DOMAIN_ID`. The C boards use 0, which is also fastdds-local's
+default (`UWRT_LOCAL_DOMAIN`), so `ros2` sees them unless you've moved off 0 or a board is rebuilt with another one.
 
 ## macOS limits
 

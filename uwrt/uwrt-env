@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # prints the rmw exports for this machine, for `eval "$(uwrt-env)"` (the .envrc does it).
 # replaces release's config_rmw.bash: no prompts, no /home/$USER paths.
-#   fastdds-local: fastdds on localhost, a spare domain. nothing waits for the robot. macos default
+#   fastdds-local: fastdds on localhost, domain 0 like the boards. nothing waits for the robot. macos default
 #   zenoh: client to the robot's router (orin2:7447), the team domain. linux default
 # per-user settings go in ~/.uwrt/env (KEY=value lines, `uwrt rmw` writes UWRT_RMW there):
-#   UWRT_RMW, UWRT_LOCAL_DOMAIN (93), UWRT_ROBOT_DOMAIN (0), UWRT_ZENOH_CONFIG, UWRT_RELEASE_WS
+#   UWRT_RMW, UWRT_LOCAL_DOMAIN (0), UWRT_ROBOT_DOMAIN (0), UWRT_ZENOH_CONFIG, UWRT_RELEASE_WS
 set -euo pipefail
 
 conf=${UWRT_CONFIG_DIR:-$HOME/.uwrt}/env
@@ -34,7 +34,7 @@ case $rmw in
     # loopback only like ROS_LOCALHOST_ONLY=1, but with big udp buffers (see the xml). ROS_LOCALHOST_ONLY
     # has to stay unset: rmw_fastrtps would swap in its own small-buffer transport
     echo "export UWRT_RMW=fastdds-local RMW_IMPLEMENTATION=rmw_fastrtps_cpp FASTRTPS_DEFAULT_PROFILES_FILE=$(q "$share/fastdds_local.xml")"
-    echo "export ROS_DOMAIN_ID=$(q "${c[UWRT_LOCAL_DOMAIN]:-93}")"
+    echo "export ROS_DOMAIN_ID=$(q "${c[UWRT_LOCAL_DOMAIN]:-0}")"
     echo "unset ROS_LOCALHOST_ONLY ZENOH_SESSION_CONFIG_URI ZENOH_ROUTER_CONFIG_URI ZENOH_ROUTER_CHECK_ATTEMPTS ZENOH_CONFIG_OVERRIDE"
     # release's fastdds scripts point these at the robot's discovery server
     echo "unset ROS_DISCOVERY_SERVER ROS_SUPER_CLIENT FASTDDS_DEFAULT_PROFILES_FILE ROS_AUTOMATIC_DISCOVERY_RANGE ROS_STATIC_PEERS"
